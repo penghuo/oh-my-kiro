@@ -1,0 +1,155 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+
+  typecheck:
+    name: Typecheck (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm run check:no-unused
+
+  test:
+    name: Test (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npm test
+
+  coverage-team-critical:
+    name: Coverage Gate (Team Critical)
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Run team/state coverage gate
+        run: npm run coverage:team-critical
+      - name: Add coverage summary to job summary
+        run: |
+          node -e '
+            const fs = require("node:fs");
+            const summary = JSON.parse(fs.readFileSync("coverage/team/coverage-summary.json", "utf8"));
+            const total = summary.total;
+            const lines = [
+              "## Team/State Coverage Summary",
+              "",
+              "| Metric | Pct | Covered / Total |",
+              "|---|---:|---:|",
+              `| Lines | ${total.lines.pct}% | ${total.lines.covered} / ${total.lines.total} |`,
+              `| Functions | ${total.functions.pct}% | ${total.functions.covered} / ${total.functions.total} |`,
+              `| Branches | ${total.branches.pct}% | ${total.branches.covered} / ${total.branches.total} |`,
+              `| Statements | ${total.statements.pct}% | ${total.statements.covered} / ${total.statements.total} |`
+            ];
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join("\n")}\n`);
+          '
+      - name: Upload team coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: team-critical-coverage
+          path: coverage/team/
+
+  ralph-persistence-gate:
+    name: Ralph Persistence Gate
+    runs-on: ubuntu-latest
+    needs: [typecheck]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Run Ralph persistence verification matrix
+        run: |
+          node --test \
+            dist/cli/__tests__/session-scoped-runtime.test.js \
+            dist/mcp/__tests__/trace-server.test.js \
+            dist/hud/__tests__/state.test.js \
+            dist/hooks/__tests__/notify-hook-linked-sync.test.js \
+            dist/mcp/__tests__/state-server-ralph-phase.test.js \
+            dist/ralph/__tests__/persistence.test.js \
+            dist/verification/__tests__/ralph-persistence-gate.test.js
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, test, coverage-team-critical, ralph-persistence-gate]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+  ci-status:
+    name: CI Status
+    if: always()
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, test, coverage-team-critical, ralph-persistence-gate, build]
+    steps:
+      - name: Check required job results
+        run: |
+          if [[ "${{ needs.lint.result }}" != "success" ]] ||
+             [[ "${{ needs.typecheck.result }}" != "success" ]] ||
+             [[ "${{ needs.test.result }}" != "success" ]] ||
+             [[ "${{ needs.coverage-team-critical.result }}" != "success" ]] ||
+             [[ "${{ needs.ralph-persistence-gate.result }}" != "success" ]] ||
+             [[ "${{ needs.build.result }}" != "success" ]]; then
+            echo "::error::One or more required CI jobs failed"
+            echo "  lint: ${{ needs.lint.result }}"
+            echo "  typecheck: ${{ needs.typecheck.result }}"
+            echo "  test: ${{ needs.test.result }}"
+            echo "  coverage-team-critical: ${{ needs.coverage-team-critical.result }}"
+            echo "  ralph-persistence-gate: ${{ needs.ralph-persistence-gate.result }}"
+            echo "  build: ${{ needs.build.result }}"
+            exit 1
+          fi
+          echo "All required CI checks passed"

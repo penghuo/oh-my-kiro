@@ -1,0 +1,16 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.omc/state/
+.omc/prompts/
+.omc/logs/
+.omc/research/
+.omc/
+.omx/
+
+# Local agent/worktree artifacts (never commit)
+.claude/
+.claire/
+.codex/
+.agents/
+coverage/
