@@ -26,7 +26,7 @@ function makeCtx(overrides: Partial<StageContext> = {}): StageContext {
 }
 
 async function setup(): Promise<string> {
-  tempDir = await mkdtemp(join(tmpdir(), 'omx-stages-test-'));
+  tempDir = await mkdtemp(join(tmpdir(), 'omk-stages-test-'));
   return tempDir;
 }
 
@@ -64,7 +64,7 @@ describe('RALPLAN Stage', () => {
   });
 
   it('canSkip returns false when plans directory is empty', async () => {
-    const plansDir = join(tempDir, '.omx', 'plans');
+    const plansDir = join(tempDir, '.omk', 'plans');
     await mkdir(plansDir, { recursive: true });
 
     const stage = createRalplanStage();
@@ -72,7 +72,7 @@ describe('RALPLAN Stage', () => {
   });
 
   it('canSkip returns true when a prd- plan file exists', async () => {
-    const plansDir = join(tempDir, '.omx', 'plans');
+    const plansDir = join(tempDir, '.omk', 'plans');
     await mkdir(plansDir, { recursive: true });
     await writeFile(join(plansDir, 'prd-my-feature.md'), '# Plan\n');
 
@@ -81,7 +81,7 @@ describe('RALPLAN Stage', () => {
   });
 
   it('canSkip returns false for non-prd plan files', async () => {
-    const plansDir = join(tempDir, '.omx', 'plans');
+    const plansDir = join(tempDir, '.omk', 'plans');
     await mkdir(plansDir, { recursive: true });
     await writeFile(join(plansDir, 'autopilot-spec.md'), '# Spec\n');
 
@@ -162,7 +162,7 @@ describe('Team Exec Stage', () => {
         cwd: '/tmp/test',
       });
 
-      assert.match(instruction, /^omx team ralph 3:executor /);
+      assert.match(instruction, /^omk team ralph 3:executor /);
       assert.match(instruction, /implement feature/);
       assert.match(instruction, /staffing=/);
       assert.match(instruction, /verify=/);
@@ -183,7 +183,7 @@ describe('Team Exec Stage', () => {
         cwd: '/tmp',
       });
 
-      assert.match(instruction, /^omx team ralph 1:executor /);
+      assert.match(instruction, /^omk team ralph 1:executor /);
       assert.match(instruction, /staffing=/);
     });
   });
@@ -248,7 +248,7 @@ describe('Ralph Verify Stage', () => {
       });
 
       assert.match(instruction, /max_iterations=15/);
-      assert.match(instruction, /^omx ralph /);
+      assert.match(instruction, /^omk ralph /);
       assert.match(instruction, /verify feature/);
       assert.match(instruction, /staffing=/);
       assert.match(instruction, /verify=/);
@@ -266,7 +266,7 @@ describe('Ralph Verify Stage', () => {
         executionArtifacts: {},
       });
 
-      assert.match(instruction, /^omx ralph /);
+      assert.match(instruction, /^omk ralph /);
       assert.match(instruction, /staffing=/);
     });
   });

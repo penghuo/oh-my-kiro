@@ -37,12 +37,12 @@ function makeState(overrides: Partial<SessionState> = {}): SessionState {
 
 describe('session lifecycle manager', () => {
   it('resets session metrics files with zeroed counters', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-session-metrics-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-session-metrics-'));
     try {
       await resetSessionMetrics(cwd);
 
-      const metricsPath = join(cwd, '.omx', 'metrics.json');
-      const hudPath = join(cwd, '.omx', 'state', 'hud-state.json');
+      const metricsPath = join(cwd, '.omk', 'metrics.json');
+      const hudPath = join(cwd, '.omk', 'state', 'hud-state.json');
       assert.equal(existsSync(metricsPath), true);
       assert.equal(existsSync(hudPath), true);
 
@@ -63,7 +63,7 @@ describe('session lifecycle manager', () => {
   });
 
   it('writes session start/end lifecycle artifacts and archives session history', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-session-lifecycle-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-session-lifecycle-'));
     const sessionId = 'sess-lifecycle-1';
     try {
       await writeSessionStart(cwd, sessionId);
@@ -75,14 +75,14 @@ describe('session lifecycle manager', () => {
       assert.equal(state.pid, process.pid);
       assert.equal(isSessionStale(state), false);
 
-      const sessionPath = join(cwd, '.omx', 'state', 'session.json');
+      const sessionPath = join(cwd, '.omk', 'state', 'session.json');
       assert.equal(existsSync(sessionPath), true);
 
       await writeSessionEnd(cwd, sessionId);
 
       assert.equal(existsSync(sessionPath), false);
 
-      const historyPath = join(cwd, '.omx', 'logs', 'session-history.jsonl');
+      const historyPath = join(cwd, '.omk', 'logs', 'session-history.jsonl');
       assert.equal(existsSync(historyPath), true);
 
       const historyLines = (await readFile(historyPath, 'utf-8'))
@@ -97,7 +97,7 @@ describe('session lifecycle manager', () => {
       assert.equal(typeof historyEntry.started_at, 'string');
       assert.equal(typeof historyEntry.ended_at, 'string');
 
-      const dailyLogPath = join(cwd, '.omx', 'logs', `omx-${todayIsoDate()}.jsonl`);
+      const dailyLogPath = join(cwd, '.omk', 'logs', `omk-${todayIsoDate()}.jsonl`);
       assert.equal(existsSync(dailyLogPath), true);
       const dailyLog = await readFile(dailyLogPath, 'utf-8');
       assert.match(dailyLog, /"event":"session_start"/);
@@ -108,9 +108,9 @@ describe('session lifecycle manager', () => {
   });
 
   it('treats invalid session JSON as absent state', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-session-invalid-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-session-invalid-'));
     try {
-      const statePath = join(cwd, '.omx', 'state', 'session.json');
+      const statePath = join(cwd, '.omk', 'state', 'session.json');
       await resetSessionMetrics(cwd);
       await writeFile(statePath, '{ not-json', 'utf-8');
       const state = await readSessionState(cwd);
@@ -136,13 +136,13 @@ describe('isSessionStale', () => {
   it('returns false for a live Linux process when identity matches', () => {
     const state = makeState({
       pid_start_ticks: 111,
-      pid_cmdline: 'node omx',
+      pid_cmdline: 'node omk',
     });
 
     const stale = isSessionStale(state, {
       platform: 'linux',
       isPidAlive: () => true,
-      readLinuxIdentity: () => ({ startTicks: 111, cmdline: 'node omx' }),
+      readLinuxIdentity: () => ({ startTicks: 111, cmdline: 'node omk' }),
     });
 
     assert.equal(stale, false);
@@ -151,13 +151,13 @@ describe('isSessionStale', () => {
   it('returns true for PID reuse on Linux when start ticks mismatch', () => {
     const state = makeState({
       pid_start_ticks: 111,
-      pid_cmdline: 'node omx',
+      pid_cmdline: 'node omk',
     });
 
     const stale = isSessionStale(state, {
       platform: 'linux',
       isPidAlive: () => true,
-      readLinuxIdentity: () => ({ startTicks: 222, cmdline: 'node omx' }),
+      readLinuxIdentity: () => ({ startTicks: 222, cmdline: 'node omk' }),
     });
 
     assert.equal(stale, true);
@@ -169,7 +169,7 @@ describe('isSessionStale', () => {
     const stale = isSessionStale(state, {
       platform: 'linux',
       isPidAlive: () => true,
-      readLinuxIdentity: () => ({ startTicks: 111, cmdline: 'node omx' }),
+      readLinuxIdentity: () => ({ startTicks: 111, cmdline: 'node omk' }),
     });
 
     assert.equal(stale, true);

@@ -5,7 +5,7 @@ import { readdir, readFile } from 'fs/promises';
 export const SESSION_ID_PATTERN = /^[A-Za-z0-9_-]{1,64}$/;
 export const STATE_MODE_SEGMENT_PATTERN = /^[A-Za-z0-9_-]{1,64}$/;
 const STATE_FILE_SUFFIX = '-state.json';
-const WORKDIR_ALLOWLIST_ENV = 'OMX_MCP_WORKDIR_ROOTS';
+const WORKDIR_ALLOWLIST_ENV = 'OMK_MCP_WORKDIR_ROOTS';
 
 export type StateFileScope = 'root' | 'session';
 
@@ -138,12 +138,12 @@ function enforceWorkingDirectoryPolicy(resolvedWorkingDirectory: string): void {
 }
 
 export function getBaseStateDir(workingDirectory?: string): string {
-  if ((workingDirectory == null || workingDirectory === '') && typeof process.env.OMX_TEAM_STATE_ROOT === 'string' && process.env.OMX_TEAM_STATE_ROOT.trim() !== '') {
+  if ((workingDirectory == null || workingDirectory === '') && typeof process.env.OMK_TEAM_STATE_ROOT === 'string' && process.env.OMK_TEAM_STATE_ROOT.trim() !== '') {
     try {
-      return resolveWorkingDirectoryForState(process.env.OMX_TEAM_STATE_ROOT.trim());
+      return resolveWorkingDirectoryForState(process.env.OMK_TEAM_STATE_ROOT.trim());
     } catch {}
   }
-  return join(resolveWorkingDirectoryForState(workingDirectory), '.omx', 'state');
+  return join(resolveWorkingDirectoryForState(workingDirectory), '.omk', 'state');
 }
 
 export function getStateDir(workingDirectory?: string, sessionId?: string): string {

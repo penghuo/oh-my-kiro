@@ -4,9 +4,9 @@
  * Prevents flooding users with session-idle notifications by enforcing a
  * minimum interval between dispatches. Ported from OMC persistent-mode hook.
  *
- * Config key : notifications.idleCooldownSeconds in ~/.codex/.omx-config.json
- * Env var    : OMX_IDLE_COOLDOWN_SECONDS  (overrides config)
- * State file : .omx/state/idle-notif-cooldown.json
+ * Config key : notifications.idleCooldownSeconds in ~/.codex/.omk-config.json
+ * Env var    : OMK_IDLE_COOLDOWN_SECONDS  (overrides config)
+ * State file : .omk/state/idle-notif-cooldown.json
  *              (session-scoped when sessionId is available)
  *
  * A cooldown value of 0 disables throttling entirely.
@@ -23,13 +23,13 @@ const SESSION_ID_SAFE_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,255}$/;
  * Read the idle notification cooldown in seconds.
  *
  * Resolution order:
- *   1. OMX_IDLE_COOLDOWN_SECONDS env var
- *   2. notifications.idleCooldownSeconds in ~/.codex/.omx-config.json
+ *   1. OMK_IDLE_COOLDOWN_SECONDS env var
+ *   2. notifications.idleCooldownSeconds in ~/.codex/.omk-config.json
  *   3. Default: 60 seconds
  */
 export function getIdleNotificationCooldownSeconds(): number {
   // 1. Environment variable override
-  const envVal = process.env.OMX_IDLE_COOLDOWN_SECONDS;
+  const envVal = process.env.OMK_IDLE_COOLDOWN_SECONDS;
   if (envVal !== undefined) {
     const parsed = Number(envVal);
     if (Number.isFinite(parsed) && parsed >= 0) {
@@ -39,7 +39,7 @@ export function getIdleNotificationCooldownSeconds(): number {
 
   // 2. Config file
   try {
-    const configPath = join(codexHome(), '.omx-config.json');
+    const configPath = join(codexHome(), '.omk-config.json');
     if (existsSync(configPath)) {
       const raw = JSON.parse(readFileSync(configPath, 'utf-8')) as Record<string, unknown>;
       const notifications = raw?.notifications as Record<string, unknown> | undefined;

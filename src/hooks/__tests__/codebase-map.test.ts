@@ -15,7 +15,7 @@ import { execSync } from 'child_process';
 import { generateCodebaseMap } from '../codebase-map.js';
 
 async function makeTempGitRepo(): Promise<string> {
-  const dir = await mkdtemp(join(tmpdir(), 'omx-codebase-map-test-'));
+  const dir = await mkdtemp(join(tmpdir(), 'omk-codebase-map-test-'));
   execSync('git init', { cwd: dir, stdio: 'ignore' });
   execSync('git config user.email "test@test.com"', { cwd: dir, stdio: 'ignore' });
   execSync('git config user.name "Test"', { cwd: dir, stdio: 'ignore' });
@@ -37,7 +37,7 @@ describe('generateCodebaseMap', () => {
   });
 
   it('returns empty string for non-git directory', async () => {
-    const plainDir = await mkdtemp(join(tmpdir(), 'omx-plain-'));
+    const plainDir = await mkdtemp(join(tmpdir(), 'omk-plain-'));
     try {
       await writeFile(join(plainDir, 'foo.ts'), 'export function foo() {}');
       const map = await generateCodebaseMap(plainDir);
@@ -111,7 +111,7 @@ describe('generateCodebaseMap', () => {
   });
 
   it('does not include untracked files (security: no filename leakage)', async () => {
-    const secDir = await mkdtemp(join(tmpdir(), 'omx-untracked-test-'));
+    const secDir = await mkdtemp(join(tmpdir(), 'omk-untracked-test-'));
     try {
       execSync('git init', { cwd: secDir, stdio: 'ignore' });
       execSync('git config user.email "test@test.com"', { cwd: secDir, stdio: 'ignore' });
@@ -143,7 +143,7 @@ describe('generateCodebaseMap integration with generateOverlay', () => {
   let tempDir: string;
   before(async () => {
     tempDir = await makeTempGitRepo();
-    await mkdir(join(tempDir, '.omx', 'state'), { recursive: true });
+    await mkdir(join(tempDir, '.omk', 'state'), { recursive: true });
     // Add a source file so the map is non-empty
     await mkdir(join(tempDir, 'src', 'hooks'), { recursive: true });
     await writeFile(join(tempDir, 'src', 'hooks', 'my-module.ts'), 'export function myFn() {}');
@@ -160,14 +160,14 @@ describe('generateCodebaseMap integration with generateOverlay', () => {
   });
 
   it('overlay is still valid when project has no tracked files', async () => {
-    const emptyDir = await mkdtemp(join(tmpdir(), 'omx-empty-git-'));
+    const emptyDir = await mkdtemp(join(tmpdir(), 'omk-empty-git-'));
     try {
       execSync('git init', { cwd: emptyDir, stdio: 'ignore' });
-      await mkdir(join(emptyDir, '.omx', 'state'), { recursive: true });
+      await mkdir(join(emptyDir, '.omk', 'state'), { recursive: true });
       const { generateOverlay } = await import('../agents-overlay.js');
       const overlay = await generateOverlay(emptyDir, 'empty-session');
-      assert.ok(overlay.includes('<!-- OMX:RUNTIME:START -->'));
-      assert.ok(overlay.includes('<!-- OMX:RUNTIME:END -->'));
+      assert.ok(overlay.includes('<!-- OMK:RUNTIME:START -->'));
+      assert.ok(overlay.includes('<!-- OMK:RUNTIME:END -->'));
       // No codebase map section when no files
       assert.ok(!overlay.includes('Codebase Map'), 'should not inject empty map');
     } finally {

@@ -95,7 +95,7 @@ describe('keyword detector swarm/team compatibility', () => {
   });
 
   it('does not trigger team keyword from filesystem/team-state path text', () => {
-    const match = detectPrimaryKeyword('You have 1 new message(s). Check .omx/state/team/execute-plan/mailbox/worker-3.json, act now, and reply with concrete progress (not ACK-only).');
+    const match = detectPrimaryKeyword('You have 1 new message(s). Check .omk/state/team/execute-plan/mailbox/worker-3.json, act now, and reply with concrete progress (not ACK-only).');
     assert.equal(match, null);
   });
 
@@ -198,8 +198,8 @@ describe('keyword registry coverage', () => {
 
 describe('keyword detector skill-active-state lifecycle', () => {
   it('writes skill-active-state.json with planning phase when keyword activates', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-keyword-state-'));
-    const stateDir = join(cwd, '.omx', 'state');
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-keyword-state-'));
+    const stateDir = join(cwd, '.omk', 'state');
     try {
       await mkdir(stateDir, { recursive: true });
       const result = await recordSkillActivation({
@@ -230,8 +230,8 @@ describe('keyword detector skill-active-state lifecycle', () => {
   });
 
   it('acquires a deep-interview input lock immediately on activation', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-keyword-state-deep-interview-'));
-    const stateDir = join(cwd, '.omx', 'state');
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-keyword-state-deep-interview-'));
+    const stateDir = join(cwd, '.omk', 'state');
     try {
       await mkdir(stateDir, { recursive: true });
       const result = await recordSkillActivation({
@@ -252,8 +252,8 @@ describe('keyword detector skill-active-state lifecycle', () => {
   });
 
   it('releases the deep-interview input lock on abort via cancel keyword', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-keyword-state-deep-interview-abort-'));
-    const stateDir = join(cwd, '.omx', 'state');
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-keyword-state-deep-interview-abort-'));
+    const stateDir = join(cwd, '.omk', 'state');
     try {
       await mkdir(stateDir, { recursive: true });
       await recordSkillActivation({
@@ -280,8 +280,8 @@ describe('keyword detector skill-active-state lifecycle', () => {
   });
 
   it('does not write state when no keyword is present', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-keyword-state-none-'));
-    const stateDir = join(cwd, '.omx', 'state');
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-keyword-state-none-'));
+    const stateDir = join(cwd, '.omk', 'state');
     try {
       await mkdir(stateDir, { recursive: true });
       const result = await recordSkillActivation({
@@ -313,8 +313,8 @@ describe('keyword detector skill-active-state lifecycle', () => {
   });
 
   it('preserves activated_at for same-skill continuation', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-keyword-state-continuation-'));
-    const stateDir = join(cwd, '.omx', 'state');
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-keyword-state-continuation-'));
+    const stateDir = join(cwd, '.omk', 'state');
     const statePath = join(stateDir, SKILL_ACTIVE_STATE_FILE);
     try {
       await mkdir(stateDir, { recursive: true });
@@ -347,8 +347,8 @@ describe('keyword detector skill-active-state lifecycle', () => {
   });
 
   it('resets activated_at when skill changes', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-keyword-state-skill-switch-'));
-    const stateDir = join(cwd, '.omx', 'state');
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-keyword-state-skill-switch-'));
+    const stateDir = join(cwd, '.omk', 'state');
     const statePath = join(stateDir, SKILL_ACTIVE_STATE_FILE);
     try {
       await mkdir(stateDir, { recursive: true });
@@ -381,8 +381,8 @@ describe('keyword detector skill-active-state lifecycle', () => {
   });
 
   it('resets activated_at when keyword changes within the same skill', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-keyword-state-keyword-switch-'));
-    const stateDir = join(cwd, '.omx', 'state');
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-keyword-state-keyword-switch-'));
+    const stateDir = join(cwd, '.omk', 'state');
     const statePath = join(stateDir, SKILL_ACTIVE_STATE_FILE);
     try {
       await mkdir(stateDir, { recursive: true });

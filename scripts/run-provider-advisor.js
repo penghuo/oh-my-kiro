@@ -8,10 +8,10 @@ const PROVIDER_BINARIES = {
   claude: 'claude',
   gemini: 'gemini',
 };
-const ASK_ORIGINAL_TASK_ENV = 'OMX_ASK_ORIGINAL_TASK';
+const ASK_ORIGINAL_TASK_ENV = 'OMK_ASK_ORIGINAL_TASK';
 
 function usage() {
-  console.error('Usage: omx ask <claude|gemini> "<prompt>"');
+  console.error('Usage: omk ask <claude|gemini> "<prompt>"');
   console.error('Legacy direct usage: node scripts/run-provider-advisor.js <claude|gemini> <prompt...>');
   console.error('                 or: node scripts/run-provider-advisor.js claude --print "<prompt>"');
   console.error('                 or: node scripts/run-provider-advisor.js gemini --prompt "<prompt>"');
@@ -94,7 +94,7 @@ function buildActionItems(exitCode) {
 
 async function writeArtifact({ provider, originalTask, finalPrompt, rawOutput, exitCode }) {
   const root = process.cwd();
-  const artifactDir = join(root, '.omx', 'artifacts');
+  const artifactDir = join(root, '.omk', 'artifacts');
   const slug = slugify(originalTask);
   const timestamp = timestampToken();
   const artifactPath = join(artifactDir, `${provider}-${slug}-${timestamp}.md`);

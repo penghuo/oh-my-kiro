@@ -9,7 +9,7 @@ import { join } from 'node:path';
 const NOTIFY_HOOK_SCRIPT = new URL('../../../scripts/notify-hook.js', import.meta.url);
 
 async function withTempDir(run: (cwd: string) => Promise<void>): Promise<void> {
-  const cwd = await mkdtemp(join(tmpdir(), 'omx-notify-cross-worktree-'));
+  const cwd = await mkdtemp(join(tmpdir(), 'omk-notify-cross-worktree-'));
   try {
     await run(cwd);
   } finally {
@@ -33,15 +33,15 @@ function runWorkerNotify(
 
   const inheritedEnv: NodeJS.ProcessEnv = {
     ...process.env,
-    OMX_TEAM_WORKER: teamWorker,
+    OMK_TEAM_WORKER: teamWorker,
     TMUX: '',
     TMUX_PANE: '',
   };
-  if (!Object.prototype.hasOwnProperty.call(extraEnv, 'OMX_TEAM_STATE_ROOT')) {
-    delete inheritedEnv.OMX_TEAM_STATE_ROOT;
+  if (!Object.prototype.hasOwnProperty.call(extraEnv, 'OMK_TEAM_STATE_ROOT')) {
+    delete inheritedEnv.OMK_TEAM_STATE_ROOT;
   }
-  if (!Object.prototype.hasOwnProperty.call(extraEnv, 'OMX_TEAM_LEADER_CWD')) {
-    delete inheritedEnv.OMX_TEAM_LEADER_CWD;
+  if (!Object.prototype.hasOwnProperty.call(extraEnv, 'OMK_TEAM_LEADER_CWD')) {
+    delete inheritedEnv.OMK_TEAM_LEADER_CWD;
   }
 
   return spawnSync(process.execPath, [NOTIFY_HOOK_SCRIPT.pathname, JSON.stringify(payload)], {
@@ -51,19 +51,19 @@ function runWorkerNotify(
 }
 
 describe('notify-hook cross-worktree heartbeat resolution', () => {
-  it('writes heartbeat under OMX_TEAM_STATE_ROOT even when payload cwd is a different worktree', async () => {
+  it('writes heartbeat under OMK_TEAM_STATE_ROOT even when payload cwd is a different worktree', async () => {
     await withTempDir(async (root) => {
       const leaderCwd = join(root, 'leader');
       const workerCwd = join(root, 'worker-worktree');
       const teamName = 'cross-root';
       const workerName = 'worker-1';
 
-      const leaderWorkerDir = join(leaderCwd, '.omx', 'state', 'team', teamName, 'workers', workerName);
+      const leaderWorkerDir = join(leaderCwd, '.omk', 'state', 'team', teamName, 'workers', workerName);
       await mkdir(leaderWorkerDir, { recursive: true });
       await mkdir(workerCwd, { recursive: true });
 
       const result = runWorkerNotify(workerCwd, `${teamName}/${workerName}`, {
-        OMX_TEAM_STATE_ROOT: join(leaderCwd, '.omx', 'state'),
+        OMK_TEAM_STATE_ROOT: join(leaderCwd, '.omk', 'state'),
       });
       assert.equal(result.status, 0, `notify-hook failed: ${result.stderr || result.stdout}`);
 
@@ -72,18 +72,18 @@ describe('notify-hook cross-worktree heartbeat resolution', () => {
       const heartbeat = JSON.parse(await readFile(heartbeatPath, 'utf8')) as { turn_count?: number };
       assert.equal(heartbeat.turn_count, 1);
 
-      const wrongHeartbeatPath = join(workerCwd, '.omx', 'state', 'team', teamName, 'workers', workerName, 'heartbeat.json');
+      const wrongHeartbeatPath = join(workerCwd, '.omk', 'state', 'team', teamName, 'workers', workerName, 'heartbeat.json');
       assert.equal(existsSync(wrongHeartbeatPath), false, 'heartbeat should not be written under worker cwd state root');
     });
   });
 
-  it('falls back to worker identity/config metadata when OMX_TEAM_STATE_ROOT is absent', async () => {
+  it('falls back to worker identity/config metadata when OMK_TEAM_STATE_ROOT is absent', async () => {
     await withTempDir(async (root) => {
       const leaderCwd = join(root, 'leader');
       const workerCwd = join(root, 'worker-worktree');
       const teamName = 'cross-meta';
       const workerName = 'worker-1';
-      const teamStateRoot = join(leaderCwd, '.omx', 'state');
+      const teamStateRoot = join(leaderCwd, '.omk', 'state');
 
       const teamRoot = join(teamStateRoot, 'team', teamName);
       const leaderWorkerDir = join(teamRoot, 'workers', workerName);
@@ -112,7 +112,7 @@ describe('notify-hook cross-worktree heartbeat resolution', () => {
       );
 
       const result = runWorkerNotify(workerCwd, `${teamName}/${workerName}`, {
-        OMX_TEAM_LEADER_CWD: leaderCwd,
+        OMK_TEAM_LEADER_CWD: leaderCwd,
       });
       assert.equal(result.status, 0, `notify-hook failed: ${result.stderr || result.stdout}`);
 

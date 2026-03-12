@@ -12,14 +12,14 @@ This guide covers two supported setup paths:
 export HOOKS_TOKEN="your-openclaw-hooks-token"
 
 # Required for OpenClaw dispatch pipeline
-export OMX_OPENCLAW=1
+export OMK_OPENCLAW=1
 
 # Required in addition for command gateways
-export OMX_OPENCLAW_COMMAND=1
+export OMK_OPENCLAW_COMMAND=1
 
 # Optional global default for command gateway timeout (ms)
 # Precedence: gateway timeout > env override > 5000 default
-export OMX_OPENCLAW_COMMAND_TIMEOUT_MS=120000
+export OMK_OPENCLAW_COMMAND_TIMEOUT_MS=120000
 ```
 
 ## Prompt tuning guide (concise + context-aware)
@@ -111,7 +111,7 @@ Use this profile when you want detailed but quickly scannable notifications:
 ### Quick update command (jq)
 
 ```bash
-CONFIG_FILE="$HOME/.codex/.omx-config.json"
+CONFIG_FILE="$HOME/.codex/.omk-config.json"
 
 jq '.notifications.verbosity = "verbose" |
     .notifications.openclaw.hooks["session-start"].instruction = "[session-start|exec]\\nproject={{projectName}} session={{sessionId}} tmux={{tmuxSession}}\\n요약: 시작 맥락 1문장\\n우선순위: 지금 할 일 1~2개\\n주의사항: 리스크/의존성(없으면 없음)" |
@@ -128,7 +128,7 @@ When both explicit OpenClaw config and generic aliases are present:
 
 1. `notifications.openclaw` wins
 2. `custom_webhook_command` / `custom_cli_command` are ignored
-3. OMX emits a warning for clarity
+3. OMK emits a warning for clarity
 
 This keeps behavior deterministic and backward compatible.
 
@@ -153,12 +153,12 @@ This keeps behavior deterministic and backward compatible.
         "session-end": {
           "enabled": true,
           "gateway": "local",
-          "instruction": "OMX task completed for {{projectPath}}"
+          "instruction": "OMK task completed for {{projectPath}}"
         },
         "ask-user-question": {
           "enabled": true,
           "gateway": "local",
-          "instruction": "OMX needs input: {{question}}"
+          "instruction": "OMK needs input: {{question}}"
         }
       }
     }
@@ -180,34 +180,34 @@ This keeps behavior deterministic and backward compatible.
         "Authorization": "Bearer ${HOOKS_TOKEN}"
       },
       "events": ["session-end", "ask-user-question"],
-      "instruction": "OMX event {{event}} for {{projectPath}}"
+      "instruction": "OMK event {{event}} for {{projectPath}}"
     },
     "custom_cli_command": {
       "enabled": true,
       "command": "~/.local/bin/my-notifier --event {{event}} --text {{instruction}}",
       "events": ["session-end"],
-      "instruction": "OMX event {{event}} for {{projectPath}}"
+      "instruction": "OMK event {{event}} for {{projectPath}}"
     }
   }
 }
 ```
 
-These aliases are normalized by OMX into internal OpenClaw gateway mappings.
+These aliases are normalized by OMK into internal OpenClaw gateway mappings.
 
 ## Option C: Clawdbot agent-command workflow (recommended for dev)
 
-Use this when you want OMX hook events to trigger **agent turns** (not plain
+Use this when you want OMK hook events to trigger **agent turns** (not plain
 message/webhook forwarding), e.g. for `#omc-dev`.
 
 > Shell safety: template variables (for example `{{instruction}}`) are interpolated into the
 > command string. Keep templates simple and avoid shell metacharacters in user-derived content.
 > For troubleshooting, temporarily remove output redirection and inspect command output.
 >
-> Command gateway timeout precedence: `gateways.<name>.timeout` > `OMX_OPENCLAW_COMMAND_TIMEOUT_MS` > `5000`.
+> Command gateway timeout precedence: `gateways.<name>.timeout` > `OMK_OPENCLAW_COMMAND_TIMEOUT_MS` > `5000`.
 > For `clawdbot agent` workflows, use `120000` (2 minutes) to avoid premature timeout.
 >
 > **Production best practices:**
-> - Use `|| true` at the end of the command to prevent OMX hook failures from blocking sessions
+> - Use `|| true` at the end of the command to prevent OMK hook failures from blocking sessions
 > - Use `.jsonl` extension with append (`>>`) for structured log aggregation
 > - Use `--reply-to 'channel:CHANNEL_ID'` format for reliable Discord delivery (preferred over aliases)
 
@@ -230,7 +230,7 @@ For Korean-first tmux follow-up operations in `#omc-dev`, see the dev guide sect
       "gateways": {
         "local": {
           "type": "command",
-          "command": "(clawdbot agent --session-id omx-hooks --message {{instruction}} --thinking minimal --deliver --reply-channel discord --reply-to 'channel:1468539002985644084' --timeout 120 --json >>/tmp/omx-openclaw-agent.jsonl 2>&1 || true)",
+          "command": "(clawdbot agent --session-id omk-hooks --message {{instruction}} --thinking minimal --deliver --reply-channel discord --reply-to 'channel:1468539002985644084' --timeout 120 --json >>/tmp/omk-openclaw-agent.jsonl 2>&1 || true)",
           "timeout": 120000
         }
       },
@@ -282,13 +282,13 @@ Use this profile when `#omc-dev` should receive OpenClaw notifications as
 Example instruction style:
 
 ```text
-OMX 훅={{event}} 프로젝트={{projectName}} 세션={{sessionId}}.
+OMK 훅={{event}} 프로젝트={{projectName}} 세션={{sessionId}}.
 반드시 한국어로 응답하세요.
-OMX tmux 세션: {{tmuxSession}}.
+OMK tmux 세션: {{tmuxSession}}.
 SOUL.md 및 #omc-dev 맥락을 참고해 필요한 후속 액션이 있으면 즉시 안내하세요.
 ```
 
-### 2) Track which OMX tmux session emitted the hook
+### 2) Track which OMK tmux session emitted the hook
 
 - Include both `{{sessionId}}` and `{{tmuxSession}}` in every hook message.
 - If `{{tmuxSession}}` is present, use that as the primary follow-up target.
@@ -297,7 +297,7 @@ SOUL.md 및 #omc-dev 맥락을 참고해 필요한 후속 액션이 있으면 �
 Quick checks:
 
 ```bash
-tmux ls | grep '^omx-' || true
+tmux ls | grep '^omk-' || true
 tmux list-panes -a -F '#{session_name}\t#{pane_id}\t#{pane_current_path}' | grep "$(basename "$PWD")" || true
 ```
 
@@ -314,14 +314,14 @@ Troubleshooting commands:
 
 ```bash
 # Inspect structured JSONL logs
-tail -n 120 /tmp/omx-openclaw-agent.jsonl | jq -s '.[] | {timestamp: (.timestamp // .time), status: (.status // .error // "ok")}'
+tail -n 120 /tmp/omk-openclaw-agent.jsonl | jq -s '.[] | {timestamp: (.timestamp // .time), status: (.status // .error // "ok")}'
 
 # Search for errors in logs
-rg '"error"|"failed"|"timeout"' /tmp/omx-openclaw-agent.jsonl | tail -20
+rg '"error"|"failed"|"timeout"' /tmp/omk-openclaw-agent.jsonl | tail -20
 
 # Manual retry with production-tested settings
-clawdbot agent --session-id omx-hooks \
-  --message "OMX hook retry 점검: session={{sessionId}} tmux={{tmuxSession}}" \
+clawdbot agent --session-id omk-hooks \
+  --message "OMK hook retry 점검: session={{sessionId}} tmux={{tmuxSession}}" \
   --thinking minimal --deliver --reply-channel discord --reply-to 'channel:1468539002985644084' \
   --timeout 120 --json
 ```
@@ -334,7 +334,7 @@ clawdbot agent --session-id omx-hooks \
 curl -sS -X POST http://127.0.0.1:18789/hooks/wake \
   -H "Authorization: Bearer ${HOOKS_TOKEN}" \
   -H "Content-Type: application/json" \
-  -d '{"text":"OMX wake smoke test","mode":"now"}'
+  -d '{"text":"OMK wake smoke test","mode":"now"}'
 ```
 
 Expected pass signal: JSON includes `"ok":true`.
@@ -342,11 +342,11 @@ Expected pass signal: JSON includes `"ok":true`.
 ### B) Delivery verification (`/hooks/agent`)
 
 ```bash
-curl -sS -o /tmp/omx-openclaw-agent-check.json -w "HTTP %{http_code}\n" \
+curl -sS -o /tmp/omk-openclaw-agent-check.json -w "HTTP %{http_code}\n" \
   -X POST http://127.0.0.1:18789/hooks/agent \
   -H "Authorization: Bearer ${HOOKS_TOKEN}" \
   -H "Content-Type: application/json" \
-  -d '{"message":"OMX delivery verification","instruction":"OMX delivery verification","event":"session-end","sessionId":"manual-check"}'
+  -d '{"message":"OMK delivery verification","instruction":"OMK delivery verification","event":"session-end","sessionId":"manual-check"}'
 ```
 
 Expected pass signal: HTTP 2xx + accepted response body.
@@ -361,8 +361,8 @@ test -n "$HOOKS_TOKEN" && echo "token ok" || echo "token missing"
 curl -sS -o /dev/null -w "HTTP %{http_code}\n" http://127.0.0.1:18789 || echo "gateway unreachable"
 
 # gate checks
-test "$OMX_OPENCLAW" = "1" && echo "OMX_OPENCLAW=1" || echo "missing OMX_OPENCLAW=1"
-test "$OMX_OPENCLAW_COMMAND" = "1" && echo "OMX_OPENCLAW_COMMAND=1" || echo "missing OMX_OPENCLAW_COMMAND=1"
+test "$OMK_OPENCLAW" = "1" && echo "OMK_OPENCLAW=1" || echo "missing OMK_OPENCLAW=1"
+test "$OMK_OPENCLAW_COMMAND" = "1" && echo "OMK_OPENCLAW_COMMAND=1" || echo "missing OMK_OPENCLAW_COMMAND=1"
 ```
 
 ## Pass/Fail Diagnostics
@@ -371,8 +371,8 @@ test "$OMX_OPENCLAW_COMMAND" = "1" && echo "OMX_OPENCLAW_COMMAND=1" || echo "mis
 - **404**: wrong path; verify `/hooks/agent` and `/hooks/wake`.
 - **5xx**: gateway runtime issue; inspect logs.
 - **Timeout/connection refused**: host/port/firewall issue.
-- **Command gateway disabled**: set both `OMX_OPENCLAW=1` and `OMX_OPENCLAW_COMMAND=1`.
-- **Command killed by `SIGTERM`**: increase `gateways.<name>.timeout` (recommend `120000` for clawdbot agent) or set `OMX_OPENCLAW_COMMAND_TIMEOUT_MS`.
-- **Hook failures blocking sessions**: ensure command ends with `|| true` to prevent OMX from waiting on clawdbot failures.
+- **Command gateway disabled**: set both `OMK_OPENCLAW=1` and `OMK_OPENCLAW_COMMAND=1`.
+- **Command killed by `SIGTERM`**: increase `gateways.<name>.timeout` (recommend `120000` for clawdbot agent) or set `OMK_OPENCLAW_COMMAND_TIMEOUT_MS`.
+- **Hook failures blocking sessions**: ensure command ends with `|| true` to prevent OMK from waiting on clawdbot failures.
 - **Missing logs**: use `.jsonl` extension with append (`>>`) for persistent structured logging.
 - **Discord delivery failures**: use `--reply-to 'channel:CHANNEL_ID'` format instead of channel aliases.

@@ -98,7 +98,7 @@ Output progress each cycle:
 
 ## State Tracking
 
-Use `omx_state` MCP tools for UltraQA lifecycle state.
+Use `omk_state` MCP tools for UltraQA lifecycle state.
 
 - **On start**:
   `state_write({mode: "ultraqa", active: true, current_phase: "qa", iteration: 1, started_at: "<now>"})`

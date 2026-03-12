@@ -190,8 +190,8 @@ describe('resolveNotifyTempContract', () => {
     assert.equal(parsed.contract.warnings.length >= 1, true);
   });
 
-  it('activates from OMX_NOTIFY_TEMP=1 env parity', () => {
-    const parsed = resolveNotifyTempContract(['--model', 'gpt-5'], { OMX_NOTIFY_TEMP: '1' });
+  it('activates from OMK_NOTIFY_TEMP=1 env parity', () => {
+    const parsed = resolveNotifyTempContract(['--model', 'gpt-5'], { OMK_NOTIFY_TEMP: '1' });
     assert.equal(parsed.contract.active, true);
     assert.equal(parsed.contract.source, 'env');
     assert.deepEqual(parsed.passthroughArgs, ['--model', 'gpt-5']);
@@ -251,10 +251,10 @@ describe('resolveWorkerSparkModel', () => {
   });
 
   it('reads low-complexity team model from config when codexHomeOverride is provided', async () => {
-    const codexHome = await mkdtemp(join(tmpdir(), 'omx-codex-home-'));
+    const codexHome = await mkdtemp(join(tmpdir(), 'omk-codex-home-'));
     try {
       await writeFile(
-        join(codexHome, '.omx-config.json'),
+        join(codexHome, '.omk-config.json'),
         JSON.stringify({ models: { team_low_complexity: 'gpt-4.1-mini' } }),
       );
       assert.equal(resolveWorkerSparkModel(['--spark'], codexHome), 'gpt-4.1-mini');
@@ -396,10 +396,10 @@ describe('resolveSetupScopeArg', () => {
 
 describe('project launch scope helpers', () => {
   it('reads persisted setup scope when valid', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-launch-scope-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-launch-scope-'));
     try {
-      await mkdir(join(wd, '.omx'), { recursive: true });
-      await writeFile(join(wd, '.omx', 'setup-scope.json'), JSON.stringify({ scope: 'project' }));
+      await mkdir(join(wd, '.omk'), { recursive: true });
+      await writeFile(join(wd, '.omk', 'setup-scope.json'), JSON.stringify({ scope: 'project' }));
       assert.equal(readPersistedSetupScope(wd), 'project');
     } finally {
       await rm(wd, { recursive: true, force: true });
@@ -407,10 +407,10 @@ describe('project launch scope helpers', () => {
   });
 
   it('ignores malformed persisted setup scope', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-launch-scope-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-launch-scope-'));
     try {
-      await mkdir(join(wd, '.omx'), { recursive: true });
-      await writeFile(join(wd, '.omx', 'setup-scope.json'), '{not-json');
+      await mkdir(join(wd, '.omk'), { recursive: true });
+      await writeFile(join(wd, '.omk', 'setup-scope.json'), '{not-json');
       assert.equal(readPersistedSetupScope(wd), undefined);
     } finally {
       await rm(wd, { recursive: true, force: true });
@@ -418,10 +418,10 @@ describe('project launch scope helpers', () => {
   });
 
   it('uses project CODEX_HOME when persisted scope is project', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-launch-scope-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-launch-scope-'));
     try {
-      await mkdir(join(wd, '.omx'), { recursive: true });
-      await writeFile(join(wd, '.omx', 'setup-scope.json'), JSON.stringify({ scope: 'project' }));
+      await mkdir(join(wd, '.omk'), { recursive: true });
+      await writeFile(join(wd, '.omk', 'setup-scope.json'), JSON.stringify({ scope: 'project' }));
       assert.equal(resolveCodexHomeForLaunch(wd, {}), join(wd, '.codex'));
     } finally {
       await rm(wd, { recursive: true, force: true });
@@ -429,10 +429,10 @@ describe('project launch scope helpers', () => {
   });
 
   it('keeps explicit CODEX_HOME override from env', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-launch-scope-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-launch-scope-'));
     try {
-      await mkdir(join(wd, '.omx'), { recursive: true });
-      await writeFile(join(wd, '.omx', 'setup-scope.json'), JSON.stringify({ scope: 'project' }));
+      await mkdir(join(wd, '.omk'), { recursive: true });
+      await writeFile(join(wd, '.omk', 'setup-scope.json'), JSON.stringify({ scope: 'project' }));
       assert.equal(resolveCodexHomeForLaunch(wd, { CODEX_HOME: '/tmp/explicit-codex-home' }), '/tmp/explicit-codex-home');
     } finally {
       await rm(wd, { recursive: true, force: true });
@@ -440,10 +440,10 @@ describe('project launch scope helpers', () => {
   });
 
   it('migrates legacy "project-local" persisted scope to "project"', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-launch-scope-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-launch-scope-'));
     try {
-      await mkdir(join(wd, '.omx'), { recursive: true });
-      await writeFile(join(wd, '.omx', 'setup-scope.json'), JSON.stringify({ scope: 'project-local' }));
+      await mkdir(join(wd, '.omk'), { recursive: true });
+      await writeFile(join(wd, '.omk', 'setup-scope.json'), JSON.stringify({ scope: 'project-local' }));
       assert.equal(readPersistedSetupScope(wd), 'project');
     } finally {
       await rm(wd, { recursive: true, force: true });
@@ -451,10 +451,10 @@ describe('project launch scope helpers', () => {
   });
 
   it('resolves CODEX_HOME for legacy "project-local" persisted scope', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-launch-scope-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-launch-scope-'));
     try {
-      await mkdir(join(wd, '.omx'), { recursive: true });
-      await writeFile(join(wd, '.omx', 'setup-scope.json'), JSON.stringify({ scope: 'project-local' }));
+      await mkdir(join(wd, '.omk'), { recursive: true });
+      await writeFile(join(wd, '.omk', 'setup-scope.json'), JSON.stringify({ scope: 'project-local' }));
       assert.equal(resolveCodexHomeForLaunch(wd, {}), join(wd, '.codex'));
     } finally {
       await rm(wd, { recursive: true, force: true });
@@ -501,8 +501,8 @@ describe('tmux HUD pane helpers', () => {
     const panes = parseTmuxPaneSnapshot(
       [
         '%1\tzsh\tzsh',
-        '%2\tnode\tnode /tmp/bin/omx.js hud --watch',
-        '%3\tnode\tnode /tmp/bin/omx.js hud --watch',
+        '%2\tnode\tnode /tmp/bin/omk.js hud --watch',
+        '%3\tnode\tnode /tmp/bin/omk.js hud --watch',
         '%4\tcodex\tcodex --model gpt-5',
       ].join('\n')
     );
@@ -531,29 +531,29 @@ describe('tmux HUD pane helpers', () => {
 describe('detached tmux new-session sequencing', () => {
   it('buildDetachedSessionBootstrapSteps uses shared HUD height and split-capture ordering', () => {
     const steps = buildDetachedSessionBootstrapSteps(
-      'omx-demo',
+      'omk-demo',
       '/tmp/project',
       "'codex' '--model' 'gpt-5'",
-      "'node' '/tmp/omx.js' 'hud' '--watch'",
+      "'node' '/tmp/omk.js' 'hud' '--watch'",
       '--model gpt-5',
       '/tmp/codex-home',
       '{"active":true}',
     );
     assert.deepEqual(steps.map((step) => step.name), ['new-session', 'split-and-capture-hud-pane']);
     assert.equal(steps[1]?.args[3], String(HUD_TMUX_HEIGHT_LINES));
-    assert.equal(steps[1]?.args[6], 'omx-demo');
+    assert.equal(steps[1]?.args[6], 'omk-demo');
     assert.equal(steps[1]?.args.includes('-P'), true);
     assert.equal(steps[1]?.args.includes('#{pane_id}'), true);
     assert.equal(steps[0]?.args.includes('-e'), true);
-    assert.equal(steps[0]?.args.includes('OMX_NOTIFY_TEMP_CONTRACT={\"active\":true}'), true);
+    assert.equal(steps[0]?.args.includes('OMK_NOTIFY_TEMP_CONTRACT={\"active\":true}'), true);
   });
 
   it('buildDetachedSessionBootstrapSteps forwards temp contract env to detached tmux session', () => {
     const steps = buildDetachedSessionBootstrapSteps(
-      'omx-demo',
+      'omk-demo',
       '/tmp/project',
       "'codex' '--model' 'gpt-5'",
-      "'node' '/tmp/omx.js' 'hud' '--watch'",
+      "'node' '/tmp/omk.js' 'hud' '--watch'",
       null,
       undefined,
       '{"active":true,"canonicalSelectors":["discord"]}',
@@ -562,17 +562,17 @@ describe('detached tmux new-session sequencing', () => {
     assert.ok(newSession);
     assert.equal(
       newSession!.args.includes('-e')
-      && newSession!.args.some((arg) => arg.startsWith('OMX_NOTIFY_TEMP_CONTRACT=')),
+      && newSession!.args.some((arg) => arg.startsWith('OMK_NOTIFY_TEMP_CONTRACT=')),
       true,
     );
   });
 
   it('buildDetachedSessionBootstrapSteps starts native Windows detached sessions with powershell', () => {
     const steps = buildDetachedSessionBootstrapSteps(
-      'omx-demo',
+      'omk-demo',
       'C:/project',
       "'codex' '--dangerously-bypass-approvals-and-sandbox'",
-      "'node' 'omx.js' 'hud' '--watch'",
+      "'node' 'omk.js' 'hud' '--watch'",
       '--model gpt-5',
       'C:/codex-home',
       null,
@@ -583,7 +583,7 @@ describe('detached tmux new-session sequencing', () => {
   });
 
   it('buildDetachedSessionFinalizeSteps keeps schedule after split-capture and before attach', () => {
-    const steps = buildDetachedSessionFinalizeSteps('omx-demo', '%12', '3', true, false);
+    const steps = buildDetachedSessionFinalizeSteps('omk-demo', '%12', '3', true, false);
     const names = steps.map((step) => step.name);
     const attachedIndex = names.indexOf('register-client-attached-reconcile');
     const scheduleIndex = names.indexOf('schedule-delayed-resize');
@@ -597,7 +597,7 @@ describe('detached tmux new-session sequencing', () => {
   });
 
   it('buildDetachedSessionFinalizeSteps uses quiet best-effort tmux resize commands', () => {
-    const steps = buildDetachedSessionFinalizeSteps('omx-demo', '%12', '3', false, false);
+    const steps = buildDetachedSessionFinalizeSteps('omk-demo', '%12', '3', false, false);
     const registerHook = steps.find((step) => step.name === 'register-resize-hook');
     const schedule = steps.find((step) => step.name === 'schedule-delayed-resize');
     const reconcile = steps.find((step) => step.name === 'reconcile-hud-resize');
@@ -611,7 +611,7 @@ describe('detached tmux new-session sequencing', () => {
   });
 
   it('buildDetachedSessionFinalizeSteps skips detached resize hooks on native Windows', () => {
-    const steps = buildDetachedSessionFinalizeSteps('omx-demo', '%12', '3', true, false, true);
+    const steps = buildDetachedSessionFinalizeSteps('omk-demo', '%12', '3', true, false, true);
     assert.deepEqual(
       steps.map((step) => step.name),
       ['set-mouse', 'attach-session'],
@@ -620,10 +620,10 @@ describe('detached tmux new-session sequencing', () => {
 
   it('buildDetachedSessionRollbackSteps unregisters hooks before killing session', () => {
     const steps = buildDetachedSessionRollbackSteps(
-      'omx-demo',
-      'omx-demo:0',
-      'omx_resize_launch_demo_0_12',
-      'omx_attached_launch_demo_0_12',
+      'omk-demo',
+      'omk-demo:0',
+      'omk_resize_launch_demo_0_12',
+      'omk_attached_launch_demo_0_12',
     );
     assert.deepEqual(
       steps.map((step) => step.name),
@@ -632,14 +632,14 @@ describe('detached tmux new-session sequencing', () => {
     assert.equal(steps[0]?.args[0], 'set-hook');
     assert.equal(steps[0]?.args[1], '-u');
     assert.equal(steps[0]?.args[2], '-t');
-    assert.equal(steps[0]?.args[3], 'omx-demo:0');
+    assert.equal(steps[0]?.args[3], 'omk-demo:0');
     assert.match(steps[0]?.args[4] ?? '', /^client-attached\[\d+\]$/);
     assert.match(steps[1]?.args[4] ?? '', /^client-resized\[\d+\]$/);
-    assert.deepEqual(steps[2]?.args, ['kill-session', '-t', 'omx-demo']);
+    assert.deepEqual(steps[2]?.args, ['kill-session', '-t', 'omk-demo']);
   });
 
   it('buildDetachedSessionRollbackSteps only kills session when no hook metadata exists', () => {
-    const steps = buildDetachedSessionRollbackSteps('omx-demo', null, null, null);
+    const steps = buildDetachedSessionRollbackSteps('omk-demo', null, null, null);
     assert.deepEqual(steps.map((step) => step.name), ['kill-session']);
   });
 });
@@ -692,25 +692,25 @@ describe('buildWindowsPromptCommand', () => {
 
 describe('buildTmuxSessionName', () => {
   it('uses detached fallback quietly outside git repos', () => {
-    const name = buildTmuxSessionName('/tmp/My Repo', 'omx-1770992424158-abc123');
-    assert.equal(name, 'omx-my-repo-detached-1770992424158-abc123');
+    const name = buildTmuxSessionName('/tmp/My Repo', 'omk-1770992424158-abc123');
+    assert.equal(name, 'omk-my-repo-detached-1770992424158-abc123');
   });
 
   it('sanitizes invalid characters', () => {
-    const name = buildTmuxSessionName('/tmp/@#$', 'omx-+++');
-    assert.match(name, /^omx-(unknown|[a-z0-9-]+)-[a-z0-9-]+-(unknown|[a-z0-9-]+)$/);
+    const name = buildTmuxSessionName('/tmp/@#$', 'omk-+++');
+    assert.match(name, /^omk-(unknown|[a-z0-9-]+)-[a-z0-9-]+-(unknown|[a-z0-9-]+)$/);
     assert.equal(name.includes('_'), false);
     assert.equal(name.includes(' '), false);
   });
 
-  it('includes repo name when cwd is inside .omx-worktrees', () => {
-    const name = buildTmuxSessionName('/home/user/my-repo.omx-worktrees/launch-feature-x', 'omx-123-abc');
-    assert.match(name, /^omx-my-repo-launch-feature-x-/);
+  it('includes repo name when cwd is inside .omk-worktrees', () => {
+    const name = buildTmuxSessionName('/home/user/my-repo.omk-worktrees/launch-feature-x', 'omk-123-abc');
+    assert.match(name, /^omk-my-repo-launch-feature-x-/);
   });
 
   it('includes repo name for detached worktree paths', () => {
-    const name = buildTmuxSessionName('/projects/cool-project.omx-worktrees/launch-detached', 'omx-456-def');
-    assert.match(name, /^omx-cool-project-launch-detached-/);
+    const name = buildTmuxSessionName('/projects/cool-project.omk-worktrees/launch-detached', 'omk-456-def');
+    assert.match(name, /^omk-cool-project-launch-detached-/);
   });
 });
 
@@ -830,7 +830,7 @@ describe('injectModelInstructionsBypassArgs', () => {
     const args = injectModelInstructionsBypassArgs(
       '/tmp/my-project',
       ['--model', 'gpt-5'],
-      { OMX_BYPASS_DEFAULT_SYSTEM_PROMPT: '0' }
+      { OMK_BYPASS_DEFAULT_SYSTEM_PROMPT: '0' }
     );
     assert.deepEqual(args, ['--model', 'gpt-5']);
   });
@@ -844,11 +844,11 @@ describe('injectModelInstructionsBypassArgs', () => {
     assert.deepEqual(args, ['-c', 'model_instructions_file="/tmp/custom.md"']);
   });
 
-  it('respects OMX_MODEL_INSTRUCTIONS_FILE env override', () => {
+  it('respects OMK_MODEL_INSTRUCTIONS_FILE env override', () => {
     const args = injectModelInstructionsBypassArgs(
       '/tmp/my-project',
       [],
-      { OMX_MODEL_INSTRUCTIONS_FILE: '/tmp/alt instructions.md' }
+      { OMK_MODEL_INSTRUCTIONS_FILE: '/tmp/alt instructions.md' }
     );
     assert.deepEqual(
       args,
@@ -861,11 +861,11 @@ describe('injectModelInstructionsBypassArgs', () => {
       '/tmp/my-project',
       ['--model', 'gpt-5'],
       {},
-      '/tmp/my-project/.omx/state/sessions/session-1/AGENTS.md'
+      '/tmp/my-project/.omk/state/sessions/session-1/AGENTS.md'
     );
     assert.deepEqual(
       args,
-      ['--model', 'gpt-5', '-c', 'model_instructions_file="/tmp/my-project/.omx/state/sessions/session-1/AGENTS.md"']
+      ['--model', 'gpt-5', '-c', 'model_instructions_file="/tmp/my-project/.omk/state/sessions/session-1/AGENTS.md"']
     );
   });
 });

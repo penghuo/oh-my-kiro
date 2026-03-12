@@ -9,59 +9,59 @@ All notable changes to this project are documented in this file.
 19 non-merge commits from `main..dev`. Contributors: [@Yeachan-Heo](https://github.com/Yeachan-Heo), [@HaD0Yun](https://github.com/HaD0Yun), [@gobylor](https://github.com/gobylor).
 
 ### Added
-- **Top-level `omx resume` command** — added `omx resume` passthrough so OMX mirrors `codex resume`, with CLI/help/docs coverage. (PR [#752](https://github.com/Yeachan-Heo/oh-my-codex/pull/752) — @gobylor)
-- **Team allocation and conservative rebalance policy seams** — team startup assignment is now lane-aware, and runtime monitoring can safely reassign reclaimed pending work to eligible idle workers without rewriting the claim model. (PR [#761](https://github.com/Yeachan-Heo/oh-my-codex/pull/761) — @HaD0Yun)
+- **Top-level `omk resume` command** — added `omk resume` passthrough so OMK mirrors `codex resume`, with CLI/help/docs coverage. (PR [#752](https://github.com/penghuo/oh-my-kiro/pull/752) — @gobylor)
+- **Team allocation and conservative rebalance policy seams** — team startup assignment is now lane-aware, and runtime monitoring can safely reassign reclaimed pending work to eligible idle workers without rewriting the claim model. (PR [#761](https://github.com/penghuo/oh-my-kiro/pull/761) — @HaD0Yun)
 
 ### Changed
-- **Team policy manifest boundaries are clearer** — persisted transport/runtime policy is now separated from lifecycle governance so nested-team checks, approval/delegation gates, and shutdown cleanup rules come from the authoritative runtime side. (PR [#753](https://github.com/Yeachan-Heo/oh-my-codex/pull/753), issue [#746](https://github.com/Yeachan-Heo/oh-my-codex/issues/746))
-- **Shared tmux stall heuristics now drive both hook and runtime paths** — common stall/bootstrap/ready/active-task detection moved into a shared engine reused by notify-hook dispatch/guard logic and the team tmux session runtime. (PR [#758](https://github.com/Yeachan-Heo/oh-my-codex/pull/758), issue [#732](https://github.com/Yeachan-Heo/oh-my-codex/issues/732))
-- **Team-mode docs and guidance were refreshed** — README copy now positions OMX more clearly around Team Mode, and the root guidance wording was tightened for direct execution and evidence-backed verification. (PR [#765](https://github.com/Yeachan-Heo/oh-my-codex/pull/765), commit [`5ced66d`](https://github.com/Yeachan-Heo/oh-my-codex/commit/5ced66db873b2cf729f66075062df3c2a8599357))
+- **Team policy manifest boundaries are clearer** — persisted transport/runtime policy is now separated from lifecycle governance so nested-team checks, approval/delegation gates, and shutdown cleanup rules come from the authoritative runtime side. (PR [#753](https://github.com/penghuo/oh-my-kiro/pull/753), issue [#746](https://github.com/penghuo/oh-my-kiro/issues/746))
+- **Shared tmux stall heuristics now drive both hook and runtime paths** — common stall/bootstrap/ready/active-task detection moved into a shared engine reused by notify-hook dispatch/guard logic and the team tmux session runtime. (PR [#758](https://github.com/penghuo/oh-my-kiro/pull/758), issue [#732](https://github.com/penghuo/oh-my-kiro/issues/732))
+- **Team-mode docs and guidance were refreshed** — README copy now positions OMK more clearly around Team Mode, and the root guidance wording was tightened for direct execution and evidence-backed verification. (PR [#765](https://github.com/penghuo/oh-my-kiro/pull/765), commit [`5ced66d`](https://github.com/penghuo/oh-my-kiro/commit/5ced66db873b2cf729f66075062df3c2a8599357))
 
 ### Fixed
-- **Fallback team delivery and stale-alert latency** — faster fallback watcher cadence, leader nudge evaluation on fallback ticks, and a larger default dispatch ack budget reduce lag in team message delivery and stale alerts. (PR [#739](https://github.com/Yeachan-Heo/oh-my-codex/pull/739), issue [#738](https://github.com/Yeachan-Heo/oh-my-codex/issues/738))
-- **Invalid Codex TOML detection in `omx doctor`** — doctor now flags malformed `~/.codex/config.toml` with a clearer duplicate-table hint. (PR [#740](https://github.com/Yeachan-Heo/oh-my-codex/pull/740), related issue [#486](https://github.com/Yeachan-Heo/oh-my-codex/issues/486))
-- **Linked Team Ralph lifecycle synchronization** — `omx team ralph` now establishes linked Ralph state on launch, propagates linked terminal cancellation directly from runtime transitions, and keeps continue-steer alive when the launcher parent exits while Ralph work is still active. (PR [#749](https://github.com/Yeachan-Heo/oh-my-codex/pull/749), issue [#742](https://github.com/Yeachan-Heo/oh-my-codex/issues/742); PR [#750](https://github.com/Yeachan-Heo/oh-my-codex/pull/750), issue [#743](https://github.com/Yeachan-Heo/oh-my-codex/issues/743); PR [#751](https://github.com/Yeachan-Heo/oh-my-codex/pull/751))
-- **Team worker and leader nudges are more actionable** — auto-nudge follow-up phrases are detected more reliably, leader nudges now derive next actions from live team state, mailbox guidance is more explicit, and stale “keep polling” wording was replaced with orchestration guidance. (PR [#754](https://github.com/Yeachan-Heo/oh-my-codex/pull/754); PR [#759](https://github.com/Yeachan-Heo/oh-my-codex/pull/759), issue [#759](https://github.com/Yeachan-Heo/oh-my-codex/issues/759); PR [#763](https://github.com/Yeachan-Heo/oh-my-codex/pull/763); PR [#766](https://github.com/Yeachan-Heo/oh-my-codex/pull/766))
-- **HUD cleanup during team shutdown** — interactive shutdown now tears down the HUD pane cleanly to avoid stale panes across rapid relaunch cycles. (PR [#764](https://github.com/Yeachan-Heo/oh-my-codex/pull/764), issue [#764](https://github.com/Yeachan-Heo/oh-my-codex/issues/764))
-- **CLI startup no longer eagerly loads `doctor`** — the `doctor` command is now lazy-loaded so unrelated CLI invocations avoid unnecessary work. (commit [`2503d95`](https://github.com/Yeachan-Heo/oh-my-codex/commit/2503d9528d175a032bbc247f61137c5daf547923))
+- **Fallback team delivery and stale-alert latency** — faster fallback watcher cadence, leader nudge evaluation on fallback ticks, and a larger default dispatch ack budget reduce lag in team message delivery and stale alerts. (PR [#739](https://github.com/penghuo/oh-my-kiro/pull/739), issue [#738](https://github.com/penghuo/oh-my-kiro/issues/738))
+- **Invalid Codex TOML detection in `omk doctor`** — doctor now flags malformed `~/.codex/config.toml` with a clearer duplicate-table hint. (PR [#740](https://github.com/penghuo/oh-my-kiro/pull/740), related issue [#486](https://github.com/penghuo/oh-my-kiro/issues/486))
+- **Linked Team Ralph lifecycle synchronization** — `omk team ralph` now establishes linked Ralph state on launch, propagates linked terminal cancellation directly from runtime transitions, and keeps continue-steer alive when the launcher parent exits while Ralph work is still active. (PR [#749](https://github.com/penghuo/oh-my-kiro/pull/749), issue [#742](https://github.com/penghuo/oh-my-kiro/issues/742); PR [#750](https://github.com/penghuo/oh-my-kiro/pull/750), issue [#743](https://github.com/penghuo/oh-my-kiro/issues/743); PR [#751](https://github.com/penghuo/oh-my-kiro/pull/751))
+- **Team worker and leader nudges are more actionable** — auto-nudge follow-up phrases are detected more reliably, leader nudges now derive next actions from live team state, mailbox guidance is more explicit, and stale “keep polling” wording was replaced with orchestration guidance. (PR [#754](https://github.com/penghuo/oh-my-kiro/pull/754); PR [#759](https://github.com/penghuo/oh-my-kiro/pull/759), issue [#759](https://github.com/penghuo/oh-my-kiro/issues/759); PR [#763](https://github.com/penghuo/oh-my-kiro/pull/763); PR [#766](https://github.com/penghuo/oh-my-kiro/pull/766))
+- **HUD cleanup during team shutdown** — interactive shutdown now tears down the HUD pane cleanly to avoid stale panes across rapid relaunch cycles. (PR [#764](https://github.com/penghuo/oh-my-kiro/pull/764), issue [#764](https://github.com/penghuo/oh-my-kiro/issues/764))
+- **CLI startup no longer eagerly loads `doctor`** — the `doctor` command is now lazy-loaded so unrelated CLI invocations avoid unnecessary work. (commit [`2503d95`](https://github.com/penghuo/oh-my-kiro/commit/2503d9528d175a032bbc247f61137c5daf547923))
 
 ## [0.8.12] - 2026-03-11
 
 12 non-merge commits from `v0.8.11..dev`. Contributors: [@Yeachan-Heo](https://github.com/Yeachan-Heo), [@HaD0Yun](https://github.com/HaD0Yun), [@gobylor](https://github.com/gobylor).
 
 ### Added
-- **Team orchestrator brain and executor lane split** — team workflow now uses dedicated `team-orchestrator` and `team-executor` agent roles for clearer separation of planning and execution concerns. (PR [#715](https://github.com/Yeachan-Heo/oh-my-codex/pull/715))
-- **Session history search command** — `omx session-history search` (alias: `omx sh search`) enables full-text search across command history, prompts, and tool interactions with multi-field matching and interactive filtering. (PR [#724](https://github.com/Yeachan-Heo/oh-my-codex/pull/724))
-- **Team idle and stall read APIs** — `omx team api` now exposes `idle-read` and `stall-read` operations for programmatic monitoring of team worker states. (PR [#720](https://github.com/Yeachan-Heo/oh-my-codex/pull/720))
-- **Ralph periodic active continue steer** — Ralph mode now periodically prompts active agents to continue when progress has stalled, reducing idle wait times. (PR [#733](https://github.com/Yeachan-Heo/oh-my-codex/pull/733))
-- **Team leader status monitoring hints** — improved leader-side status hints for better visibility into team member progress and stalled states. (PR [#734](https://github.com/Yeachan-Heo/oh-my-codex/pull/734))
+- **Team orchestrator brain and executor lane split** — team workflow now uses dedicated `team-orchestrator` and `team-executor` agent roles for clearer separation of planning and execution concerns. (PR [#715](https://github.com/penghuo/oh-my-kiro/pull/715))
+- **Session history search command** — `omk session-history search` (alias: `omk sh search`) enables full-text search across command history, prompts, and tool interactions with multi-field matching and interactive filtering. (PR [#724](https://github.com/penghuo/oh-my-kiro/pull/724))
+- **Team idle and stall read APIs** — `omk team api` now exposes `idle-read` and `stall-read` operations for programmatic monitoring of team worker states. (PR [#720](https://github.com/penghuo/oh-my-kiro/pull/720))
+- **Ralph periodic active continue steer** — Ralph mode now periodically prompts active agents to continue when progress has stalled, reducing idle wait times. (PR [#733](https://github.com/penghuo/oh-my-kiro/pull/733))
+- **Team leader status monitoring hints** — improved leader-side status hints for better visibility into team member progress and stalled states. (PR [#734](https://github.com/penghuo/oh-my-kiro/pull/734))
 
 ### Changed
-- **Low-confidence analysis prompts stay single-lane** — team decomposition now keeps analysis prompts in a single lane when confidence is low, preventing fragmentation of uncertain work. (PR [#726](https://github.com/Yeachan-Heo/oh-my-codex/pull/726))
+- **Low-confidence analysis prompts stay single-lane** — team decomposition now keeps analysis prompts in a single lane when confidence is low, preventing fragmentation of uncertain work. (PR [#726](https://github.com/penghuo/oh-my-kiro/pull/726))
 
 ### Fixed
-- **Windows psmux detached launch stability** — resolved process detachment issues when launching team workers on Windows. (PR [#725](https://github.com/Yeachan-Heo/oh-my-codex/pull/725))
-- **Skip tmux bootstrap when tmux unavailable** — graceful fallback when tmux is not installed or not in PATH. (PR [#722](https://github.com/Yeachan-Heo/oh-my-codex/pull/722) — @gobylor)
-- **Stalled team leader nudge before stale gate** — team leaders now receive proactive nudges before hitting stale detection thresholds. (PR [#729](https://github.com/Yeachan-Heo/oh-my-codex/pull/729))
+- **Windows psmux detached launch stability** — resolved process detachment issues when launching team workers on Windows. (PR [#725](https://github.com/penghuo/oh-my-kiro/pull/725))
+- **Skip tmux bootstrap when tmux unavailable** — graceful fallback when tmux is not installed or not in PATH. (PR [#722](https://github.com/penghuo/oh-my-kiro/pull/722) — @gobylor)
+- **Stalled team leader nudge before stale gate** — team leaders now receive proactive nudges before hitting stale detection thresholds. (PR [#729](https://github.com/penghuo/oh-my-kiro/pull/729))
 
 ### Reverted
-- **Experimental Rust CLI parity harness** — commits #728 and #730 were reverted from dev to maintain TypeScript CLI stability. (PR [#736](https://github.com/Yeachan-Heo/oh-my-codex/pull/736))
+- **Experimental Rust CLI parity harness** — commits #728 and #730 were reverted from dev to maintain TypeScript CLI stability. (PR [#736](https://github.com/penghuo/oh-my-kiro/pull/736))
 
 ## [0.8.11] - 2026-03-10
 
 Generated from the latest merged `dev` runtime/model-default work and validated on `dev` before release.
 
 ### Added
-- **Additive team event-query APIs** — `omx team api` now exposes dedicated event-query operations so team runtime signals can be consumed more structurally. (PR [#714](https://github.com/Yeachan-Heo/oh-my-codex/pull/714))
-- **Explicit model-default contract** — runtime/docs/tests now align around the intended main/spark default model behavior (`gpt-5.4` / `gpt-5.3-codex-spark`). (PR [#718](https://github.com/Yeachan-Heo/oh-my-codex/pull/718))
+- **Additive team event-query APIs** — `omk team api` now exposes dedicated event-query operations so team runtime signals can be consumed more structurally. (PR [#714](https://github.com/penghuo/oh-my-kiro/pull/714))
+- **Explicit model-default contract** — runtime/docs/tests now align around the intended main/spark default model behavior (`gpt-5.4` / `gpt-5.3-codex-spark`). (PR [#718](https://github.com/penghuo/oh-my-kiro/pull/718))
 
 ### Changed
-- **Team prompt decomposition is less brittle for prose prompts** — natural-language task prompts are no longer fragmented into pathological subtasks as easily. (PR [#712](https://github.com/Yeachan-Heo/oh-my-codex/pull/712))
+- **Team prompt decomposition is less brittle for prose prompts** — natural-language task prompts are no longer fragmented into pathological subtasks as easily. (PR [#712](https://github.com/penghuo/oh-my-kiro/pull/712))
 
 ### Fixed
-- **Shell-pane notification cleanup after terminal team states** — team notify injection now stays out of shell panes after completion. (PR [#668](https://github.com/Yeachan-Heo/oh-my-codex/pull/668))
-- **Clawhip lifecycle event noise reduction** — operational event emission is quieter while preserving needed visibility. (PR [#713](https://github.com/Yeachan-Heo/oh-my-codex/pull/713))
-- **Team runtime hardening across startup/worktree/idle-launch-arg paths** — includes the merged fixes from PRs [#696](https://github.com/Yeachan-Heo/oh-my-codex/pull/696), [#697](https://github.com/Yeachan-Heo/oh-my-codex/pull/697), [#700](https://github.com/Yeachan-Heo/oh-my-codex/pull/700), [#707](https://github.com/Yeachan-Heo/oh-my-codex/pull/707), [#708](https://github.com/Yeachan-Heo/oh-my-codex/pull/708), and [#711](https://github.com/Yeachan-Heo/oh-my-codex/pull/711).
+- **Shell-pane notification cleanup after terminal team states** — team notify injection now stays out of shell panes after completion. (PR [#668](https://github.com/penghuo/oh-my-kiro/pull/668))
+- **Clawhip lifecycle event noise reduction** — operational event emission is quieter while preserving needed visibility. (PR [#713](https://github.com/penghuo/oh-my-kiro/pull/713))
+- **Team runtime hardening across startup/worktree/idle-launch-arg paths** — includes the merged fixes from PRs [#696](https://github.com/penghuo/oh-my-kiro/pull/696), [#697](https://github.com/penghuo/oh-my-kiro/pull/697), [#700](https://github.com/penghuo/oh-my-kiro/pull/700), [#707](https://github.com/penghuo/oh-my-kiro/pull/707), [#708](https://github.com/penghuo/oh-my-kiro/pull/708), and [#711](https://github.com/penghuo/oh-my-kiro/pull/711).
 - **Release gate stability for setup refresh tests** — setup AGENTS overwrite coverage now stays non-interactive under test so the release gate no longer hangs on a model-upgrade prompt.
 
 
@@ -73,19 +73,19 @@ Generated from the latest merged `dev` runtime/model-default work and validated 
 - **Release-critical regression coverage and test-environment isolation** — expanded CLI auto-update regression coverage across success, decline, failure, and already-up-to-date paths, and hardened CLI/OpenClaw integration suites against ambient `CODEX_HOME` leakage so release validation stays deterministic. (direct commit `aedd068` — @Yeachan-Heo)
 
 ### Changed
-- **Root prompt contracts now bias more explicitly toward direct execution and evidence-backed verification** — tightened the top-level `AGENTS.md` / template contracts and simplified core prompt surfaces while preserving workflow, team, and verification guarantees. (PR [#646](https://github.com/Yeachan-Heo/oh-my-codex/pull/646) — @HaD0Yun)
+- **Root prompt contracts now bias more explicitly toward direct execution and evidence-backed verification** — tightened the top-level `AGENTS.md` / template contracts and simplified core prompt surfaces while preserving workflow, team, and verification guarantees. (PR [#646](https://github.com/penghuo/oh-my-kiro/pull/646) — @HaD0Yun)
 - **Local development artifacts are now ignored by git** — `.codex/`, `.agents/`, and `coverage/` are ignored to avoid committing local session state and generated coverage data. (direct commit `3149747` — @Yeachan-Heo)
 
 ### Fixed
-- **Auto-update now refreshes OMX setup immediately after a successful global install** — successful `omx` self-updates now force a setup refresh so prompts, skills, and `AGENTS.md` stay in sync without a separate manual refresh. (PR [#648](https://github.com/Yeachan-Heo/oh-my-codex/pull/648) — @Yeachan-Heo)
-- **tmux Enter submission is more reliable in alternate-screen UIs** — added a settle delay before the first `C-m` submit and mirrored that protection in the hook extensibility tmux submission path. (PR [#649](https://github.com/Yeachan-Heo/oh-my-codex/pull/649) — @Yeachan-Heo, fixes [#647](https://github.com/Yeachan-Heo/oh-my-codex/issues/647))
+- **Auto-update now refreshes OMK setup immediately after a successful global install** — successful `omk` self-updates now force a setup refresh so prompts, skills, and `AGENTS.md` stay in sync without a separate manual refresh. (PR [#648](https://github.com/penghuo/oh-my-kiro/pull/648) — @Yeachan-Heo)
+- **tmux Enter submission is more reliable in alternate-screen UIs** — added a settle delay before the first `C-m` submit and mirrored that protection in the hook extensibility tmux submission path. (PR [#649](https://github.com/penghuo/oh-my-kiro/pull/649) — @Yeachan-Heo, fixes [#647](https://github.com/penghuo/oh-my-kiro/issues/647))
 
 ## [0.8.9] - 2026-03-08
 
 2 non-merge commits from `v0.8.8..dev`. Contributor: [@Yeachan-Heo](https://github.com/Yeachan-Heo).
 
 ### Changed
-- **Team worker startup now uses per-role instruction surfaces end-to-end** — routed worker roles now persist into live team config/identity, compose per-worker startup `AGENTS.md` files from the resolved role prompt, and continue to apply role-based default reasoning unless explicit launch overrides are present. (PR [#643](https://github.com/Yeachan-Heo/oh-my-codex/pull/643))
+- **Team worker startup now uses per-role instruction surfaces end-to-end** — routed worker roles now persist into live team config/identity, compose per-worker startup `AGENTS.md` files from the resolved role prompt, and continue to apply role-based default reasoning unless explicit launch overrides are present. (PR [#643](https://github.com/penghuo/oh-my-kiro/pull/643))
 
 ### Fixed
 - **Scaled task bootstrap now persists canonical task state before worker handoff** — dynamic scale-up writes new tasks through canonical team state first, preserving stable task ids/owners/roles for worker inboxes and role resolution instead of reconstructing synthetic task metadata during bootstrap.
@@ -95,15 +95,15 @@ Generated from the latest merged `dev` runtime/model-default work and validated 
 5 non-merge commits from `main..dev`. Contributor: [@Yeachan-Heo](https://github.com/Yeachan-Heo).
 
 ### Added
-- **Anti-slop workflow and catalog wiring** — added the anti-slop workflow contract to root/template guidance, introduced a dedicated `ai-slop-cleaner` skill, and updated catalog manifests/tests so the new workflow is part of the generated skill surface. (PR [#634](https://github.com/Yeachan-Heo/oh-my-codex/pull/634))
-- **Per-teammate reasoning-effort allocation for team runs** — team orchestration can now resolve reasoning effort per worker, with updated runtime/model-contract behavior plus regression coverage for runtime, tmux-session, and model selection paths. (PR [#642](https://github.com/Yeachan-Heo/oh-my-codex/pull/642))
+- **Anti-slop workflow and catalog wiring** — added the anti-slop workflow contract to root/template guidance, introduced a dedicated `ai-slop-cleaner` skill, and updated catalog manifests/tests so the new workflow is part of the generated skill surface. (PR [#634](https://github.com/penghuo/oh-my-kiro/pull/634))
+- **Per-teammate reasoning-effort allocation for team runs** — team orchestration can now resolve reasoning effort per worker, with updated runtime/model-contract behavior plus regression coverage for runtime, tmux-session, and model selection paths. (PR [#642](https://github.com/penghuo/oh-my-kiro/pull/642))
 
 ### Changed
 - **Team launch/model contracts were tightened** — worker launch args, scaling paths, tmux session handling, and README / skill guidance were adjusted so teammate-specific reasoning effort is propagated more consistently during team execution.
 
 ### Fixed
-- **Deep-interview auto-approval injection is now lock-protected** — keyword detection and notify-hook auto-nudge paths were hardened so deep-interview auto-approval injection stays bounded, with expanded regression coverage around notify-hook modules and keyword routing. (PR [#637](https://github.com/Yeachan-Heo/oh-my-codex/pull/637))
-- **Published npm bin path normalization** — normalized the package bin path contract and updated the package-bin regression test to keep the published `omx` entrypoint aligned. (PR [#638](https://github.com/Yeachan-Heo/oh-my-codex/pull/638))
+- **Deep-interview auto-approval injection is now lock-protected** — keyword detection and notify-hook auto-nudge paths were hardened so deep-interview auto-approval injection stays bounded, with expanded regression coverage around notify-hook modules and keyword routing. (PR [#637](https://github.com/penghuo/oh-my-kiro/pull/637))
+- **Published npm bin path normalization** — normalized the package bin path contract and updated the package-bin regression test to keep the published `omk` entrypoint aligned. (PR [#638](https://github.com/penghuo/oh-my-kiro/pull/638))
 - **Worker role reservation remains team-only** — prompt-guidance contract enforcement now reserves the worker role for team mode explicitly, backed by routing regression coverage.
 
 ## [0.8.7] - 2026-03-08
@@ -111,45 +111,45 @@ Generated from the latest merged `dev` runtime/model-default work and validated 
 12 non-merge commits from `v0.8.6..dev`. Contributors: [@Yeachan-Heo](https://github.com/Yeachan-Heo), [@HaD0Yun](https://github.com/HaD0Yun), [@marlocarlo](https://github.com/marlocarlo).
 
 ### Added
-- **Prompt-guidance contract docs and reusable fragments** — added a first-class prompt-guidance contract document, reusable guidance fragments, a sync script, and shared contract test helpers so root instructions, templates, and prompts can stay aligned more systematically. (PR [#620](https://github.com/Yeachan-Heo/oh-my-codex/pull/620) — @Yeachan-Heo)
-- **Team hardening benchmark and deeper runtime/worktree coverage** — added a dedicated hardening benchmark plus broader runtime, state, worktree, and end-to-end regression coverage for expired-claim recovery and worker hygiene. (PR [#624](https://github.com/Yeachan-Heo/oh-my-codex/pull/624) — @HaD0Yun)
-- **Centralized MCP stdio lifecycle bootstrap** — state, memory, code-intel, trace, and team MCP servers now share a common `autoStartStdioMcpServer` helper and a dedicated lifecycle regression suite for idle teardown. (PR [#626](https://github.com/Yeachan-Heo/oh-my-codex/pull/626), [#627](https://github.com/Yeachan-Heo/oh-my-codex/pull/627) — @Yeachan-Heo)
-- **Package-bin contract coverage for global installs** — added an explicit contract test to keep the published npm bin path aligned with global `omx` installation behavior. (PR [#633](https://github.com/Yeachan-Heo/oh-my-codex/pull/633) — @Yeachan-Heo)
+- **Prompt-guidance contract docs and reusable fragments** — added a first-class prompt-guidance contract document, reusable guidance fragments, a sync script, and shared contract test helpers so root instructions, templates, and prompts can stay aligned more systematically. (PR [#620](https://github.com/penghuo/oh-my-kiro/pull/620) — @Yeachan-Heo)
+- **Team hardening benchmark and deeper runtime/worktree coverage** — added a dedicated hardening benchmark plus broader runtime, state, worktree, and end-to-end regression coverage for expired-claim recovery and worker hygiene. (PR [#624](https://github.com/penghuo/oh-my-kiro/pull/624) — @HaD0Yun)
+- **Centralized MCP stdio lifecycle bootstrap** — state, memory, code-intel, trace, and team MCP servers now share a common `autoStartStdioMcpServer` helper and a dedicated lifecycle regression suite for idle teardown. (PR [#626](https://github.com/penghuo/oh-my-kiro/pull/626), [#627](https://github.com/penghuo/oh-my-kiro/pull/627) — @Yeachan-Heo)
+- **Package-bin contract coverage for global installs** — added an explicit contract test to keep the published npm bin path aligned with global `omk` installation behavior. (PR [#633](https://github.com/penghuo/oh-my-kiro/pull/633) — @Yeachan-Heo)
 
 ### Changed
-- **Prompt surfaces were normalized around contract-driven XML structure** — prompt guidance validation was centralized, shared fragments were extracted, all agent prompts were migrated from Markdown-style headings to XML-tag structure, and the 2-layer orchestrator/role-prompt model was clarified across docs, templates, and config generation. (PR [#619](https://github.com/Yeachan-Heo/oh-my-codex/pull/619), [#623](https://github.com/Yeachan-Heo/oh-my-codex/pull/623) — @HaD0Yun)
+- **Prompt surfaces were normalized around contract-driven XML structure** — prompt guidance validation was centralized, shared fragments were extracted, all agent prompts were migrated from Markdown-style headings to XML-tag structure, and the 2-layer orchestrator/role-prompt model was clarified across docs, templates, and config generation. (PR [#619](https://github.com/penghuo/oh-my-kiro/pull/619), [#623](https://github.com/penghuo/oh-my-kiro/pull/623) — @HaD0Yun)
 - **Fast-path agent reasoning defaults were rebalanced** — analyst, planner, and related fast-lane agent defaults were tuned downward to better match their intended operating posture.
 
 ### Fixed
-- **Windows native startup and tmux capability detection** — OMX now checks tmux capability instead of hard-blocking on `win32`, supports `psmux`, uses Windows-appropriate command resolution where needed, and documents the platform setup path more clearly. (PR [#616](https://github.com/Yeachan-Heo/oh-my-codex/pull/616) — @marlocarlo)
-- **Leader-only orchestration boundaries in prompt surfaces** — worker-facing and role-specific prompts now preserve leader orchestration responsibilities more explicitly, with regression coverage for the boundary contract. (PR [#625](https://github.com/Yeachan-Heo/oh-my-codex/pull/625) — @HaD0Yun)
-- **npm global-install bin contract** — corrected the published `omx` bin path entry in `package.json` and locked it down with a dedicated contract test for packed tarballs and global installation behavior. (PR [#633](https://github.com/Yeachan-Heo/oh-my-codex/pull/633) — @Yeachan-Heo)
+- **Windows native startup and tmux capability detection** — OMK now checks tmux capability instead of hard-blocking on `win32`, supports `psmux`, uses Windows-appropriate command resolution where needed, and documents the platform setup path more clearly. (PR [#616](https://github.com/penghuo/oh-my-kiro/pull/616) — @marlocarlo)
+- **Leader-only orchestration boundaries in prompt surfaces** — worker-facing and role-specific prompts now preserve leader orchestration responsibilities more explicitly, with regression coverage for the boundary contract. (PR [#625](https://github.com/penghuo/oh-my-kiro/pull/625) — @HaD0Yun)
+- **npm global-install bin contract** — corrected the published `omk` bin path entry in `package.json` and locked it down with a dedicated contract test for packed tarballs and global installation behavior. (PR [#633](https://github.com/penghuo/oh-my-kiro/pull/633) — @Yeachan-Heo)
 
 ## [0.8.6] - 2026-03-07
 
 4 non-merge commits from `main..dev`. Contributor: [@Yeachan-Heo](https://github.com/Yeachan-Heo).
 
 ### Added
-- **Event-aware team waiting and canonical event normalization** — team runtime/state handling now includes additive `wake_on=event` / `after_event_id` waiting in `omx_run_team_wait`, shared event normalization/cursor helpers, canonical event typing across runtime/state/API layers, and new `omx team await <team-name>` CLI support. Runtime now emits `worker_state_changed` while preserving legacy `worker_idle` compatibility. (PR [#609](https://github.com/Yeachan-Heo/oh-my-codex/pull/609) — @Yeachan-Heo)
-- **GPT-5.4 prompt-guidance rollout across core prompt surfaces** — root/template `AGENTS.md`, executor/planner/verifier prompts, generated `developer_instructions`, and regression coverage were updated to encode compact output defaults, low-risk follow-through, localized task-update overrides, and dependency-aware tool persistence more explicitly. (PR [#611](https://github.com/Yeachan-Heo/oh-my-codex/pull/611) — @Yeachan-Heo, addresses [#608](https://github.com/Yeachan-Heo/oh-my-codex/issues/608))
-- **GPT-5.4 prompt-guidance expansion across the wider prompt catalog and execution-heavy skills** — the same guidance was extended across the remaining agent prompts plus execution-heavy skills including `analyze`, `autopilot`, `plan`, `ralph`, `ralplan`, `team`, `ultraqa`, `code-review`, `security-review`, and `build-fix`, with scenario-focused regression coverage added for prompt catalogs, wave-two guidance, and skill contracts. (PR [#612](https://github.com/Yeachan-Heo/oh-my-codex/pull/612) — @Yeachan-Heo, follow-up to [#611](https://github.com/Yeachan-Heo/oh-my-codex/pull/611))
+- **Event-aware team waiting and canonical event normalization** — team runtime/state handling now includes additive `wake_on=event` / `after_event_id` waiting in `omk_run_team_wait`, shared event normalization/cursor helpers, canonical event typing across runtime/state/API layers, and new `omk team await <team-name>` CLI support. Runtime now emits `worker_state_changed` while preserving legacy `worker_idle` compatibility. (PR [#609](https://github.com/penghuo/oh-my-kiro/pull/609) — @Yeachan-Heo)
+- **GPT-5.4 prompt-guidance rollout across core prompt surfaces** — root/template `AGENTS.md`, executor/planner/verifier prompts, generated `developer_instructions`, and regression coverage were updated to encode compact output defaults, low-risk follow-through, localized task-update overrides, and dependency-aware tool persistence more explicitly. (PR [#611](https://github.com/penghuo/oh-my-kiro/pull/611) — @Yeachan-Heo, addresses [#608](https://github.com/penghuo/oh-my-kiro/issues/608))
+- **GPT-5.4 prompt-guidance expansion across the wider prompt catalog and execution-heavy skills** — the same guidance was extended across the remaining agent prompts plus execution-heavy skills including `analyze`, `autopilot`, `plan`, `ralph`, `ralplan`, `team`, `ultraqa`, `code-review`, `security-review`, and `build-fix`, with scenario-focused regression coverage added for prompt catalogs, wave-two guidance, and skill contracts. (PR [#612](https://github.com/penghuo/oh-my-kiro/pull/612) — @Yeachan-Heo, follow-up to [#611](https://github.com/penghuo/oh-my-kiro/pull/611))
 
 ### Fixed
-- **Leader follow-up, watcher drain visibility, and idle/nudge coordination** — team leader follow-up behavior was hardened without repurposing worker-only nudges; watcher/dispatch drain liveness is now surfaced more clearly in runtime/state paths, with stronger regression coverage for event-mode wait, dispatch dedupe, all-workers-idle, and leader notification flows. (PR [#609](https://github.com/Yeachan-Heo/oh-my-codex/pull/609))
-- **`team-ops` gateway contract regression** — removed an accidental `teamEventLogPath` re-export so the strict `team-ops` contract remains stable after the event-aware waiting changes. (PR [#610](https://github.com/Yeachan-Heo/oh-my-codex/pull/610))
+- **Leader follow-up, watcher drain visibility, and idle/nudge coordination** — team leader follow-up behavior was hardened without repurposing worker-only nudges; watcher/dispatch drain liveness is now surfaced more clearly in runtime/state paths, with stronger regression coverage for event-mode wait, dispatch dedupe, all-workers-idle, and leader notification flows. (PR [#609](https://github.com/penghuo/oh-my-kiro/pull/609))
+- **`team-ops` gateway contract regression** — removed an accidental `teamEventLogPath` re-export so the strict `team-ops` contract remains stable after the event-aware waiting changes. (PR [#610](https://github.com/penghuo/oh-my-kiro/pull/610))
 
 ## [0.8.5] - 2026-03-06
 
 7 non-merge commits from `v0.8.4..dev`. Contributors: [@Yeachan-Heo](https://github.com/Yeachan-Heo), [@HaD0Yun](https://github.com/HaD0Yun), [@sjals93](https://github.com/sjals93).
 
 ### Added
-- **Posture-aware agent routing** — agents now carry Sisyphus-style posture metadata (`frontier-orchestrator`, `deep-worker`, `fast-lane`) that separates role, reasoning tier, and operating style. Native agent configs include `## OMX Posture Overlay`, `## Model-Class Guidance`, and `## OMX Agent Metadata` sections. (PR [#588](https://github.com/Yeachan-Heo/oh-my-codex/pull/588), [#592](https://github.com/Yeachan-Heo/oh-my-codex/pull/592) — @HaD0Yun)
+- **Posture-aware agent routing** — agents now carry Sisyphus-style posture metadata (`frontier-orchestrator`, `deep-worker`, `fast-lane`) that separates role, reasoning tier, and operating style. Native agent configs include `## OMK Posture Overlay`, `## Model-Class Guidance`, and `## OMK Agent Metadata` sections. (PR [#588](https://github.com/penghuo/oh-my-kiro/pull/588), [#592](https://github.com/penghuo/oh-my-kiro/pull/592) — @HaD0Yun)
 - **Maintainers section** added to README with @Yeachan-Heo and @HaD0Yun.
 
 ### Fixed
-- **Windows ESM import crash** — `bin/omx.js` now converts absolute paths to `file://` URLs before `import()`, fixing `ERR_UNSUPPORTED_ESM_URL_SCHEME` on Windows. (PR [#589](https://github.com/Yeachan-Heo/oh-my-codex/pull/589) — @sjals93, fixes [#557](https://github.com/Yeachan-Heo/oh-my-codex/issues/557))
-- **tmux capture-pane history flag** — replaced invalid `-l` flag with the correct `-S` negative-offset form so `capture-pane` actually returns recent output. (PR [#593](https://github.com/Yeachan-Heo/oh-my-codex/pull/593), fixes [#591](https://github.com/Yeachan-Heo/oh-my-codex/issues/591))
-- **Legacy model alias cleanup** — removed stale `gpt-5.3-codex` / `o3` references from 15 prompt files and runtime agent metadata generation, preventing confusion when posture routing is active. (part of PR [#592](https://github.com/Yeachan-Heo/oh-my-codex/pull/592))
+- **Windows ESM import crash** — `bin/omk.js` now converts absolute paths to `file://` URLs before `import()`, fixing `ERR_UNSUPPORTED_ESM_URL_SCHEME` on Windows. (PR [#589](https://github.com/penghuo/oh-my-kiro/pull/589) — @sjals93, fixes [#557](https://github.com/penghuo/oh-my-kiro/issues/557))
+- **tmux capture-pane history flag** — replaced invalid `-l` flag with the correct `-S` negative-offset form so `capture-pane` actually returns recent output. (PR [#593](https://github.com/penghuo/oh-my-kiro/pull/593), fixes [#591](https://github.com/penghuo/oh-my-kiro/issues/591))
+- **Legacy model alias cleanup** — removed stale `gpt-5.3-codex` / `o3` references from 15 prompt files and runtime agent metadata generation, preventing confusion when posture routing is active. (part of PR [#592](https://github.com/penghuo/oh-my-kiro/pull/592))
 
 ## [0.8.4] - 2026-03-06
 
@@ -157,7 +157,7 @@ Generated from `v0.8.3..dev` (non-merge commits) and release validation on `dev`
 
 ### Changed
 - Bumped package version to `0.8.4`.
-- `omx setup` now refreshes managed OMX artifacts by default while preserving backups of overwritten files where applicable.
+- `omk setup` now refreshes managed OMK artifacts by default while preserving backups of overwritten files where applicable.
 
 ### Added
 - Setup refresh coverage for managed artifact replacement, scope-aware updates, and uninstall compatibility paths.
@@ -194,7 +194,7 @@ Generated from the Gemini worker hotfix on `dev`, plus release-validation harden
 Generated from `v0.8.1..main` (non-merge commits) and release validation on `main`.
 
 ### Added
-- Gemini CLI worker support for OMX team mode, including mixed CLI maps and `--model` passthrough (`#576`, `#579`, related issue `#573`).
+- Gemini CLI worker support for OMK team mode, including mixed CLI maps and `--model` passthrough (`#576`, `#579`, related issue `#573`).
 - Default frontier-model fallback is now centralized through `DEFAULT_FRONTIER_MODEL` (currently `gpt-5.4`) instead of hardcoded references (`#583`).
 - `configure-notifications` is now the canonical shipped notification-setup skill, with catalog/setup behavior aligned to match docs (`#584`).
 
@@ -204,7 +204,7 @@ Generated from `v0.8.1..main` (non-merge commits) and release validation on `mai
 - Expanded OpenClaw integration docs and localized navigation links (`#571`).
 
 ### Fixed
-- `omx setup` now skips writing the deprecated `[tui]` section for Codex CLI `>= 0.107.0` (`#572`, fixes `#564`).
+- `omk setup` now skips writing the deprecated `[tui]` section for Codex CLI `>= 0.107.0` (`#572`, fixes `#564`).
 - Prevented unresolved placeholder leakage in OpenClaw hook instruction templates (`#581`, closes `#578`).
 - Hardened explicit multi-skill ordering and blocked implicit keyword auto-activation for direct `/prompts:<name>` invocations (`#582`).
 
@@ -216,7 +216,7 @@ Generated from `v0.8.1..main` (non-merge commits) and release validation on `mai
 Generated from `4141fd6..HEAD` (non-merge commits) and release validation on `dev`.
 
 ### Added
-- Team CLI interop API (`omx team api ...`) with hard deprecation of legacy `team_*` MCP tools.
+- Team CLI interop API (`omk team api ...`) with hard deprecation of legacy `team_*` MCP tools.
 - Finalized CLI-first team interop/dispatch reliability flow.
 
 ### Changed
@@ -238,7 +238,7 @@ Generated from `4141fd6..HEAD` (non-merge commits) and release validation on `de
 Generated from `v0.7.6..dev` (non-merge commits) and release validation on `dev`.
 
 ### Added
-- New canonical provider advisor command: `omx ask <claude|gemini> "<prompt>"`.
+- New canonical provider advisor command: `omk ask <claude|gemini> "<prompt>"`.
 - Ouroboros-inspired ambiguity-gated deep interview workflow (`$deep-interview`) for requirement clarification.
 - Required pre-context intake gates for execution-heavy flows (autopilot, ralph, team, ralplan, and deep-interview preflight).
 - New `$web-clone` skill for URL-driven website cloning and verification loops.
@@ -247,11 +247,11 @@ Generated from `v0.7.6..dev` (non-merge commits) and release validation on `dev`
 
 ### Changed
 - Bumped package version to `0.8.0`.
-- `ask-claude` and `ask-gemini` skill guidance now routes to canonical `omx ask ...` usage.
+- `ask-claude` and `ask-gemini` skill guidance now routes to canonical `omk ask ...` usage.
 - Ask docs/CLI parsing now explicitly align with provider help flags (`claude --print|-p`, `gemini --prompt|-p`).
 - Legacy wrapper/npm script entrypoints remain available as transitional compatibility paths with migration hints.
 - Refactored team state facade into bounded modules and extracted canonical state-root resolution.
-- Improved CLI behavior around `omx ralph --prd`, `--version` routing, and PRD-focused help guidance.
+- Improved CLI behavior around `omk ralph --prd`, `--version` routing, and PRD-focused help guidance.
 - Hardened runtime quality/performance/concurrency paths (dispatch polling backoff, notepad atomicity, scaling rollback, shutdown guards).
 
 ### Fixed
@@ -259,7 +259,7 @@ Generated from `v0.7.6..dev` (non-merge commits) and release validation on `dev`
 - Fixed launch worktree reuse to gracefully handle pre-existing paths.
 - Fixed team claim lifecycle contract enforcement (`releaseTaskClaim` token validation) and worker bootstrap lifecycle docs.
 - Fixed `writeAtomic` ENOENT masking behavior and team rebase/typecheck regressions.
-- Fixed onboarding warning copy clarity in `omx doctor`.
+- Fixed onboarding warning copy clarity in `omk doctor`.
 - Fixed missing pre-context gate text for team/ralplan skill docs.
 
 ### CI / Test / Docs
@@ -295,7 +295,7 @@ Generated strictly from commit logs in `main..dev`:
 ### Changed / Docs / CI / Refactor
 - `0c68a02` docs: OpenClaw integration guide for notifications (#413)
 - `56091a4` ci: add CI Status gate job for branch protection (#423)
-- `3f6b3fd` refactor(mcp): extract omx_run_team_* to dedicated team-server.ts (#431)
+- `3f6b3fd` refactor(mcp): extract omk_run_team_* to dedicated team-server.ts (#431)
 - `6c1c4eb` docs(changelog): update unreleased notes for main...dev
 
 ### Fixed (from `fix(...)` subjects)
@@ -315,7 +315,7 @@ Generated strictly from commit logs in `main..dev`:
 - `d33ecfc` fix(team): remove unused symbols flagged in PR review
 - `f0cc833` fix(tmux): restore injection when scoped mode state is missing
 - `baeb8e7` fix(skills): restore visual-verdict contract and ralph visual-loop guidance
-- `e0c5974` fix(skills): normalize forked OMC references to OMX canonical paths
+- `e0c5974` fix(skills): normalize forked OMC references to OMK canonical paths
 
 ### Reverts
 - `ee72e1f` Revert "fix(team): switch dedicated tmux session to opt-in with worker location hint (#432)"
@@ -332,7 +332,7 @@ Generated strictly from commit logs in `main..dev`:
 - `2026-03-01` `576ec9c` fix(ralph): exclude option values from CLI task description (#424)
 - `2026-03-01` `6eed3c6` fix(notify-hook): add structured logging for visual-verdict parse/persist failures (#428)
 - `2026-03-01` `b5dc657` fix(team): fix 3 regressions in team/ralph shutdown and resume paths (#430)
-- `2026-03-01` `3f6b3fd` refactor(mcp): extract omx_run_team_* to dedicated team-server.ts (#431)
+- `2026-03-01` `3f6b3fd` refactor(mcp): extract omk_run_team_* to dedicated team-server.ts (#431)
 - `2026-03-01` `ee72e1f` Revert "fix(team): switch dedicated tmux session to opt-in with worker location hint (#432)"
 - `2026-03-02` `c3d1220` fix(team): switch dedicated tmux session to opt-in with worker location hint (#432)
 - `2026-03-02` `454e69d` fix(team): force cleanup on failed/cancelled runs, await worktree rollback, refresh dead-worker panes (#438)
@@ -347,7 +347,7 @@ Generated strictly from commit logs in `main..dev`:
 - `2026-03-02` `baeb8e7` fix(skills): restore visual-verdict contract and ralph visual-loop guidance
 - `2026-03-02` `a5f2b77` Revert "fix(skills): restore visual-verdict contract and ralph visual-loop guidance"
 - `2026-03-02` `6c1c4eb` docs(changelog): update unreleased notes for main...dev
-- `2026-03-02` `e0c5974` fix(skills): normalize forked OMC references to OMX canonical paths
+- `2026-03-02` `e0c5974` fix(skills): normalize forked OMC references to OMK canonical paths
 
 ## [0.7.3] - 2026-02-28
 
@@ -355,7 +355,7 @@ Generated strictly from commit logs in `main..dev`:
 
 ### Added
 - Configurable pipeline orchestrator with stage-based execution (ralph-verify, ralplan, team-exec) (#398).
-- `omx uninstall` command with `--dry-run`, `--keep-config`, `--purge`, and `--scope` options (#389).
+- `omk uninstall` command with `--dry-run`, `--keep-config`, `--purge`, and `--scope` options (#389).
 - Openclaw dispatcher passes originating channel context to webhook hooks (#387).
 
 ### Fixed
@@ -364,7 +364,7 @@ Generated strictly from commit logs in `main..dev`:
 - Team dispatch lock timeout and binary path mismatch resolved (#401).
 - Team dispatch retries on Codex trust prompt instead of rolling back (#395).
 - Team dispatch draft consumption verified before marking notified (#392).
-- Config generator prevents duplicate OMX blocks on repeated `omx setup` (#386).
+- Config generator prevents duplicate OMK blocks on repeated `omk setup` (#386).
 - Team operator docs now clarify Claude-pane Enter (`C-m`) can queue while busy and document state-first/safe manual intervention guidance for `$team`.
 
 ### Changed
@@ -382,7 +382,7 @@ Hotfix: team shutdown `--force` flag was not being parsed from CLI arguments.
 - Added `shutdown_gate_forced` audit event when force-bypass is used, closing an observability gap in the event log.
 
 ### Changed
-- Updated usage string to document `[--force]` option: `omx team shutdown <team-name> [--force]`.
+- Updated usage string to document `[--force]` option: `omk team shutdown <team-name> [--force]`.
 - Added `shutdown_gate_forced` to `TeamEventType` union and `TEAM_EVENT_TYPES` constant.
 
 ## [0.7.1] - 2026-02-26
@@ -407,7 +407,7 @@ Hotfix: team shutdown `--force` flag was not being parsed from CLI arguments.
 - Dynamic team worker scaling — Phase 1 manual `scale_up` / `scale_down` mid-session (#363).
 - Per-worker idle notification forwarded to leader pane (#335).
 - Prompt-mode worker launch transport for interactive team workflows (#264).
-- Worker model defaults resolved from config with `OMX_TEAM_WORKER_CLI_MAP` (#263).
+- Worker model defaults resolved from config with `OMK_TEAM_WORKER_CLI_MAP` (#263).
 - Worker hard cap raised to 20 (#343).
 - Team shutdown gated on unresolved tasks to prevent premature teardown (#320, #322).
 - MSYS2 / Git Bash tmux worker support (#266).
@@ -534,12 +534,12 @@ Hotfix: team shutdown `--force` flag was not being parsed from CLI arguments.
 - Added a new "What's New in 0.6.0" section to the docs site homepage with highlights for mixed Codex/Claude teammates and reliability updates.
 
 ### Changed
-- Clarified `skills/team/SKILL.md` docs that `N:agent-type` selects worker role prompts (not CLI choice), and documented `OMX_TEAM_WORKER_CLI` / `OMX_TEAM_WORKER_CLI_MAP` usage for launching Claude teammates.
+- Clarified `skills/team/SKILL.md` docs that `N:agent-type` selects worker role prompts (not CLI choice), and documented `OMK_TEAM_WORKER_CLI` / `OMK_TEAM_WORKER_CLI_MAP` usage for launching Claude teammates.
 
 ## [0.6.0] - 2026-02-23
 
 ### Added
-- Mixed team worker CLI routing via `OMX_TEAM_WORKER_CLI_MAP` so a single `$team` run can launch Codex and Claude workers together (e.g. `codex,codex,claude,claude`).
+- Mixed team worker CLI routing via `OMK_TEAM_WORKER_CLI_MAP` so a single `$team` run can launch Codex and Claude workers together (e.g. `codex,codex,claude,claude`).
 - Leader-side all-workers-idle nudge fallback for Claude teams, so leader notifications still fire even when worker-side Codex hooks are unavailable.
 - Adaptive trigger submit retry guard helper and tests to reduce false-positive resend escalation.
 
@@ -549,8 +549,8 @@ Hotfix: team shutdown `--force` flag was not being parsed from CLI arguments.
 
 ### Fixed
 - Pre-assigned worker tasks can now be claimed by their assigned owner in `pending` state, unblocking Codex worker bootstrap claim flow.
-- `OMX_TEAM_WORKER_CLI_MAP` parsing now rejects empty entries and reports map-specific validation errors.
-- `OMX_TEAM_WORKER_CLI_MAP=auto` now resolves from launch args/model detection and no longer inherits `OMX_TEAM_WORKER_CLI` overrides unexpectedly.
+- `OMK_TEAM_WORKER_CLI_MAP` parsing now rejects empty entries and reports map-specific validation errors.
+- `OMK_TEAM_WORKER_CLI_MAP=auto` now resolves from launch args/model detection and no longer inherits `OMK_TEAM_WORKER_CLI` overrides unexpectedly.
 - Team leader nudge targeting now prioritizes `leader_pane_id`, improving reliability with mixed/Claude worker setups.
 
 ## [0.5.1] - 2026-02-23
@@ -558,8 +558,8 @@ Hotfix: team shutdown `--force` flag was not being parsed from CLI arguments.
 ### Added
 - **Native worktree orchestration for team mode**: Workers now launch in git worktrees with canonical state-root metadata, enabling true isolation for parallel team workstreams.
 - **Cross-worktree team state resolution**: MCP state tools and the notify hook resolve team state across worktrees, so the leader always sees the correct shared state regardless of which worktree a worker is running in.
-- **`omx ralph` CLI subcommand**: `omx ralph "<task>"` starts a ralph persistence loop directly from the command line, removing the need to manually invoke the skill inside a session (closes #153).
-- **Scoped ralph state with canonical persistence migration**: Ralph state is now scoped per session/worktree and migrated from legacy flat paths to the canonical `.omx/state/sessions/` layout automatically.
+- **`omk ralph` CLI subcommand**: `omk ralph "<task>"` starts a ralph persistence loop directly from the command line, removing the need to manually invoke the skill inside a session (closes #153).
+- **Scoped ralph state with canonical persistence migration**: Ralph state is now scoped per session/worktree and migrated from legacy flat paths to the canonical `.omk/state/sessions/` layout automatically.
 - **Claim-safe team transition tool for MCP interop**: New `team_transition_task` MCP tool applies state transitions atomically with claim-token verification, preventing race conditions between concurrent workers.
 - **Clean tmux pane output before notifications**: Notification content is sanitized (ANSI escapes, tmux artifacts stripped) before being sent to notification integrations, eliminating garbled messages.
 - **Startup codebase map injection hook**: Session start injects a lightweight file-tree snapshot into the agent context so workers have structural awareness of the project without extra exploration turns (closes #136).
@@ -626,13 +626,13 @@ Hotfix: team shutdown `--force` flag was not being parsed from CLI arguments.
 
 ### Removed
 - Removed deprecated prompts: `deep-executor`, `scientist`.
-- Removed deprecated skills: `deepinit`, `learn-about-omx`, `learner`, `pipeline`, `project-session-manager`, `psm`, `release`, `ultrapilot`, `writer-memory`.
+- Removed deprecated skills: `deepinit`, `learn-about-omk`, `learner`, `pipeline`, `project-session-manager`, `psm`, `release`, `ultrapilot`, `writer-memory`.
 
 ## [0.4.4] - 2026-02-19
 
 ### Added
 - Added code-simplifier stop hook for automatic refactoring.
-- Registered OMX agents as Codex native multi-agent agent roles.
+- Registered OMK agents as Codex native multi-agent agent roles.
 
 ### Fixed
 - Fixed team mode notification spam with runtime tests.
@@ -644,11 +644,11 @@ Hotfix: team shutdown `--force` flag was not being parsed from CLI arguments.
 ### Added
 - Added broader auto-nudge stall detection patterns (for example: "next I can", "say go", and "keep driving") with a focused last-lines hot zone.
 - Added worker-idle aggregation notifications so team leaders are alerted when all workers are idle/done (with cooldown and event logging).
-- Added automatic tmux mouse scrolling for team sessions (opt-out via `OMX_TEAM_MOUSE=0`).
+- Added automatic tmux mouse scrolling for team sessions (opt-out via `OMK_TEAM_MOUSE=0`).
 
 ### Fixed
 - Fixed worker message submission reliability by adding settle/delay timing before and during submit key rounds.
-- Fixed CLI exit behavior by awaiting `main(...)` in `bin/omx.js` so `/exit` terminates cleanly.
+- Fixed CLI exit behavior by awaiting `main(...)` in `bin/omk.js` so `/exit` terminates cleanly.
 - Replaced deprecated `collab` feature references with `multi_agent` across generator logic, docs, and tests.
 
 ### Tests
@@ -668,16 +668,16 @@ Hotfix: team shutdown `--force` flag was not being parsed from CLI arguments.
 ## [0.3.9] - 2026-02-15
 
 ### Changed
-- Updated planner handoff guidance to use actionable `$ralph` / `$team` commands instead of the removed `/oh-my-codex:start-work` command.
+- Updated planner handoff guidance to use actionable `$ralph` / `$team` commands instead of the removed `/oh-my-kiro:start-work` command.
 - Updated team skill docs to describe team-scoped `worker-agents.md` composition (no project `AGENTS.md` mutation).
 
 ### Fixed
-- Preserved and restored pre-existing `OMX_MODEL_INSTRUCTIONS_FILE` values during team start rollback/shutdown to avoid clobbering leader config.
+- Preserved and restored pre-existing `OMK_MODEL_INSTRUCTIONS_FILE` values during team start rollback/shutdown to avoid clobbering leader config.
 
 ## [0.3.8] - 2026-02-15
 
 ### Fixed
-- Fixed `omx` not launching tmux session when run outside of tmux (regression in 0.3.7).
+- Fixed `omk` not launching tmux session when run outside of tmux (regression in 0.3.7).
 
 ## [0.3.7] - 2026-02-15
 
@@ -688,7 +688,7 @@ Hotfix: team shutdown `--force` flag was not being parsed from CLI arguments.
 
 ### Changed
 - Defaulted low-complexity team workers to `gpt-5.3-codex-spark`.
-- Improved `omx` CLI behavior for session-scoped `model_instructions_file` handling.
+- Improved `omk` CLI behavior for session-scoped `model_instructions_file` handling.
 - Hardened worker bootstrap/orchestrator guidance flow and executor prompt migration.
 - Improved HUD pane dedupe and `--help` launch behavior in tmux workflows.
 
@@ -701,7 +701,7 @@ Hotfix: team shutdown `--force` flag was not being parsed from CLI arguments.
 ### Added
 - Added pane-canonical tmux hook routing tests for heal/fallback behavior.
 - Added shared mode runtime context wrapper to capture mode tmux pane metadata.
-- Added tmux session name generation in `omx-<directory>-<branch>-<sessionid>` format.
+- Added tmux session name generation in `omk-<directory>-<branch>-<sessionid>` format.
 
 ### Changed
 - Switched tmux hook targeting to pane-canonical behavior with migration from legacy session targets.

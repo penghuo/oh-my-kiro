@@ -4,7 +4,7 @@
 `dev`
 
 ## Summary
-This PR documents one of OMX's strongest high-control workflows: `ralplan -> team -> ralph`. The goal is to make the README explain not only that team mode exists, but why it matters even when `$ultrawork` already provides parallel execution.
+This PR documents one of OMK's strongest high-control workflows: `ralplan -> team -> ralph`. The goal is to make the README explain not only that team mode exists, but why it matters even when `$ultrawork` already provides parallel execution.
 
 The key point is that team mode is not just fanout. It is coordinated, inspectable, runtime-aware execution. Workers can share blocker awareness, execution stays visible through tmux panes plus durable state, and the leader retains stronger control over recovery and lifecycle commands. Pairing that with `ralplan` up front and `ralph` at the back creates a workflow that is both fast and operationally disciplined.
 
@@ -23,7 +23,7 @@ The key point is that team mode is not just fanout. It is coordinated, inspectab
 The docs position `ralplan` as the place where team follow-up should become more explicit. In future work, `ralplan` can emit lane recommendations, role placement hints, and launch guidance for a direct `team` handoff, while `ralph` remains the persistence and verification layer.
 
 ## Expected outcomes
-- Better onboarding for users evaluating OMX's orchestration model
+- Better onboarding for users evaluating OMK's orchestration model
 - Easier explanation of why team mode is distinct from ultrawork
 - Clearer path from planning to execution for future feature work
 - Better support for mixed-CLI teams and runtime-heavy edge-case work

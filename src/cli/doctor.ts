@@ -1,5 +1,5 @@
 /**
- * omx doctor - Validate oh-my-codex installation
+ * omk doctor - Validate oh-my-kiro installation
  */
 
 import { existsSync } from 'fs';
@@ -7,7 +7,7 @@ import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
 import {
   codexHome, codexConfigPath, codexPromptsDir,
-  userSkillsDir, omxStateDir,
+  userSkillsDir, omkStateDir,
 } from '../utils/paths.js';
 import { classifySpawnError, spawnPlatformCommandSync } from '../utils/platform-command.js';
 import { getCatalogExpectations } from './catalog-contract.js';
@@ -46,7 +46,7 @@ const LEGACY_SCOPE_MIGRATION: Record<string, DoctorSetupScope> = {
 };
 
 async function resolveDoctorScope(cwd: string): Promise<DoctorScopeResolution> {
-  const scopePath = join(cwd, '.omx', 'setup-scope.json');
+  const scopePath = join(cwd, '.omk', 'setup-scope.json');
   if (!existsSync(scopePath)) {
     return { scope: 'user', source: 'default' };
   }
@@ -78,7 +78,7 @@ function resolveDoctorPaths(cwd: string, scope: DoctorSetupScope): DoctorPaths {
       configPath: join(codexHomeDir, 'config.toml'),
       promptsDir: join(codexHomeDir, 'prompts'),
       skillsDir: join(cwd, '.agents', 'skills'),
-      stateDir: omxStateDir(cwd),
+      stateDir: omkStateDir(cwd),
     };
   }
 
@@ -87,7 +87,7 @@ function resolveDoctorPaths(cwd: string, scope: DoctorSetupScope): DoctorPaths {
     configPath: codexConfigPath(),
     promptsDir: codexPromptsDir(),
     skillsDir: userSkillsDir(),
-    stateDir: omxStateDir(cwd),
+    stateDir: omkStateDir(cwd),
   };
 }
 
@@ -101,10 +101,10 @@ export async function doctor(options: DoctorOptions = {}): Promise<void> {
   const scopeResolution = await resolveDoctorScope(cwd);
   const paths = resolveDoctorPaths(cwd, scopeResolution.scope);
   const scopeSourceMessage = scopeResolution.source === 'persisted'
-    ? ' (from .omx/setup-scope.json)'
+    ? ' (from .omk/setup-scope.json)'
     : '';
 
-  console.log('oh-my-codex doctor');
+  console.log('oh-my-kiro doctor');
   console.log('==================\n');
   console.log(`Resolved setup scope: ${scopeResolution.scope}${scopeSourceMessage}\n`);
 
@@ -153,11 +153,11 @@ export async function doctor(options: DoctorOptions = {}): Promise<void> {
   console.log(`\nResults: ${passCount} passed, ${warnCount} warnings, ${failCount} failed`);
 
   if (failCount > 0) {
-    console.log('\nRun "omx setup" to fix installation issues.');
+    console.log('\nRun "omk setup" to fix installation issues.');
   } else if (warnCount > 0) {
-    console.log('\nRun "omx setup --force" to refresh all components.');
+    console.log('\nRun "omk setup --force" to refresh all components.');
   } else {
-    console.log('\nAll checks passed! oh-my-codex is ready.');
+    console.log('\nAll checks passed! oh-my-kiro is ready.');
   }
 }
 
@@ -168,7 +168,7 @@ interface TeamDoctorIssue {
 }
 
 async function doctorTeam(): Promise<void> {
-  console.log('oh-my-codex doctor --team');
+  console.log('oh-my-kiro doctor --team');
   console.log('=========================\n');
 
   const issues = await collectTeamDoctorIssues(process.cwd());
@@ -187,13 +187,13 @@ async function doctorTeam(): Promise<void> {
   }
 
   console.log(`\nResults: ${warningCount} warnings, ${failureCount} failed`);
-  // Ensure non-zero exit for `omx doctor --team` failures.
+  // Ensure non-zero exit for `omk doctor --team` failures.
   if (failureCount > 0) process.exitCode = 1;
 }
 
 async function collectTeamDoctorIssues(cwd: string): Promise<TeamDoctorIssue[]> {
   const issues: TeamDoctorIssue[] = [];
-  const stateDir = omxStateDir(cwd);
+  const stateDir = omkStateDir(cwd);
   const teamsRoot = join(stateDir, 'team');
   const nowMs = Date.now();
   const lagThresholdMs = 60_000;
@@ -217,7 +217,7 @@ async function collectTeamDoctorIssues(cwd: string): Promise<TeamDoctorIssue[]> 
     const manifestPath = join(teamDir, 'manifest.v2.json');
     const configPath = join(teamDir, 'config.json');
 
-    let tmuxSession = `omx-team-${teamName}`;
+    let tmuxSession = `omk-team-${teamName}`;
     if (existsSync(manifestPath)) {
       try {
         const raw = await readFile(manifestPath, 'utf-8');
@@ -315,8 +315,8 @@ async function collectTeamDoctorIssues(cwd: string): Promise<TeamDoctorIssue[]> 
       if (leaderIsStale && !tmuxUnavailable) {
         // Check if any team tmux session has live worker panes
         for (const teamName of teamDirs) {
-          const session = knownTeamSessions.has(`omx-team-${teamName}`)
-            ? `omx-team-${teamName}`
+          const session = knownTeamSessions.has(`omk-team-${teamName}`)
+            ? `omk-team-${teamName}`
             : [...knownTeamSessions].find(s => s.includes(teamName));
           if (!session || !tmuxSessions.has(session)) continue;
           issues.push({
@@ -378,7 +378,7 @@ function listTeamTmuxSessions(): Set<string> | null {
   const sessions = (res.stdout || '')
     .split('\n')
     .map((s) => s.trim())
-    .filter((s) => s.startsWith('omx-team-'));
+    .filter((s) => s.startsWith('omk-team-'));
   return new Set(sessions);
 }
 
@@ -472,15 +472,15 @@ async function checkConfig(configPath: string): Promise<Check> {
       };
     }
 
-    const hasOmx = content.includes('omx_') || content.includes('oh-my-codex');
-    if (hasOmx) {
-      return { name: 'Config', status: 'pass', message: 'config.toml has OMX entries' };
+    const hasOmk = content.includes('omk_') || content.includes('oh-my-kiro');
+    if (hasOmk) {
+      return { name: 'Config', status: 'pass', message: 'config.toml has OMK entries' };
     }
 
     return {
       name: 'Config',
       status: 'warn',
-      message: 'config.toml exists but no OMX entries yet (expected before first setup; run "omx setup --force" once)',
+      message: 'config.toml exists but no OMK entries yet (expected before first setup; run "omk setup --force" once)',
     };
   } catch {
     return { name: 'Config', status: 'fail', message: 'cannot read config.toml' };
@@ -529,7 +529,7 @@ function checkAgentsMd(scope: DoctorSetupScope): Check {
   if (scope === 'user') {
     return { name: 'AGENTS.md', status: 'pass', message: 'user scope leaves project AGENTS.md unchanged' };
   }
-  return { name: 'AGENTS.md', status: 'warn', message: 'not found in project root (run omx agents-init . or omx setup --scope project)' };
+  return { name: 'AGENTS.md', status: 'warn', message: 'not found in project root (run omk agents-init . or omk setup --scope project)' };
 }
 
 async function checkMcpServers(configPath: string): Promise<Check> {
@@ -540,14 +540,14 @@ async function checkMcpServers(configPath: string): Promise<Check> {
     const content = await readFile(configPath, 'utf-8');
     const mcpCount = (content.match(/\[mcp_servers\./g) || []).length;
     if (mcpCount > 0) {
-      const hasOmx = content.includes('omx_state') || content.includes('omx_memory');
-      if (hasOmx) {
-        return { name: 'MCP Servers', status: 'pass', message: `${mcpCount} servers configured (OMX present)` };
+      const hasOmk = content.includes('omk_state') || content.includes('omk_memory');
+      if (hasOmk) {
+        return { name: 'MCP Servers', status: 'pass', message: `${mcpCount} servers configured (OMK present)` };
       }
       return {
         name: 'MCP Servers',
         status: 'warn',
-        message: `${mcpCount} servers but no OMX servers yet (expected before first setup; run "omx setup --force" once)`,
+        message: `${mcpCount} servers but no OMK servers yet (expected before first setup; run "omk setup --force" once)`,
       };
     }
     return { name: 'MCP Servers', status: 'warn', message: 'no MCP servers configured' };

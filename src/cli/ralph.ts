@@ -5,12 +5,12 @@ import {
   resolveAvailableAgentTypes,
 } from '../team/followup-planner.js';
 
-export const RALPH_HELP = `omx ralph - Launch Codex with ralph persistence mode active
+export const RALPH_HELP = `omk ralph - Launch Codex with ralph persistence mode active
 
 Usage:
-  omx ralph [task text...]
-  omx ralph --prd "<task text>"
-  omx ralph [ralph-options] [codex-args...] [task text...]
+  omk ralph [task text...]
+  omk ralph --prd "<task text>"
+  omk ralph [ralph-options] [codex-args...] [task text...]
 
 Options:
   --help, -h           Show this help message
@@ -18,19 +18,19 @@ Options:
   --prd=<task text>    Same as --prd "<task text>"
 
 PRD mode:
-  Ralph initializes persistence artifacts in .omx/ so PRD and progress
+  Ralph initializes persistence artifacts in .omk/ so PRD and progress
   state can survive across Codex sessions. Provide task text either as
   positional words or with --prd.
 
 Common patterns:
-  omx ralph "Fix flaky notify-hook tests"
-  omx ralph --prd "Ship release checklist automation"
-  omx ralph --model gpt-5 "Refactor state hydration"
-  omx ralph -- --task-with-leading-dash
+  omk ralph "Fix flaky notify-hook tests"
+  omk ralph --prd "Ship release checklist automation"
+  omk ralph --model gpt-5 "Refactor state hydration"
+  omk ralph -- --task-with-leading-dash
 `;
 
 const VALUE_TAKING_FLAGS = new Set(['--model', '--provider', '--config', '-c', '-i', '--images-dir']);
-const RALPH_OMX_FLAGS = new Set(['--prd']);
+const RALPH_OMK_FLAGS = new Set(['--prd']);
 
 export function extractRalphTaskDescription(args: readonly string[]): string {
   const words: string[] = [];
@@ -80,7 +80,7 @@ export function normalizeRalphCliArgs(args: readonly string[]): string[] {
 export function filterRalphCodexArgs(args: readonly string[]): string[] {
   const filtered: string[] = [];
   for (const token of args) {
-    if (RALPH_OMX_FLAGS.has(token.toLowerCase())) continue;
+    if (RALPH_OMK_FLAGS.has(token.toLowerCase())) continue;
     filtered.push(token);
   }
   return filtered;

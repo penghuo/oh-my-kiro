@@ -1,5 +1,5 @@
 /**
- * Pipeline stage interfaces for oh-my-codex
+ * Pipeline stage interfaces for oh-my-kiro
  *
  * Shared stage contracts that align with OMC pipeline design (#1130).
  * The pipeline sequences: RALPLAN -> teams (codex workers) -> ralph verification.

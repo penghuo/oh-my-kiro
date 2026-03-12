@@ -1,4 +1,4 @@
-# Contributing to oh-my-codex
+# Contributing to oh-my-kiro
 
 Thanks for contributing.
 
@@ -18,8 +18,8 @@ For local CLI testing:
 
 ```bash
 npm link
-omx setup
-omx doctor
+omk setup
+omk doctor
 ```
 
 ### Team/state coverage gate (issue #454)
@@ -45,7 +45,7 @@ npm test
 If you were recently in a team worker session, clear team env vars first so tests do not inherit worker-specific state roots:
 
 ```bash
-unset OMX_TEAM_WORKER OMX_TEAM_STATE_ROOT OMX_TEAM_LEADER_CWD OMX_TEAM_WORKER_CLI OMX_TEAM_WORKER_CLI_MAP OMX_TEAM_WORKER_LAUNCH_ARGS
+unset OMK_TEAM_WORKER OMK_TEAM_STATE_ROOT OMK_TEAM_LEADER_CWD OMK_TEAM_WORKER_CLI OMK_TEAM_WORKER_CLI_MAP OMK_TEAM_WORKER_LAUNCH_ARGS
 ```
 
 ## Project structure
@@ -58,7 +58,7 @@ unset OMX_TEAM_WORKER OMX_TEAM_STATE_ROOT OMX_TEAM_LEADER_CWD OMX_TEAM_WORKER_CL
 ### Adding a new agent prompt
 
 1. Create `prompts/my-agent.md` with the agent's system prompt
-2. Run `omx setup --force` to install it to `~/.codex/prompts/`
+2. Run `omk setup --force` to install it to `~/.codex/prompts/`
 3. Use `/prompts:my-agent` in Codex CLI
 
 ### Prompt guidance contract
@@ -70,7 +70,7 @@ That document defines the GPT-5.4 behavior contract contributors should preserve
 ### Adding a new skill
 
 1. Create `skills/my-skill/SKILL.md` with the skill workflow
-2. Run `omx setup --force` to install it to `~/.agents/skills/`
+2. Run `omk setup --force` to install it to `~/.agents/skills/`
 3. Use `$my-skill` in Codex CLI
 
 ## Workflow

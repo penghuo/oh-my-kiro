@@ -1,4 +1,4 @@
-# oh-my-codex v0.8.9
+# oh-my-kiro v0.8.9
 
 Released: 2026-03-08
 
@@ -17,7 +17,7 @@ This release:
 - keeps role-based default reasoning allocation active unless an explicit launch override is present
 - verifies the live worker launch path with runtime, tmux-session, and worker-bootstrap coverage
 
-PR: [#643](https://github.com/Yeachan-Heo/oh-my-codex/pull/643)
+PR: [#643](https://github.com/penghuo/oh-my-kiro/pull/643)
 
 ### Scale-up task bootstrap now preserves canonical task identity
 
@@ -30,10 +30,10 @@ This release:
 
 ## Upgrade note
 
-If you use project-scoped OMX installs, rerun:
+If you use project-scoped OMK installs, rerun:
 
 ```bash
-omx setup --force --scope project
+omk setup --force --scope project
 ```
 
 after upgrading so managed project config/native-agent paths are refreshed.

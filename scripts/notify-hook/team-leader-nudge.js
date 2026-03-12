@@ -22,7 +22,7 @@ const ACK_LIKE_PATTERNS = [
 ];
 
 export function resolveLeaderNudgeIntervalMs() {
-  const raw = safeString(process.env.OMX_TEAM_LEADER_NUDGE_MS || '');
+  const raw = safeString(process.env.OMK_TEAM_LEADER_NUDGE_MS || '');
   const parsed = asNumber(raw);
   // Default: 30 seconds for stale-leader follow-up. Guard against spam.
   if (parsed !== null && parsed >= 10_000 && parsed <= 30 * 60_000) return parsed;
@@ -30,7 +30,7 @@ export function resolveLeaderNudgeIntervalMs() {
 }
 
 export function resolveLeaderAllIdleNudgeCooldownMs() {
-  const raw = safeString(process.env.OMX_TEAM_LEADER_ALL_IDLE_COOLDOWN_MS || '');
+  const raw = safeString(process.env.OMK_TEAM_LEADER_ALL_IDLE_COOLDOWN_MS || '');
   const parsed = asNumber(raw);
   // Default: 30 seconds.
   if (parsed !== null && parsed >= 5_000 && parsed <= 10 * 60_000) return parsed;
@@ -38,7 +38,7 @@ export function resolveLeaderAllIdleNudgeCooldownMs() {
 }
 
 export function resolveLeaderStalenessThresholdMs() {
-  const raw = safeString(process.env.OMX_TEAM_LEADER_STALE_MS || '');
+  const raw = safeString(process.env.OMK_TEAM_LEADER_STALE_MS || '');
   const parsed = asNumber(raw);
   // Default: 3 minutes. Guard against unreasonable values.
   if (parsed !== null && parsed >= 10_000 && parsed <= 30 * 60_000) return parsed;
@@ -46,7 +46,7 @@ export function resolveLeaderStalenessThresholdMs() {
 }
 
 export function resolveLeaderProgressStallThresholdMs() {
-  const raw = safeString(process.env.OMX_TEAM_PROGRESS_STALL_MS || '');
+  const raw = safeString(process.env.OMK_TEAM_PROGRESS_STALL_MS || '');
   const parsed = asNumber(raw);
   // Default: 2 minutes. Guard against unreasonable values.
   if (parsed !== null && parsed >= 10_000 && parsed <= 60 * 60_000) return parsed;
@@ -54,15 +54,15 @@ export function resolveLeaderProgressStallThresholdMs() {
 }
 
 function buildStatusCheckReminder(teamName) {
-  return `Next: check messages; keep orchestrating; if done, gracefully shut down: omx team shutdown ${teamName}.`;
+  return `Next: check messages; keep orchestrating; if done, gracefully shut down: omk team shutdown ${teamName}.`;
 }
 
 function buildMailboxCheckReminder(teamName) {
-  return `Next: read messages; keep orchestrating; if done, gracefully shut down: omx team shutdown ${teamName}.`;
+  return `Next: read messages; keep orchestrating; if done, gracefully shut down: omk team shutdown ${teamName}.`;
 }
 
 function buildWorkerStartEvidenceReminder(teamName, workerName) {
-  return `Next: check ${workerName} msg/output, confirm task in omx team status ${teamName}, then reassign/nudge.`;
+  return `Next: check ${workerName} msg/output, confirm task in omk team status ${teamName}, then reassign/nudge.`;
 }
 
 function buildLeaderActionGuidance(teamName, {
@@ -82,7 +82,7 @@ function buildLeaderActionGuidance(teamName, {
       : 'Next: launch a new team for the next task set.';
   }
   if (allWorkersIdle && tasksComplete) {
-    return `Next: omx team shutdown ${teamName}.`;
+    return `Next: omk team shutdown ${teamName}.`;
   }
   return buildStatusCheckReminder(teamName);
 }
@@ -389,7 +389,7 @@ async function getAckWithoutStartEvidence(stateDir, teamName, msg) {
 }
 
 export async function emitTeamNudgeEvent(cwd, teamName, reason, nowIso) {
-  const eventsDir = join(cwd, '.omx', 'state', 'team', teamName, 'events');
+  const eventsDir = join(cwd, '.omk', 'state', 'team', teamName, 'events');
   const eventsPath = join(eventsDir, 'events.ndjson');
   try {
     await mkdir(eventsDir, { recursive: true });
@@ -408,7 +408,7 @@ export async function emitTeamNudgeEvent(cwd, teamName, reason, nowIso) {
 }
 
 async function emitLeaderNudgeDeferredEvent(cwd, teamName, reason, nowIso, { tmuxSession = '', leaderPaneId = '', paneCurrentCommand = '', sourceType = 'leader_nudge' } = {}) {
-  const eventsDir = join(cwd, '.omx', 'state', 'team', teamName, 'events');
+  const eventsDir = join(cwd, '.omk', 'state', 'team', teamName, 'events');
   const eventsPath = join(eventsDir, 'events.ndjson');
   try {
     await mkdir(eventsDir, { recursive: true });
@@ -438,7 +438,7 @@ export async function maybeNudgeTeamLeader({ cwd, stateDir, logsDir, preComputed
   const progressStallThresholdMs = resolveLeaderProgressStallThresholdMs();
   const nowMs = Date.now();
   const nowIso = new Date().toISOString();
-  const omxDir = join(cwd, '.omx');
+  const omkDir = join(cwd, '.omk');
   const nudgeStatePath = join(stateDir, 'team-leader-nudge.json');
 
   let nudgeState = await readJsonIfExists(nudgeStatePath, null);
@@ -487,8 +487,8 @@ export async function maybeNudgeTeamLeader({ cwd, stateDir, logsDir, preComputed
     let leaderPaneId = '';
     let workers = [];
     try {
-      const manifestPath = join(omxDir, 'state', 'team', teamName, 'manifest.v2.json');
-      const configPath = join(omxDir, 'state', 'team', teamName, 'config.json');
+      const manifestPath = join(omkDir, 'state', 'team', teamName, 'manifest.v2.json');
+      const configPath = join(omkDir, 'state', 'team', teamName, 'config.json');
       const srcPath = existsSync(manifestPath) ? manifestPath : configPath;
       if (existsSync(srcPath)) {
         const raw = JSON.parse(await readFile(srcPath, 'utf-8'));
@@ -501,7 +501,7 @@ export async function maybeNudgeTeamLeader({ cwd, stateDir, logsDir, preComputed
     }
     let mailbox = null;
     try {
-      const mailboxPath = join(omxDir, 'state', 'team', teamName, 'mailbox', 'leader-fixed.json');
+      const mailboxPath = join(omkDir, 'state', 'team', teamName, 'mailbox', 'leader-fixed.json');
       mailbox = await readJsonIfExists(mailboxPath, null);
     } catch {
       mailbox = null;
@@ -595,7 +595,7 @@ export async function maybeNudgeTeamLeader({ cwd, stateDir, logsDir, preComputed
     if (shouldSendAllIdleNudge) {
       nudgeReason = 'all_workers_idle';
       const N = workerNames.length;
-      text = `[OMX] All ${N} worker${N === 1 ? '' : 's'} idle. ${leaderActionGuidance}`;
+      text = `[OMK] All ${N} worker${N === 1 ? '' : 's'} idle. ${leaderActionGuidance}`;
     } else if (ackWithoutStartEvidence) {
       nudgeReason = ACK_WITHOUT_START_EVIDENCE_REASON;
       text =

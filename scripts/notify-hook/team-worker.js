@@ -27,20 +27,20 @@ async function readTeamStateRootFromJson(path) {
 }
 
 export async function resolveTeamStateDirForWorker(cwd, parsedTeamWorker) {
-  const explicitStateRoot = safeString(process.env.OMX_TEAM_STATE_ROOT || '').trim();
+  const explicitStateRoot = safeString(process.env.OMK_TEAM_STATE_ROOT || '').trim();
   if (explicitStateRoot) {
     return resolvePath(cwd, explicitStateRoot);
   }
 
   const teamName = parsedTeamWorker.teamName;
   const workerName = parsedTeamWorker.workerName;
-  const leaderCwd = safeString(process.env.OMX_TEAM_LEADER_CWD || '').trim();
+  const leaderCwd = safeString(process.env.OMK_TEAM_LEADER_CWD || '').trim();
 
   const candidateStateDirs = [];
   if (leaderCwd) {
-    candidateStateDirs.push(join(resolvePath(leaderCwd), '.omx', 'state'));
+    candidateStateDirs.push(join(resolvePath(leaderCwd), '.omk', 'state'));
   }
-  candidateStateDirs.push(join(cwd, '.omx', 'state'));
+  candidateStateDirs.push(join(cwd, '.omk', 'state'));
 
   for (const candidateStateDir of candidateStateDirs) {
     const teamRoot = join(candidateStateDir, 'team', teamName);
@@ -60,7 +60,7 @@ export async function resolveTeamStateDirForWorker(cwd, parsedTeamWorker) {
     return candidateStateDir;
   }
 
-  return join(cwd, '.omx', 'state');
+  return join(cwd, '.omk', 'state');
 }
 
 export function parseTeamWorkerEnv(rawValue) {
@@ -71,14 +71,14 @@ export function parseTeamWorkerEnv(rawValue) {
 }
 
 export function resolveWorkerIdleNotifyEnabled() {
-  const raw = safeString(process.env.OMX_TEAM_WORKER_IDLE_NOTIFY || '').trim().toLowerCase();
+  const raw = safeString(process.env.OMK_TEAM_WORKER_IDLE_NOTIFY || '').trim().toLowerCase();
   // Default: enabled. Disable with "false", "0", or "off".
   if (raw === 'false' || raw === '0' || raw === 'off') return false;
   return true;
 }
 
 export function resolveWorkerIdleCooldownMs() {
-  const raw = safeString(process.env.OMX_TEAM_WORKER_IDLE_COOLDOWN_MS || '');
+  const raw = safeString(process.env.OMK_TEAM_WORKER_IDLE_COOLDOWN_MS || '');
   const parsed = asNumber(raw);
   // Default: 30 seconds. Guard against unreasonable values.
   if (parsed !== null && parsed >= 5_000 && parsed <= 10 * 60_000) return parsed;
@@ -86,7 +86,7 @@ export function resolveWorkerIdleCooldownMs() {
 }
 
 export function resolveAllWorkersIdleCooldownMs() {
-  const raw = safeString(process.env.OMX_TEAM_ALL_IDLE_COOLDOWN_MS || '');
+  const raw = safeString(process.env.OMK_TEAM_ALL_IDLE_COOLDOWN_MS || '');
   const parsed = asNumber(raw);
   // Default: 60 seconds. Guard against unreasonable values.
   if (parsed !== null && parsed >= 5_000 && parsed <= 10 * 60_000) return parsed;
@@ -94,14 +94,14 @@ export function resolveAllWorkersIdleCooldownMs() {
 }
 
 export function resolveStatusStaleMs() {
-  const raw = safeString(process.env.OMX_TEAM_STATUS_STALE_MS || '');
+  const raw = safeString(process.env.OMK_TEAM_STATUS_STALE_MS || '');
   const parsed = asNumber(raw);
   if (parsed !== null && parsed >= 5_000 && parsed <= 60 * 60_000) return parsed;
   return 120_000;
 }
 
 export function resolveHeartbeatStaleMs() {
-  const raw = safeString(process.env.OMX_TEAM_HEARTBEAT_STALE_MS || '');
+  const raw = safeString(process.env.OMK_TEAM_HEARTBEAT_STALE_MS || '');
   const parsed = asNumber(raw);
   if (parsed !== null && parsed >= 5_000 && parsed <= 60 * 60_000) return parsed;
   return 180_000;
@@ -386,8 +386,8 @@ export async function maybeNotifyLeaderAllWorkersIdle({ cwd, stateDir, logsDir, 
   }
 
   const N = workers.length;
-  const nextAction = `Next: run omx team status ${teamName}, check unread worker messages, then assign the next concrete task or shut the team down.`;
-  const message = `[OMX] All ${N} worker${N === 1 ? '' : 's'} idle. ${nextAction} ${DEFAULT_MARKER}`;
+  const nextAction = `Next: run omk team status ${teamName}, check unread worker messages, then assign the next concrete task or shut the team down.`;
+  const message = `[OMK] All ${N} worker${N === 1 ? '' : 's'} idle. ${nextAction} ${DEFAULT_MARKER}`;
   const tmuxTarget = leaderPaneId;
   const paneGuard = await checkPaneReadyForTeamSendKeys(tmuxTarget);
   if (!paneGuard.ok) {
@@ -588,7 +588,7 @@ export async function maybeNotifyLeaderWorkerIdle({ cwd, stateDir, logsDir, pars
   }
 
   // Build notification message with context
-  const parts = [`[OMX] ${workerName} idle`];
+  const parts = [`[OMK] ${workerName} idle`];
   if (prevState && prevState !== 'unknown') parts.push(`(was: ${prevState})`);
   if (currentTaskId) parts.push(`task: ${currentTaskId}`);
   if (currentReason) parts.push(`reason: ${currentReason}`);

@@ -29,7 +29,7 @@ describe('normalizeTmuxHookConfig', () => {
   it('normalizes valid config', () => {
     const config = normalizeTmuxHookConfig({
       enabled: true,
-      target: { type: 'session', value: 'omx-work' },
+      target: { type: 'session', value: 'omk-work' },
       allowed_modes: ['team'],
       cooldown_ms: 2000,
       max_injections_per_session: 4,
@@ -40,7 +40,7 @@ describe('normalizeTmuxHookConfig', () => {
     });
     assert.equal(config.enabled, true);
     assert.equal(config.valid, true);
-    assert.deepEqual(config.target, { type: 'session', value: 'omx-work' });
+    assert.deepEqual(config.target, { type: 'session', value: 'omk-work' });
     assert.deepEqual(config.allowed_modes, ['team']);
     assert.equal(config.cooldown_ms, 2000);
     assert.equal(config.max_injections_per_session, 4);
@@ -85,12 +85,12 @@ describe('pickActiveMode', () => {
 describe('evaluateInjectionGuards', () => {
   const validConfig = normalizeTmuxHookConfig({
     enabled: true,
-    target: { type: 'session', value: 'omx' },
+    target: { type: 'session', value: 'omk' },
     allowed_modes: ['ralph'],
     cooldown_ms: 1000,
     max_injections_per_session: 2,
-    prompt_template: 'Continue [OMX_TMUX_INJECT]',
-    marker: '[OMX_TMUX_INJECT]',
+    prompt_template: 'Continue [OMK_TMUX_INJECT]',
+    marker: '[OMK_TMUX_INJECT]',
     dry_run: false,
     log_level: 'info',
   });

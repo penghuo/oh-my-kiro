@@ -44,8 +44,8 @@ Most non-trivial software tasks require coordinated phases: understanding requir
 <Steps>
 0. **Pre-context Intake (required before Phase 0 starts)**:
    - Derive a task slug from the request.
-   - Load the latest relevant snapshot from `.omx/context/{slug}-*.md` when available.
-   - If no snapshot exists, create `.omx/context/{slug}-{timestamp}.md` (UTC `YYYYMMDDTHHMMSSZ`) with:
+   - Load the latest relevant snapshot from `.omk/context/{slug}-*.md` when available.
+   - If no snapshot exists, create `.omk/context/{slug}-{timestamp}.md` (UTC `YYYYMMDDTHHMMSSZ`) with:
      - Task statement
      - Desired outcome
      - Known facts/evidence
@@ -56,16 +56,16 @@ Most non-trivial software tasks require coordinated phases: understanding requir
    - Carry the snapshot path into autopilot artifacts/state so all phases share grounded context.
 
 1. **Phase 0 - Expansion**: Turn the user's idea into a detailed spec
-   - If `.omx/specs/deep-interview-*.md` exists for this task: reuse it and skip redundant expansion work
+   - If `.omk/specs/deep-interview-*.md` exists for this task: reuse it and skip redundant expansion work
    - If prompt is highly vague: route to `$deep-interview` for Socratic ambiguity-gated clarification
    - Analyst (THOROUGH tier): Extract requirements
    - Architect (THOROUGH tier): Create technical specification
-   - Output: `.omx/plans/autopilot-spec.md`
+   - Output: `.omk/plans/autopilot-spec.md`
 
 2. **Phase 1 - Planning**: Create an implementation plan from the spec
    - Architect (THOROUGH tier): Create plan (direct mode, no interview)
    - Critic (THOROUGH tier): Validate plan
-   - Output: `.omx/plans/autopilot-impl.md`
+   - Output: `.omk/plans/autopilot-impl.md`
 
 3. **Phase 2 - Execution**: Implement the plan using Ralph + Ultrawork
    - LOW-tier executor/search roles: Simple tasks
@@ -84,7 +84,7 @@ Most non-trivial software tasks require coordinated phases: understanding requir
    - Code-reviewer: Quality review
    - All must approve; fix and re-validate on rejection
 
-6. **Phase 5 - Cleanup**: Clear all mode state via OMX MCP tools on successful completion
+6. **Phase 5 - Cleanup**: Clear all mode state via OMK MCP tools on successful completion
    - `state_clear({mode: "autopilot"})`
    - `state_clear({mode: "ralph"})`
    - `state_clear({mode: "ultrawork"})`
@@ -103,7 +103,7 @@ Most non-trivial software tasks require coordinated phases: understanding requir
 
 ## State Management
 
-Use `omx_state` MCP tools for autopilot lifecycle state.
+Use `omk_state` MCP tools for autopilot lifecycle state.
 
 - **On start**:
   `state_write({mode: "autopilot", active: true, current_phase: "expansion", started_at: "<now>", state: {context_snapshot_path: "<snapshot-path>"}})`
@@ -170,7 +170,7 @@ Why bad: This is an exploration/brainstorming request. Respond conversationally 
 Optional settings in `~/.codex/config.toml`:
 
 ```toml
-[omx.autopilot]
+[omk.autopilot]
 maxIterations = 10
 maxQaCycles = 5
 maxValidationRounds = 3
@@ -215,7 +215,7 @@ RALPLAN (consensus planning) -> team-exec (Codex CLI workers) -> ralph-verify (a
 Pipeline configuration options:
 
 ```toml
-[omx.autopilot.pipeline]
+[omk.autopilot.pipeline]
 maxRalphIterations = 10    # Ralph verification iteration ceiling
 workerCount = 2            # Number of Codex CLI team workers
 agentType = "executor"     # Agent type for team workers

@@ -7,7 +7,7 @@ import { tmpdir } from 'os';
 import { initTeamState, createTask, readTeamConfig, saveTeamConfig } from '../state.js';
 
 async function loadRuntimeCliModule() {
-  process.env.OMX_RUNTIME_CLI_DISABLE_AUTO_START = '1';
+  process.env.OMK_RUNTIME_CLI_DISABLE_AUTO_START = '1';
   return await import('../runtime-cli.js');
 }
 
@@ -30,7 +30,7 @@ describe('runtime-cli helpers', () => {
   });
 
   it('refreshes pane targets from live team config after scale changes', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-runtime-cli-live-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-runtime-cli-live-'));
     try {
       await initTeamState('live-refresh', 'task', 'executor', 2, cwd);
       const config = await readTeamConfig('live-refresh', cwd);
@@ -75,7 +75,7 @@ describe('runtime-cli helpers', () => {
   });
 
   it('falls back to forced shutdown when graceful shutdown is blocked', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-runtime-cli-shutdown-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-runtime-cli-shutdown-'));
     try {
       await initTeamState('shutdown-fallback', 'task', 'executor', 1, cwd);
       await createTask('shutdown-fallback', {
@@ -84,7 +84,7 @@ describe('runtime-cli helpers', () => {
         status: 'pending',
       }, cwd);
 
-      const teamRoot = join(cwd, '.omx', 'state', 'team', 'shutdown-fallback');
+      const teamRoot = join(cwd, '.omk', 'state', 'team', 'shutdown-fallback');
       assert.equal(existsSync(teamRoot), true);
 
       const runtimeCli = await loadRuntimeCliModule();

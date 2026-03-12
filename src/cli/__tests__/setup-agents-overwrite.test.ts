@@ -58,13 +58,13 @@ async function readCurrentLinuxStartTicks(): Promise<number | undefined> {
   }
 }
 
-describe('omx setup AGENTS refresh behavior', () => {
+describe('omk setup AGENTS refresh behavior', () => {
   it('leaves project AGENTS.md untouched for user scope', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-setup-agents-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-setup-agents-'));
     const restoreTty = setMockTty(true);
     const existing = '# project-owned agents file\n';
     try {
-      await mkdir(join(wd, '.omx', 'state'), { recursive: true });
+      await mkdir(join(wd, '.omk', 'state'), { recursive: true });
       await writeFile(join(wd, 'AGENTS.md'), existing);
 
       const output = await runSetupWithCapturedLogs(wd, {
@@ -74,7 +74,7 @@ describe('omx setup AGENTS refresh behavior', () => {
       assert.match(output, /User scope leaves project AGENTS\.md unchanged\./);
       assert.match(output, /agents_md: updated=0, unchanged=0, backed_up=0, skipped=1, removed=0/);
       assert.equal(await readFile(join(wd, 'AGENTS.md'), 'utf-8'), existing);
-      assert.equal(existsSync(join(wd, '.omx', 'backups', 'setup')), false);
+      assert.equal(existsSync(join(wd, '.omk', 'backups', 'setup')), false);
     } finally {
       restoreTty();
       await rm(wd, { recursive: true, force: true });
@@ -82,11 +82,11 @@ describe('omx setup AGENTS refresh behavior', () => {
   });
 
   it('refreshes existing AGENTS.md by default in TTY and creates a backup first', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-setup-agents-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-setup-agents-'));
     const restoreTty = setMockTty(true);
     const existing = '# old agents file\n';
     try {
-      await mkdir(join(wd, '.omx', 'state'), { recursive: true });
+      await mkdir(join(wd, '.omk', 'state'), { recursive: true });
       await writeFile(join(wd, 'AGENTS.md'), existing);
 
       const output = await runSetupWithCapturedLogs(wd, {
@@ -96,10 +96,10 @@ describe('omx setup AGENTS refresh behavior', () => {
       const agentsContent = await readFile(join(wd, 'AGENTS.md'), 'utf-8');
       assert.match(output, /Generated AGENTS\.md in project root\./);
       assert.match(output, /agents_md: updated=1, unchanged=0, backed_up=1, skipped=0, removed=0/);
-      assert.match(agentsContent, /# oh-my-codex - Intelligent Multi-Agent Orchestration/);
+      assert.match(agentsContent, /# oh-my-kiro - Intelligent Multi-Agent Orchestration/);
       assert.doesNotMatch(agentsContent, /# old agents file/);
 
-      const backupsRoot = join(wd, '.omx', 'backups', 'setup');
+      const backupsRoot = join(wd, '.omk', 'backups', 'setup');
       assert.equal(existsSync(backupsRoot), true);
       const timestamps = await readdir(backupsRoot);
       assert.equal(timestamps.length, 1);
@@ -112,15 +112,15 @@ describe('omx setup AGENTS refresh behavior', () => {
   });
 
   it('skips overwrite during active session under refresh-first defaults', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-setup-agents-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-setup-agents-'));
     const restoreTty = setMockTty(true);
     const existing = '# active session file\n';
     try {
       const pidStartTicks = await readCurrentLinuxStartTicks();
-      await mkdir(join(wd, '.omx', 'state'), { recursive: true });
+      await mkdir(join(wd, '.omk', 'state'), { recursive: true });
       await writeFile(join(wd, 'AGENTS.md'), existing);
       await writeFile(
-        join(wd, '.omx', 'state', 'session.json'),
+        join(wd, '.omk', 'state', 'session.json'),
         JSON.stringify({
           session_id: 'sess-test',
           started_at: new Date().toISOString(),
@@ -134,12 +134,12 @@ describe('omx setup AGENTS refresh behavior', () => {
         scope: 'project',
       });
 
-      assert.match(output, /WARNING: Active omx session detected/);
+      assert.match(output, /WARNING: Active omk session detected/);
       assert.match(output, /Skipping AGENTS\.md overwrite to avoid corrupting runtime overlay\./);
       assert.match(output, /Stop the active session first, then re-run setup\./);
       assert.match(output, /agents_md: updated=0, unchanged=0, backed_up=0, skipped=1, removed=0/);
       assert.equal(await readFile(join(wd, 'AGENTS.md'), 'utf-8'), existing);
-      assert.equal(existsSync(join(wd, '.omx', 'backups', 'setup')), false);
+      assert.equal(existsSync(join(wd, '.omk', 'backups', 'setup')), false);
     } finally {
       restoreTty();
       await rm(wd, { recursive: true, force: true });

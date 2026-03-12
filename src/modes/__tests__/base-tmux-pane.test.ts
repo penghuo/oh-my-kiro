@@ -9,10 +9,10 @@ describe('modes/base tmux pane capture', () => {
   it('captures tmux_pane_id in mode state on startMode()', async () => {
     const prev = process.env.TMUX_PANE;
     process.env.TMUX_PANE = '%123';
-    const wd = await mkdtemp(join(tmpdir(), 'omx-mode-pane-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-mode-pane-'));
     try {
       await startMode('ralph', 'test', 1, wd);
-      const raw = JSON.parse(await readFile(join(wd, '.omx', 'state', 'ralph-state.json'), 'utf-8'));
+      const raw = JSON.parse(await readFile(join(wd, '.omk', 'state', 'ralph-state.json'), 'utf-8'));
       assert.equal(raw.tmux_pane_id, '%123');
       assert.ok(typeof raw.tmux_pane_set_at === 'string' && raw.tmux_pane_set_at.length > 0);
     } finally {
@@ -23,9 +23,9 @@ describe('modes/base tmux pane capture', () => {
   });
 
   it('blocks exclusive mode startup when another exclusive state file is malformed', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-mode-malformed-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-mode-malformed-'));
     try {
-      const stateDir = join(wd, '.omx', 'state');
+      const stateDir = join(wd, '.omk', 'state');
       await mkdir(stateDir, { recursive: true });
       await writeFile(join(stateDir, 'ralph-state.json'), '{ "active": true');
 

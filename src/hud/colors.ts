@@ -1,5 +1,5 @@
 /**
- * OMX HUD - ANSI Color Utilities
+ * OMK HUD - ANSI Color Utilities
  *
  * Terminal color codes for statusline rendering.
  * Ported from oh-my-claudecode.

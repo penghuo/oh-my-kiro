@@ -1,7 +1,7 @@
 /**
- * One-time GitHub star prompt shown at OMX startup.
+ * One-time GitHub star prompt shown at OMK startup.
  * Skipped when no TTY or when gh CLI is not installed.
- * State stored globally (~/.omx/state/star-prompt.json) so it shows once per user.
+ * State stored globally (~/.omk/state/star-prompt.json) so it shows once per user.
  */
 
 import { readFile, writeFile, mkdir } from 'fs/promises';
@@ -11,14 +11,14 @@ import { homedir } from 'os';
 import * as childProcess from 'child_process';
 import { createInterface } from 'readline/promises';
 
-const REPO = 'Yeachan-Heo/oh-my-codex';
+const REPO = 'penghuo/oh-my-kiro';
 
 interface StarPromptState {
   prompted_at: string;
 }
 
 export function starPromptStatePath(): string {
-  return join(homedir(), '.omx', 'state', 'star-prompt.json');
+  return join(homedir(), '.omk', 'state', 'star-prompt.json');
 }
 
 export async function hasBeenPrompted(): Promise<boolean> {
@@ -34,7 +34,7 @@ export async function hasBeenPrompted(): Promise<boolean> {
 }
 
 export async function markPrompted(): Promise<void> {
-  const stateDir = join(homedir(), '.omx', 'state');
+  const stateDir = join(homedir(), '.omk', 'state');
   await mkdir(stateDir, { recursive: true });
   await writeFile(
     starPromptStatePath(),
@@ -106,16 +106,16 @@ export async function maybePromptGithubStar(deps: MaybePromptGithubStarDeps = {}
   await markPromptedImpl();
 
   const askYesNoImpl = deps.askYesNoFn ?? askYesNo;
-  const approved = await askYesNoImpl('[omx] Enjoying oh-my-codex? Star it on GitHub? [Y/n] ');
+  const approved = await askYesNoImpl('[omk] Enjoying oh-my-kiro? Star it on GitHub? [Y/n] ');
   if (!approved) return;
 
   const starRepoImpl = deps.starRepoFn ?? starRepo;
   const star = starRepoImpl();
   if (star.ok) {
     const log = deps.logFn ?? console.log;
-    log('[omx] Thanks for the star!');
+    log('[omk] Thanks for the star!');
     return;
   }
   const warn = deps.warnFn ?? console.warn;
-  warn(`[omx] Could not star repository automatically: ${star.error}`);
+  warn(`[omk] Could not star repository automatically: ${star.error}`);
 }

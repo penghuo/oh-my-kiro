@@ -1,4 +1,4 @@
-# oh-my-codex v0.8.1
+# oh-my-kiro v0.8.1
 
 Released: **2026-03-05**
 
@@ -8,7 +8,7 @@ This is a **stability + usability** release focused on team orchestration reliab
 
 ## TL;DR
 
-If you use `$team`/`omx team` heavily, this release makes the runtime more consistent by standardizing around **CLI-first interop**.
+If you use `$team`/`omk team` heavily, this release makes the runtime more consistent by standardizing around **CLI-first interop**.
 
 If you are setting up notifications, onboarding is now cleaner through a **unified `configure-notifications` flow**.
 
@@ -21,7 +21,7 @@ If you use OpenClaw integrations, timeout handling now has **safe configurable b
 ### 1) Team runtime: CLI-first interop is now the default direction
 
 - Added and finalized team API interop through:
-  - `omx team api ...`
+  - `omk team api ...`
 - Legacy `team_*` MCP tools are now treated as deprecated paths in favor of the CLI-first contract.
 
 **Why this matters:**
@@ -53,9 +53,9 @@ If you use OpenClaw integrations, timeout handling now has **safe configurable b
 ## Compatibility / migration notes
 
 - If you previously relied on legacy `team_*` MCP workflows, migrate to:
-  - `omx team api <operation> ...`
+  - `omk team api <operation> ...`
 - For notification setup, prefer:
-  - `omx configure-notifications` (or skill equivalent)
+  - `omk configure-notifications` (or skill equivalent)
 
 No breaking package-level API changes were introduced in this patch release.
 
@@ -90,4 +90,4 @@ Key commits included:
 
 ---
 
-Thanks for using **oh-my-codex**. If anything regresses, please open an issue with repro steps and logs.
+Thanks for using **oh-my-kiro**. If anything regresses, please open an issue with repro steps and logs.

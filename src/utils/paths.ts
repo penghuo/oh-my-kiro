@@ -1,5 +1,5 @@
 /**
- * Path utilities for oh-my-codex
+ * Path utilities for oh-my-kiro
  * Resolves Codex CLI config, skills, prompts, and state directories
  */
 
@@ -33,34 +33,34 @@ export function projectSkillsDir(projectRoot?: string): string {
   return join(projectRoot || process.cwd(), '.agents', 'skills');
 }
 
-/** oh-my-codex state directory (.omx/state/) */
-export function omxStateDir(projectRoot?: string): string {
-  return join(projectRoot || process.cwd(), '.omx', 'state');
+/** oh-my-kiro state directory (.omk/state/) */
+export function omkStateDir(projectRoot?: string): string {
+  return join(projectRoot || process.cwd(), '.omk', 'state');
 }
 
-/** oh-my-codex project memory file (.omx/project-memory.json) */
-export function omxProjectMemoryPath(projectRoot?: string): string {
-  return join(projectRoot || process.cwd(), '.omx', 'project-memory.json');
+/** oh-my-kiro project memory file (.omk/project-memory.json) */
+export function omkProjectMemoryPath(projectRoot?: string): string {
+  return join(projectRoot || process.cwd(), '.omk', 'project-memory.json');
 }
 
-/** oh-my-codex notepad file (.omx/notepad.md) */
-export function omxNotepadPath(projectRoot?: string): string {
-  return join(projectRoot || process.cwd(), '.omx', 'notepad.md');
+/** oh-my-kiro notepad file (.omk/notepad.md) */
+export function omkNotepadPath(projectRoot?: string): string {
+  return join(projectRoot || process.cwd(), '.omk', 'notepad.md');
 }
 
-/** oh-my-codex plans directory (.omx/plans/) */
-export function omxPlansDir(projectRoot?: string): string {
-  return join(projectRoot || process.cwd(), '.omx', 'plans');
+/** oh-my-kiro plans directory (.omk/plans/) */
+export function omkPlansDir(projectRoot?: string): string {
+  return join(projectRoot || process.cwd(), '.omk', 'plans');
 }
 
-/** oh-my-codex logs directory (.omx/logs/) */
-export function omxLogsDir(projectRoot?: string): string {
-  return join(projectRoot || process.cwd(), '.omx', 'logs');
+/** oh-my-kiro logs directory (.omk/logs/) */
+export function omkLogsDir(projectRoot?: string): string {
+  return join(projectRoot || process.cwd(), '.omk', 'logs');
 }
 
-/** oh-my-codex native agent config directory (~/.omx/agents/) */
-export function omxAgentsConfigDir(): string {
-  return join(homedir(), '.omx', 'agents');
+/** oh-my-kiro native agent config directory (~/.omk/agents/) */
+export function omkAgentsConfigDir(): string {
+  return join(homedir(), '.omk', 'agents');
 }
 
 /** Get the package root directory (where agents/, skills/, prompts/ live) */

@@ -1,14 +1,14 @@
-# oh-my-codex v0.8.4
+# oh-my-kiro v0.8.4
 
 Released: **2026-03-06**
 
-This is a **setup-flow patch release** focused on making `omx setup` refresh behavior safer, more predictable, and easier to rerun.
+This is a **setup-flow patch release** focused on making `omk setup` refresh behavior safer, more predictable, and easier to rerun.
 
 ---
 
 ## TL;DR
 
-- `omx setup` now refreshes managed OMX artifacts by default instead of leaving stale generated content behind.
+- `omk setup` now refreshes managed OMK artifacts by default instead of leaving stale generated content behind.
 - Managed refresh paths now preserve backups where applicable before overwriting files.
 - Setup prompts before upgrading managed Codex model references from `gpt-5.3-codex` to `gpt-5.4`.
 - Added deeper refresh/idempotency regression coverage for setup and config generation paths.
@@ -18,9 +18,9 @@ This is a **setup-flow patch release** focused on making `omx setup` refresh beh
 
 ## What changed
 
-### 1) Managed OMX artifacts refresh by default
+### 1) Managed OMK artifacts refresh by default
 
-Setup now treats managed OMX artifacts as refreshable outputs rather than one-time drops. Re-running `omx setup` updates shipped artifacts more consistently, helping existing installations stay aligned with current templates and generated assets.
+Setup now treats managed OMK artifacts as refreshable outputs rather than one-time drops. Re-running `omk setup` updates shipped artifacts more consistently, helping existing installations stay aligned with current templates and generated assets.
 
 **Why this matters:**
 - reduces stale generated files after upgrades
@@ -32,7 +32,7 @@ Setup now treats managed OMX artifacts as refreshable outputs rather than one-ti
 When setup replaces managed artifacts, it now does so with stronger backup behavior where applicable.
 
 **Why this matters:**
-- lowers risk when refreshing existing local OMX-managed files
+- lowers risk when refreshing existing local OMK-managed files
 - gives users a clearer recovery path if they need to inspect prior state
 - makes setup automation less destructive
 
@@ -58,7 +58,7 @@ This release adds/extends tests and validation hardening around:
 
 ## Included commits
 
-- `fed035b` — feat(setup): refresh managed OMX artifacts by default with backups
+- `fed035b` — feat(setup): refresh managed OMK artifacts by default with backups
 - `6aa577d` — feat(setup): prompt before upgrading gpt-5.3-codex to gpt-5.4
 
 ---
@@ -75,4 +75,4 @@ Planned release gates:
 
 ---
 
-Thanks for using **oh-my-codex**. If anything regresses, please open an issue with reproduction steps, logs, and your CLI/runtime details.
+Thanks for using **oh-my-kiro**. If anything regresses, please open an issue with reproduction steps, logs, and your CLI/runtime details.

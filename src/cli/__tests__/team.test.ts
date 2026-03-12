@@ -79,50 +79,50 @@ describe('teamCommand shutdown --force parsing', () => {
 describe('teamCommand api', () => {
   it('builds leader monitoring hints that keep team status visible while ON', () => {
     const hints = buildLeaderMonitoringHints('My Team');
-    assert.equal(hints[0], 'leader_check: omx team status my-team');
+    assert.equal(hints[0], 'leader_check: omk team status my-team');
     assert.match(hints[1] ?? '', /while ON, keep checking state/);
-    assert.match(hints[1] ?? '', /sleep 30 && omx team status my-team/);
+    assert.match(hints[1] ?? '', /sleep 30 && omk team status my-team/);
   });
 
-  it('prints team-specific help for omx team --help', async () => {
+  it('prints team-specific help for omk team --help', async () => {
     const logs: string[] = [];
     const originalLog = console.log;
     try {
       console.log = (...args: unknown[]) => logs.push(args.map(String).join(' '));
       await teamCommand(['--help']);
       assert.equal(logs.length, 1);
-      assert.match(logs[0] ?? '', /Usage: omx team \[ralph\] \[N:agent-type\]/);
-      assert.match(logs[0] ?? '', /omx team api <operation>/);
-      assert.match(logs[0] ?? '', /omx team await <team-name>/);
-      assert.match(logs[0] ?? '', /omx team await <team-name>/);
+      assert.match(logs[0] ?? '', /Usage: omk team \[ralph\] \[N:agent-type\]/);
+      assert.match(logs[0] ?? '', /omk team api <operation>/);
+      assert.match(logs[0] ?? '', /omk team await <team-name>/);
+      assert.match(logs[0] ?? '', /omk team await <team-name>/);
     } finally {
       console.log = originalLog;
     }
   });
 
-  it('prints team-specific help for omx team help alias', async () => {
+  it('prints team-specific help for omk team help alias', async () => {
     const logs: string[] = [];
     const originalLog = console.log;
     try {
       console.log = (...args: unknown[]) => logs.push(args.map(String).join(' '));
       await teamCommand(['help']);
       assert.equal(logs.length, 1);
-      assert.match(logs[0] ?? '', /Usage: omx team \[ralph\] \[N:agent-type\]/);
-      assert.match(logs[0] ?? '', /omx team api <operation>/);
-      assert.match(logs[0] ?? '', /omx team await <team-name>/);
+      assert.match(logs[0] ?? '', /Usage: omk team \[ralph\] \[N:agent-type\]/);
+      assert.match(logs[0] ?? '', /omk team api <operation>/);
+      assert.match(logs[0] ?? '', /omk team await <team-name>/);
     } finally {
       console.log = originalLog;
     }
   });
 
-  it('prints team-api-specific help for omx team api --help', async () => {
+  it('prints team-api-specific help for omk team api --help', async () => {
     const logs: string[] = [];
     const originalLog = console.log;
     try {
       console.log = (...args: unknown[]) => logs.push(args.map(String).join(' '));
       await teamCommand(['api', '--help']);
       assert.equal(logs.length, 1);
-      assert.match(logs[0] ?? '', /Usage: omx team api <operation>/);
+      assert.match(logs[0] ?? '', /Usage: omk team api <operation>/);
       assert.match(logs[0] ?? '', /send-message/);
       assert.match(logs[0] ?? '', /transition-task-status/);
       assert.match(logs[0] ?? '', /read-idle-state/);
@@ -132,14 +132,14 @@ describe('teamCommand api', () => {
     }
   });
 
-  it('prints team-api-specific help for omx team api help alias', async () => {
+  it('prints team-api-specific help for omk team api help alias', async () => {
     const logs: string[] = [];
     const originalLog = console.log;
     try {
       console.log = (...args: unknown[]) => logs.push(args.map(String).join(' '));
       await teamCommand(['api', 'help']);
       assert.equal(logs.length, 1);
-      assert.match(logs[0] ?? '', /Usage: omx team api <operation>/);
+      assert.match(logs[0] ?? '', /Usage: omk team api <operation>/);
       assert.match(logs[0] ?? '', /send-message/);
       assert.match(logs[0] ?? '', /transition-task-status/);
     } finally {
@@ -147,14 +147,14 @@ describe('teamCommand api', () => {
     }
   });
 
-  it('prints operation-specific help for omx team api <operation> --help', async () => {
+  it('prints operation-specific help for omk team api <operation> --help', async () => {
     const logs: string[] = [];
     const originalLog = console.log;
     try {
       console.log = (...args: unknown[]) => logs.push(args.map(String).join(' '));
       await teamCommand(['api', 'send-message', '--help']);
       assert.equal(logs.length, 1);
-      assert.match(logs[0] ?? '', /Usage: omx team api send-message --input <json> \[--json\]/);
+      assert.match(logs[0] ?? '', /Usage: omk team api send-message --input <json> \[--json\]/);
       assert.match(logs[0] ?? '', /Required input fields/);
       assert.match(logs[0] ?? '', /from_worker/);
       assert.match(logs[0] ?? '', /to_worker/);
@@ -164,28 +164,28 @@ describe('teamCommand api', () => {
     }
   });
 
-  it('prints operation-specific help for omx team api <operation> help alias', async () => {
+  it('prints operation-specific help for omk team api <operation> help alias', async () => {
     const logs: string[] = [];
     const originalLog = console.log;
     try {
       console.log = (...args: unknown[]) => logs.push(args.map(String).join(' '));
       await teamCommand(['api', 'claim-task', 'help']);
       assert.equal(logs.length, 1);
-      assert.match(logs[0] ?? '', /Usage: omx team api claim-task --input <json> \[--json\]/);
+      assert.match(logs[0] ?? '', /Usage: omk team api claim-task --input <json> \[--json\]/);
       assert.match(logs[0] ?? '', /expected_version/);
     } finally {
       console.log = originalLog;
     }
   });
 
-  it('prints event query help for omx team api read-events help alias', async () => {
+  it('prints event query help for omk team api read-events help alias', async () => {
     const logs: string[] = [];
     const originalLog = console.log;
     try {
       console.log = (...args: unknown[]) => logs.push(args.map(String).join(' '));
       await teamCommand(['api', 'read-events', 'help']);
       assert.equal(logs.length, 1);
-      assert.match(logs[0] ?? '', /Usage: omx team api read-events --input <json> \[--json\]/);
+      assert.match(logs[0] ?? '', /Usage: omk team api read-events --input <json> \[--json\]/);
       assert.match(logs[0] ?? '', /after_event_id/);
       assert.match(logs[0] ?? '', /wakeable_only/);
       assert.match(logs[0] ?? '', /worker_idle/);
@@ -195,7 +195,7 @@ describe('teamCommand api', () => {
   });
 
   it('executes read-events via CLI api with canonical JSON results', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-team-api-read-events-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-team-api-read-events-'));
     const previousCwd = process.cwd();
     const logs: string[] = [];
     const originalLog = console.log;
@@ -233,7 +233,7 @@ describe('teamCommand api', () => {
           events?: Array<{ type?: string; source_type?: string; worker?: string; task_id?: string }>;
         };
       };
-      assert.equal(envelope.command, 'omx team api read-events');
+      assert.equal(envelope.command, 'omk team api read-events');
       assert.equal(envelope.ok, true);
       assert.equal(envelope.operation, 'read-events');
       assert.equal(envelope.data?.count, 1);
@@ -249,7 +249,7 @@ describe('teamCommand api', () => {
   });
 
   it('executes read-idle-state via CLI api with structured JSON results', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-team-api-read-idle-state-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-team-api-read-idle-state-'));
     const previousCwd = process.cwd();
     const logs: string[] = [];
     const originalLog = console.log;
@@ -294,7 +294,7 @@ describe('teamCommand api', () => {
           last_idle_transition_by_worker?: Record<string, { source_type?: string } | null>;
         };
       };
-      assert.equal(envelope.command, 'omx team api read-idle-state');
+      assert.equal(envelope.command, 'omk team api read-idle-state');
       assert.equal(envelope.ok, true);
       assert.equal(envelope.operation, 'read-idle-state');
       assert.equal(envelope.data?.all_workers_idle, false);
@@ -310,7 +310,7 @@ describe('teamCommand api', () => {
   });
 
   it('executes read-stall-state via CLI api with structured JSON results', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-team-api-read-stall-state-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-team-api-read-stall-state-'));
     const previousCwd = process.cwd();
     const logs: string[] = [];
     const originalLog = console.log;
@@ -399,7 +399,7 @@ describe('teamCommand api', () => {
           reasons?: string[];
         };
       };
-      assert.equal(envelope.command, 'omx team api read-stall-state');
+      assert.equal(envelope.command, 'omk team api read-stall-state');
       assert.equal(envelope.ok, true);
       assert.equal(envelope.operation, 'read-stall-state');
       assert.equal(envelope.data?.team_stalled, true);
@@ -414,7 +414,7 @@ describe('teamCommand api', () => {
   });
 
   it('executes CLI interop operation with stable JSON envelope', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-team-api-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-team-api-'));
     const previousCwd = process.cwd();
     const logs: string[] = [];
     const originalLog = console.log;
@@ -447,7 +447,7 @@ describe('teamCommand api', () => {
       };
       assert.equal(envelope.schema_version, '1.0');
       assert.equal(typeof envelope.timestamp, 'string');
-      assert.equal(envelope.command, 'omx team api send-message');
+      assert.equal(envelope.command, 'omk team api send-message');
       assert.equal(envelope.ok, true);
       assert.equal(envelope.operation, 'send-message');
       assert.equal(envelope.data?.message?.body, 'ACK');
@@ -476,11 +476,11 @@ describe('teamCommand api', () => {
       };
       assert.equal(envelope.schema_version, '1.0');
       assert.equal(typeof envelope.timestamp, 'string');
-      assert.equal(envelope.command, 'omx team api');
+      assert.equal(envelope.command, 'omk team api');
       assert.equal(envelope.ok, false);
       assert.equal(envelope.operation, 'unknown');
       assert.equal(envelope.error?.code, 'invalid_input');
-      assert.match(envelope.error?.message ?? '', /Usage: omx team api/);
+      assert.match(envelope.error?.message ?? '', /Usage: omk team api/);
       assert.equal(process.exitCode, 1);
     } finally {
       console.log = originalLog;
@@ -489,7 +489,7 @@ describe('teamCommand api', () => {
   });
 
   it('supports claim-safe lifecycle via CLI api (create -> claim -> transition)', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-team-api-lifecycle-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-team-api-lifecycle-'));
     const previousCwd = process.cwd();
     const logs: string[] = [];
     const originalLog = console.log;
@@ -566,7 +566,7 @@ describe('teamCommand api', () => {
 
 
   it('accepts new canonical event types via CLI api append-event', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-team-api-event-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-team-api-event-'));
     const previousCwd = process.cwd();
     const logs: string[] = [];
     const originalLog = console.log;
@@ -610,7 +610,7 @@ describe('teamCommand api', () => {
 
 describe('teamCommand await', () => {
   it('returns next canonical event for a team in JSON mode', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-team-await-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-team-await-'));
     const previousCwd = process.cwd();
     const logs: string[] = [];
     const originalLog = console.log;
@@ -652,14 +652,14 @@ describe('teamCommand await', () => {
   });
 
   it('returns a dead-worker event for the prompt-launch smoke path instead of timing out', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-team-await-prompt-dead-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-team-await-prompt-dead-'));
     const binDir = join(wd, 'bin');
     const fakeCodexPath = join(binDir, 'codex');
     const previousCwd = process.cwd();
     const previousPath = process.env.PATH;
     const previousTmux = process.env.TMUX;
-    const previousLaunchMode = process.env.OMX_TEAM_WORKER_LAUNCH_MODE;
-    const previousWorkerCli = process.env.OMX_TEAM_WORKER_CLI;
+    const previousLaunchMode = process.env.OMK_TEAM_WORKER_LAUNCH_MODE;
+    const previousWorkerCli = process.env.OMK_TEAM_WORKER_CLI;
     const logs: string[] = [];
     const stderr: string[] = [];
     const originalLog = console.log;
@@ -682,8 +682,8 @@ process.on('SIGTERM', () => process.exit(0));
       process.chdir(wd);
       process.env.PATH = `${binDir}:${previousPath ?? ''}`;
       delete process.env.TMUX;
-      process.env.OMX_TEAM_WORKER_LAUNCH_MODE = 'prompt';
-      process.env.OMX_TEAM_WORKER_CLI = 'codex';
+      process.env.OMK_TEAM_WORKER_LAUNCH_MODE = 'prompt';
+      process.env.OMK_TEAM_WORKER_CLI = 'codex';
       console.log = (...args: unknown[]) => logs.push(args.map(String).join(' '));
       process.stderr.write = ((chunk: string | Uint8Array) => {
         stderr.push(String(chunk));
@@ -718,23 +718,23 @@ process.on('SIGTERM', () => process.exit(0));
       else delete process.env.PATH;
       if (typeof previousTmux === 'string') process.env.TMUX = previousTmux;
       else delete process.env.TMUX;
-      if (typeof previousLaunchMode === 'string') process.env.OMX_TEAM_WORKER_LAUNCH_MODE = previousLaunchMode;
-      else delete process.env.OMX_TEAM_WORKER_LAUNCH_MODE;
-      if (typeof previousWorkerCli === 'string') process.env.OMX_TEAM_WORKER_CLI = previousWorkerCli;
-      else delete process.env.OMX_TEAM_WORKER_CLI;
+      if (typeof previousLaunchMode === 'string') process.env.OMK_TEAM_WORKER_LAUNCH_MODE = previousLaunchMode;
+      else delete process.env.OMK_TEAM_WORKER_LAUNCH_MODE;
+      if (typeof previousWorkerCli === 'string') process.env.OMK_TEAM_WORKER_CLI = previousWorkerCli;
+      else delete process.env.OMK_TEAM_WORKER_CLI;
       await rm(wd, { recursive: true, force: true });
     }
   });
 
-  it('establishes Ralph-side linked state for real omx team ralph launches', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-team-ralph-link-'));
+  it('establishes Ralph-side linked state for real omk team ralph launches', async () => {
+    const wd = await mkdtemp(join(tmpdir(), 'omk-team-ralph-link-'));
     const binDir = join(wd, 'bin');
     const fakeCodexPath = join(binDir, 'codex');
     const previousCwd = process.cwd();
     const previousPath = process.env.PATH;
     const previousTmux = process.env.TMUX;
-    const previousLaunchMode = process.env.OMX_TEAM_WORKER_LAUNCH_MODE;
-    const previousWorkerCli = process.env.OMX_TEAM_WORKER_CLI;
+    const previousLaunchMode = process.env.OMK_TEAM_WORKER_LAUNCH_MODE;
+    const previousWorkerCli = process.env.OMK_TEAM_WORKER_CLI;
 
     await mkdir(binDir, { recursive: true });
     await writeFile(
@@ -751,15 +751,15 @@ process.on('SIGTERM', () => process.exit(0));
       process.chdir(wd);
       process.env.PATH = `${binDir}:${previousPath ?? ''}`;
       delete process.env.TMUX;
-      process.env.OMX_TEAM_WORKER_LAUNCH_MODE = 'prompt';
-      process.env.OMX_TEAM_WORKER_CLI = 'codex';
+      process.env.OMK_TEAM_WORKER_LAUNCH_MODE = 'prompt';
+      process.env.OMK_TEAM_WORKER_CLI = 'codex';
 
       const teamTask = 'issue 742 linked ralph launch';
       const teamName = parseTeamStartArgs(['ralph', '1:executor', teamTask]).parsed.teamName;
       await teamCommand(['ralph', '1:executor', teamTask]);
 
-      const teamState = JSON.parse(await readFile(join(wd, '.omx', 'state', 'team-state.json'), 'utf-8')) as Record<string, unknown>;
-      const ralphState = JSON.parse(await readFile(join(wd, '.omx', 'state', 'ralph-state.json'), 'utf-8')) as Record<string, unknown>;
+      const teamState = JSON.parse(await readFile(join(wd, '.omk', 'state', 'team-state.json'), 'utf-8')) as Record<string, unknown>;
+      const ralphState = JSON.parse(await readFile(join(wd, '.omk', 'state', 'ralph-state.json'), 'utf-8')) as Record<string, unknown>;
 
       assert.equal(teamState.linked_ralph, true);
       assert.equal(teamState.team_name, teamName);
@@ -776,10 +776,10 @@ process.on('SIGTERM', () => process.exit(0));
       else delete process.env.PATH;
       if (typeof previousTmux === 'string') process.env.TMUX = previousTmux;
       else delete process.env.TMUX;
-      if (typeof previousLaunchMode === 'string') process.env.OMX_TEAM_WORKER_LAUNCH_MODE = previousLaunchMode;
-      else delete process.env.OMX_TEAM_WORKER_LAUNCH_MODE;
-      if (typeof previousWorkerCli === 'string') process.env.OMX_TEAM_WORKER_CLI = previousWorkerCli;
-      else delete process.env.OMX_TEAM_WORKER_CLI;
+      if (typeof previousLaunchMode === 'string') process.env.OMK_TEAM_WORKER_LAUNCH_MODE = previousLaunchMode;
+      else delete process.env.OMK_TEAM_WORKER_LAUNCH_MODE;
+      if (typeof previousWorkerCli === 'string') process.env.OMK_TEAM_WORKER_CLI = previousWorkerCli;
+      else delete process.env.OMK_TEAM_WORKER_CLI;
       await rm(wd, { recursive: true, force: true });
     }
   });

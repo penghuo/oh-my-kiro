@@ -6,15 +6,15 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-function runOmx(
+function runOmk(
   cwd: string,
   argv: string[],
   envOverrides: Record<string, string> = {},
 ): { status: number | null; stdout: string; stderr: string; error: string } {
   const testDir = dirname(fileURLToPath(import.meta.url));
   const repoRoot = join(testDir, '..', '..', '..');
-  const omxBin = join(repoRoot, 'bin', 'omx.js');
-  const result = spawnSync(process.execPath, [omxBin, ...argv], {
+  const omkBin = join(repoRoot, 'bin', 'omk.js');
+  const result = spawnSync(process.execPath, [omkBin, ...argv], {
     cwd,
     encoding: 'utf-8',
     env: {
@@ -34,9 +34,9 @@ function shouldSkipForSpawnPermissions(err: string): boolean {
   return typeof err === 'string' && /(EPERM|EACCES)/i.test(err);
 }
 
-describe('omx launch fallback when tmux is unavailable', () => {
+describe('omk launch fallback when tmux is unavailable', () => {
   it('launches codex directly without tmux ENOENT noise', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-launch-fallback-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-launch-fallback-'));
     try {
       const home = join(wd, 'home');
       const fakeBin = join(wd, 'bin');
@@ -50,15 +50,15 @@ describe('omx launch fallback when tmux is unavailable', () => {
       );
       await chmod(fakeCodexPath, 0o755);
 
-      const result = runOmx(
+      const result = runOmk(
         wd,
         ['--xhigh', '--madmax'],
         {
           HOME: home,
           PATH: `${fakeBin}:/usr/bin:/bin`,
-          OMX_AUTO_UPDATE: '0',
-          OMX_NOTIFY_FALLBACK: '0',
-          OMX_HOOK_DERIVED_SIGNALS: '0',
+          OMK_AUTO_UPDATE: '0',
+          OMK_NOTIFY_FALLBACK: '0',
+          OMK_HOOK_DERIVED_SIGNALS: '0',
         },
       );
 

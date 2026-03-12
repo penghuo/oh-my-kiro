@@ -1,10 +1,10 @@
 # GPT-5.4 Prompt Guidance Contract
 
-Status: contributor-facing contract for OMX prompt and orchestration surfaces.
+Status: contributor-facing contract for OMK prompt and orchestration surfaces.
 
 ## Purpose
 
-This document explains the **behavioral prompt contract** introduced by the GPT-5.4 guidance rollout in [#608](https://github.com/Yeachan-Heo/oh-my-codex/issues/608) and expanded in [#611](https://github.com/Yeachan-Heo/oh-my-codex/pull/611) and [#612](https://github.com/Yeachan-Heo/oh-my-codex/pull/612).
+This document explains the **behavioral prompt contract** introduced by the GPT-5.4 guidance rollout in [#608](https://github.com/penghuo/oh-my-kiro/issues/608) and expanded in [#611](https://github.com/penghuo/oh-my-kiro/pull/611) and [#612](https://github.com/penghuo/oh-my-kiro/pull/612).
 
 Use it when you edit any of these surfaces:
 
@@ -15,7 +15,7 @@ Use it when you edit any of these surfaces:
 
 ## Scope and current source of truth
 
-Issue [#615](https://github.com/Yeachan-Heo/oh-my-codex/issues/615) uses examples like `src/prompts/role-planner.ts`, but the current prompt sources in this repository live in **`prompts/*.md`**, then get installed to `~/.codex/prompts/`.
+Issue [#615](https://github.com/penghuo/oh-my-kiro/issues/615) uses examples like `src/prompts/role-planner.ts`, but the current prompt sources in this repository live in **`prompts/*.md`**, then get installed to `~/.codex/prompts/`.
 
 The GPT-5.4 contract is currently distributed across:
 
@@ -30,8 +30,8 @@ This document is the contributor-oriented index for those surfaces.
 
 ## What this contract is — and is not
 
-This contract is about **how OMX prompts should behave**.
-It is not the same thing as OMX's routing metadata.
+This contract is about **how OMK prompts should behave**.
+It is not the same thing as OMK's routing metadata.
 
 - **Behavioral contract:** compact output defaults, automatic follow-through, localized task updates, persistent tool use, and evidence-backed completion.
 - **Adjacent but separate routing layer:** role/tier/posture metadata such as `frontier-orchestrator`, `deep-worker`, and `fast-lane` in `src/agents/native-config.ts` and `docs/shared/agent-tiers.md`.
@@ -39,7 +39,7 @@ It is not the same thing as OMX's routing metadata.
 If you are changing prompt prose, use this document first.
 If you are changing routing metadata or native config overlays, use the routing docs/tests first.
 
-## The 4 core GPT-5.4 patterns OMX currently enforces
+## The 4 core GPT-5.4 patterns OMK currently enforces
 
 ### 1. Compact, information-dense output by default
 
@@ -107,7 +107,7 @@ Example prompt text:
 
 ### 4. Persistent tool use, dependency-aware sequencing, and evidence-backed completion
 
-Contributors should preserve the rule that prompts keep using tools when correctness depends on retrieval, diagnostics, tests, or verification. OMX should not stop at a plausible answer if proof is still missing.
+Contributors should preserve the rule that prompts keep using tools when correctness depends on retrieval, diagnostics, tests, or verification. OMK should not stop at a plausible answer if proof is still missing.
 
 Representative locations:
 
@@ -129,7 +129,7 @@ Example prompt text:
 
 ## Reinforcement pattern: scenario examples
 
-OMX also uses **scenario-style examples** to make the contract concrete for "continue", "make a PR", and "merge if CI green" flows.
+OMK also uses **scenario-style examples** to make the contract concrete for "continue", "make a PR", and "merge if CI green" flows.
 These examples reinforce the four core patterns above, but they are not a separate routing or reasoning system.
 
 Representative locations:
@@ -201,7 +201,7 @@ npm test
 
 ## References
 
-- Implementation issue: [#608](https://github.com/Yeachan-Heo/oh-my-codex/issues/608)
-- Documentation issue: [#615](https://github.com/Yeachan-Heo/oh-my-codex/issues/615)
+- Implementation issue: [#608](https://github.com/penghuo/oh-my-kiro/issues/608)
+- Documentation issue: [#615](https://github.com/penghuo/oh-my-kiro/issues/615)
 - Rollout summary: `docs/release-notes-0.8.6.md:24-47`
 - Guidance schema: `docs/guidance-schema.md`

@@ -1,4 +1,4 @@
-# oh-my-codex v0.8.7
+# oh-my-kiro v0.8.7
 
 Released: 2026-03-08
 
@@ -9,7 +9,7 @@ Contributors: [@Yeachan-Heo](https://github.com/Yeachan-Heo), [@HaD0Yun](https:/
 
 ### Prompt-system contract cleanup and XML normalization
 
-OMX's instruction surfaces now have a cleaner shared contract across the root orchestrator, templates, generated guidance, and the prompt catalog.
+OMK's instruction surfaces now have a cleaner shared contract across the root orchestrator, templates, generated guidance, and the prompt catalog.
 
 This release:
 - centralizes prompt-guidance contract validation
@@ -19,10 +19,10 @@ This release:
 - documents the GPT-5.4 prompt-guidance contract directly in the repo
 
 Representative PRs:
-- [#619](https://github.com/Yeachan-Heo/oh-my-codex/pull/619) — XML-tag prompt migration
-- [#620](https://github.com/Yeachan-Heo/oh-my-codex/pull/620) — prompt-guidance contract documentation
-- [#623](https://github.com/Yeachan-Heo/oh-my-codex/pull/623) — 2-layer orchestrator / role-prompt documentation
-- [#625](https://github.com/Yeachan-Heo/oh-my-codex/pull/625) — leader-only orchestration boundaries
+- [#619](https://github.com/penghuo/oh-my-kiro/pull/619) — XML-tag prompt migration
+- [#620](https://github.com/penghuo/oh-my-kiro/pull/620) — prompt-guidance contract documentation
+- [#623](https://github.com/penghuo/oh-my-kiro/pull/623) — 2-layer orchestrator / role-prompt documentation
+- [#625](https://github.com/penghuo/oh-my-kiro/pull/625) — leader-only orchestration boundaries
 
 ### Team runtime hardening
 
@@ -34,11 +34,11 @@ Notable effects:
 - broader runtime/state/worktree/end-to-end regression coverage
 - a dedicated hardening benchmark script
 
-PR: [#624](https://github.com/Yeachan-Heo/oh-my-codex/pull/624)
+PR: [#624](https://github.com/penghuo/oh-my-kiro/pull/624)
 
 ### MCP server stdio teardown unification
 
-OMX's MCP stdio entrypoints now share one idempotent shutdown path instead of duplicating raw transport bootstrap logic in each server.
+OMK's MCP stdio entrypoints now share one idempotent shutdown path instead of duplicating raw transport bootstrap logic in each server.
 
 This release:
 - adds `autoStartStdioMcpServer` in `src/mcp/bootstrap.ts`
@@ -46,7 +46,7 @@ This release:
 - routes stdin close, transport close, `SIGTERM`, and `SIGINT` through one lifecycle path
 - adds regression coverage for idle teardown across the MCP server entrypoints
 
-PRs: [#626](https://github.com/Yeachan-Heo/oh-my-codex/pull/626), [#627](https://github.com/Yeachan-Heo/oh-my-codex/pull/627)
+PRs: [#626](https://github.com/penghuo/oh-my-kiro/pull/626), [#627](https://github.com/penghuo/oh-my-kiro/pull/627)
 
 ### npm global-install bin contract fix
 
@@ -54,15 +54,15 @@ This release also includes a last-minute packaging fix for global installation b
 
 It:
 - corrects the published npm bin path contract in `package.json`
-- adds `src/cli/__tests__/package-bin-contract.test.ts` so the global-install `omx` entrypoint stays covered in CI
+- adds `src/cli/__tests__/package-bin-contract.test.ts` so the global-install `omk` entrypoint stays covered in CI
 
-PR: [#633](https://github.com/Yeachan-Heo/oh-my-codex/pull/633)
+PR: [#633](https://github.com/penghuo/oh-my-kiro/pull/633)
 
 ## Bug fixes and operational polish
 
 ### Windows / tmux capability handling
 
-OMX no longer blocks native Windows purely because the platform is `win32`.
+OMK no longer blocks native Windows purely because the platform is `win32`.
 
 Instead, it now:
 - checks actual tmux capability
@@ -70,7 +70,7 @@ Instead, it now:
 - uses `where` where appropriate on Windows
 - documents platform-specific setup paths more clearly in the README
 
-PR: [#616](https://github.com/Yeachan-Heo/oh-my-codex/pull/616)
+PR: [#616](https://github.com/penghuo/oh-my-kiro/pull/616)
 
 ### Fast-path agent posture tuning
 
@@ -98,6 +98,6 @@ e53c915 docs: document GPT-5.4 prompt guidance contract (#620)
 810549a docs(prompt): clarify 2-layer orchestrator and role prompt model
 7b193d7 fix(prompts): enforce leader-only orchestration boundaries
 adcc5b6 feat(team): harden expired-claim recovery and worktree hygiene (#624)
-577c416 fix(mcp): centralize stdio lifecycle teardown for OMX servers (#626) (#627)
+577c416 fix(mcp): centralize stdio lifecycle teardown for OMK servers (#626) (#627)
 50619d7 Fix npm bin path contract for global install (#633)
 ```

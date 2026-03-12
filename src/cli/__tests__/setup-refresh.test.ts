@@ -33,7 +33,7 @@ async function runSetupWithCapturedLogs(
   }
 }
 
-describe("omx setup refresh summary and dry-run behavior", () => {
+describe("omk setup refresh summary and dry-run behavior", () => {
   async function runSetupInTempDir(
     wd: string,
     options: Parameters<typeof setup>[0],
@@ -48,9 +48,9 @@ describe("omx setup refresh summary and dry-run behavior", () => {
   }
 
   it("prints per-category summary and verbose changed-file detail", async () => {
-    const wd = await mkdtemp(join(tmpdir(), "omx-setup-refresh-"));
+    const wd = await mkdtemp(join(tmpdir(), "omk-setup-refresh-"));
     try {
-      await mkdir(join(wd, ".omx", "state"), { recursive: true });
+      await mkdir(join(wd, ".omk", "state"), { recursive: true });
       await runSetupInTempDir(wd, { scope: "project" });
 
       const skillPath = join(wd, ".agents", "skills", "help", "SKILL.md");
@@ -73,9 +73,9 @@ describe("omx setup refresh summary and dry-run behavior", () => {
   });
 
   it("does not overwrite or create backups during dry-run", async () => {
-    const wd = await mkdtemp(join(tmpdir(), "omx-setup-refresh-"));
+    const wd = await mkdtemp(join(tmpdir(), "omk-setup-refresh-"));
     try {
-      await mkdir(join(wd, ".omx", "state"), { recursive: true });
+      await mkdir(join(wd, ".omk", "state"), { recursive: true });
       await runSetupInTempDir(wd, { scope: "project" });
 
       const skillPath = join(wd, ".agents", "skills", "help", "SKILL.md");
@@ -87,7 +87,7 @@ describe("omx setup refresh summary and dry-run behavior", () => {
         dryRun: true,
       });
       assert.equal(await readFile(skillPath, "utf-8"), customized);
-      assert.equal(existsSync(join(wd, ".omx", "backups", "setup")), false);
+      assert.equal(existsSync(join(wd, ".omk", "backups", "setup")), false);
       assert.match(output, /skills: updated=/);
       assert.match(output, /skills: .*backed_up=1/);
     } finally {
@@ -96,9 +96,9 @@ describe("omx setup refresh summary and dry-run behavior", () => {
   });
 
   it("creates backup files under the scope-specific setup backup root when refreshing modified managed files", async () => {
-    const wd = await mkdtemp(join(tmpdir(), "omx-setup-refresh-"));
+    const wd = await mkdtemp(join(tmpdir(), "omk-setup-refresh-"));
     try {
-      await mkdir(join(wd, ".omx", "state"), { recursive: true });
+      await mkdir(join(wd, ".omk", "state"), { recursive: true });
       await runSetupInTempDir(wd, { scope: "project" });
 
       const promptPath = join(wd, ".codex", "prompts", "executor.md");
@@ -107,7 +107,7 @@ describe("omx setup refresh summary and dry-run behavior", () => {
 
       await runSetupInTempDir(wd, { scope: "project" });
 
-      const backupsRoot = join(wd, ".omx", "backups", "setup");
+      const backupsRoot = join(wd, ".omk", "backups", "setup");
       assert.equal(existsSync(backupsRoot), true);
       const timestamps = await readdir(backupsRoot);
       assert.ok(timestamps.length >= 1);
@@ -126,9 +126,9 @@ describe("omx setup refresh summary and dry-run behavior", () => {
   });
 
   it("offers an upgrade from gpt-5.3-codex to gpt-5.4 when accepted", async () => {
-    const wd = await mkdtemp(join(tmpdir(), "omx-setup-refresh-"));
+    const wd = await mkdtemp(join(tmpdir(), "omk-setup-refresh-"));
     try {
-      await mkdir(join(wd, ".omx", "state"), { recursive: true });
+      await mkdir(join(wd, ".omk", "state"), { recursive: true });
       await mkdir(join(wd, ".codex"), { recursive: true });
       await writeFile(
         join(wd, ".codex", "config.toml"),
@@ -158,9 +158,9 @@ describe("omx setup refresh summary and dry-run behavior", () => {
   });
 
   it("preserves gpt-5.3-codex when the upgrade prompt is declined", async () => {
-    const wd = await mkdtemp(join(tmpdir(), "omx-setup-refresh-"));
+    const wd = await mkdtemp(join(tmpdir(), "omk-setup-refresh-"));
     try {
-      await mkdir(join(wd, ".omx", "state"), { recursive: true });
+      await mkdir(join(wd, ".omk", "state"), { recursive: true });
       await mkdir(join(wd, ".codex"), { recursive: true });
       await writeFile(
         join(wd, ".codex", "config.toml"),
@@ -183,9 +183,9 @@ describe("omx setup refresh summary and dry-run behavior", () => {
   });
 
   it("preserves gpt-5.3-codex in non-interactive runs without prompting", async () => {
-    const wd = await mkdtemp(join(tmpdir(), "omx-setup-refresh-"));
+    const wd = await mkdtemp(join(tmpdir(), "omk-setup-refresh-"));
     try {
-      await mkdir(join(wd, ".omx", "state"), { recursive: true });
+      await mkdir(join(wd, ".omk", "state"), { recursive: true });
       await mkdir(join(wd, ".codex"), { recursive: true });
       await writeFile(
         join(wd, ".codex", "config.toml"),

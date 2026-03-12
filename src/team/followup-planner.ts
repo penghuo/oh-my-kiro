@@ -118,14 +118,14 @@ function buildLaunchHints(
 ): FollowupLaunchHints {
   if (mode === 'team') {
     return {
-      shellCommand: `omx team ralph ${recommendedHeadcount}:${fallbackRole} ${toQuotedCliArg(task)}`,
+      shellCommand: `omk team ralph ${recommendedHeadcount}:${fallbackRole} ${toQuotedCliArg(task)}`,
       skillCommand: `$team ralph ${recommendedHeadcount}:${fallbackRole} ${toQuotedCliArg(task)}`,
       rationale: 'Launch team with linked Ralph follow-up so delivery lanes stay parallel but final verification remains persistent and evidence-backed.',
     };
   }
 
   return {
-    shellCommand: `omx ralph ${toQuotedCliArg(task)}`,
+    shellCommand: `omk ralph ${toQuotedCliArg(task)}`,
     skillCommand: `$ralph ${toQuotedCliArg(task)}`,
     rationale: 'Launch Ralph directly when one persistent implementation + verification loop is sufficient without team coordination overhead.',
   };
@@ -140,7 +140,7 @@ function buildVerificationPlan(
     return {
       summary: 'Use a linked team -> ralph path: team workers deliver in parallel, then Ralph closes with fresh evidence, regression checks, and final sign-off.',
       checkpoints: [
-        'Launch via `omx team ralph ...` (or `$team ralph ...`) so Ralph stays linked to the team run.',
+        'Launch via `omk team ralph ...` (or `$team ralph ...`) so Ralph stays linked to the team run.',
         `Keep ${qualityLane?.role ?? 'the verification lane'} focused on tests, regression coverage, and evidence capture before team shutdown.`,
         'Reserve Ralph for post-team completion review, acceptance-criteria validation, and final architecture/completion sign-off.',
       ],

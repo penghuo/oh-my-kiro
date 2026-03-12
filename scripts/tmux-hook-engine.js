@@ -1,7 +1,7 @@
 import { createHash } from 'crypto';
 
 export const DEFAULT_ALLOWED_MODES = ['ralph', 'ultrawork', 'team'];
-export const DEFAULT_MARKER = '[OMX_TMUX_INJECT]';
+export const DEFAULT_MARKER = '[OMK_TMUX_INJECT]';
 const PLACEHOLDER_TARGET_VALUES = new Set([
   'replace-with-tmux-pane-id',
   'replace-with-tmux-session-name',

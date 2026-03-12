@@ -117,7 +117,7 @@ describe('maybeCheckAndPromptUpdate', () => {
   }
 
   it('runs setup refresh after a successful auto-update', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-update-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-update-'));
     const originalLog = console.log;
     const prompts: string[] = [];
     const setupCalls: Array<{ force?: boolean }> = [];
@@ -147,7 +147,7 @@ describe('maybeCheckAndPromptUpdate', () => {
   });
 
   it('does not update or refresh setup when the prompt is declined', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-update-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-update-'));
     let updateAttempts = 0;
     let setupCalls = 0;
 
@@ -175,7 +175,7 @@ describe('maybeCheckAndPromptUpdate', () => {
   });
 
   it('does not refresh setup when the global update fails', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-update-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-update-'));
     const originalLog = console.log;
     const logs: string[] = [];
     let setupCalls = 0;
@@ -198,7 +198,7 @@ describe('maybeCheckAndPromptUpdate', () => {
       });
 
       assert.equal(setupCalls, 0);
-      assert.match(logs.join('\n'), /Update failed\. Run manually: npm install -g oh-my-codex@latest/);
+      assert.match(logs.join('\n'), /Update failed\. Run manually: npm install -g oh-my-kiro@latest/);
     } finally {
       console.log = originalLog;
       await rm(cwd, { recursive: true, force: true });
@@ -206,7 +206,7 @@ describe('maybeCheckAndPromptUpdate', () => {
   });
 
   it('skips the update flow when the fetched version is not newer', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-update-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-update-'));
     let promptCalls = 0;
     let updateAttempts = 0;
 

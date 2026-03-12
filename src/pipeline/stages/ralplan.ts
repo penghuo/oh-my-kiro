@@ -2,7 +2,7 @@
  * RALPLAN stage adapter for pipeline orchestrator.
  *
  * Wraps the consensus planning workflow (planner + architect + critic)
- * into a PipelineStage. Produces a plan artifact at `.omx/plans/`.
+ * into a PipelineStage. Produces a plan artifact at `.omk/plans/`.
  */
 
 import { existsSync, readdirSync } from 'fs';
@@ -27,7 +27,7 @@ export function createRalplanStage(): PipelineStage {
 
     canSkip(ctx: StageContext): boolean {
       // Skip if a plan artifact already exists
-      const plansDir = join(ctx.cwd, '.omx', 'plans');
+      const plansDir = join(ctx.cwd, '.omk', 'plans');
       if (!existsSync(plansDir)) return false;
       try {
         const files = readdirSync(plansDir) as string[];
@@ -41,7 +41,7 @@ export function createRalplanStage(): PipelineStage {
 
     async run(ctx: StageContext): Promise<StageResult> {
       const startTime = Date.now();
-      const plansDir = join(ctx.cwd, '.omx', 'plans');
+      const plansDir = join(ctx.cwd, '.omk', 'plans');
 
       try {
         // Discover any existing plan files

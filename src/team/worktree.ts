@@ -158,7 +158,7 @@ function resolveBranchName(input: WorktreePlanInput): string | null {
 
 function resolveWorktreePath(input: WorktreePlanInput, repoRoot: string): string {
   const parent = dirname(repoRoot);
-  const bucket = `${basename(repoRoot)}.omx-worktrees`;
+  const bucket = `${basename(repoRoot)}.omk-worktrees`;
 
   if (input.scope === 'launch') {
     if (!input.mode.enabled || input.mode.detached) {

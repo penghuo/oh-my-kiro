@@ -59,7 +59,7 @@ Sequential task execution wastes time when tasks are independent. Ultrawork enab
 
 ## State Management
 
-Use `omx_state` MCP tools for ultrawork lifecycle state.
+Use `omk_state` MCP tools for ultrawork lifecycle state.
 
 - **On start**:
   `state_write({mode: "ultrawork", active: true, reinforcement_count: 1, started_at: "<now>"})`

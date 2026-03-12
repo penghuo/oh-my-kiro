@@ -10,7 +10,7 @@ import {
 
 describe('followup-planner', () => {
   it('resolves available agent types from explicit prompt directories', async () => {
-    const dir = await mkdtemp(join(tmpdir(), 'omx-followup-roster-'));
+    const dir = await mkdtemp(join(tmpdir(), 'omk-followup-roster-'));
     try {
       await writeFile(join(dir, 'executor.md'), '# Executor');
       await writeFile(join(dir, 'architect.md'), '# Architect');
@@ -25,7 +25,7 @@ describe('followup-planner', () => {
 
 
   it('includes team-executor when the prompt is available', async () => {
-    const dir = await mkdtemp(join(tmpdir(), 'omx-followup-roster-'));
+    const dir = await mkdtemp(join(tmpdir(), 'omk-followup-roster-'));
     try {
       await writeFile(join(dir, 'executor.md'), '# Executor');
       await writeFile(join(dir, 'team-executor.md'), '# Team Executor');
@@ -53,7 +53,7 @@ describe('followup-planner', () => {
     assert.ok(
       plan.allocations.some((allocation) => allocation.reason.includes('specialist') || allocation.reason.includes('verification')),
     );
-    assert.equal(plan.launchHints.shellCommand, 'omx team ralph 3:executor "Fix flaky integration tests and update README"');
+    assert.equal(plan.launchHints.shellCommand, 'omk team ralph 3:executor "Fix flaky integration tests and update README"');
     assert.equal(plan.launchHints.skillCommand, '$team ralph 3:executor "Fix flaky integration tests and update README"');
     assert.match(plan.verificationPlan.summary, /team -> ralph/i);
     assert.equal(plan.verificationPlan.checkpoints.length, 3);
@@ -71,7 +71,7 @@ describe('followup-planner', () => {
     assert.match(plan.staffingSummary, /architect x1/);
     assert.match(plan.staffingSummary, /test-engineer x1/);
     assert.ok(plan.allocations.some((allocation) => allocation.reason.includes('sign-off')));
-    assert.equal(plan.launchHints.shellCommand, 'omx ralph "Investigate auth regression and verify the fix"');
+    assert.equal(plan.launchHints.shellCommand, 'omk ralph "Investigate auth regression and verify the fix"');
     assert.equal(plan.launchHints.skillCommand, '$ralph "Investigate auth regression and verify the fix"');
     assert.match(plan.verificationPlan.summary, /persistent execution and verification owner/i);
     assert.equal(plan.verificationPlan.checkpoints.length, 3);

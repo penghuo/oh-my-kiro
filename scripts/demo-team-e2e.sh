@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# OMX Team E2E Demo Script
+# OMK Team E2E Demo Script
 #
 # This script demonstrates the tmux-based multi-agent orchestration system
 # with mixed Codex/Claude workers. It performs a complete end-to-end test
@@ -13,9 +13,9 @@
 #   WORKER_COUNT                    Number of workers (default: 6, minimum: 5)
 #   TEAM_TASK                       Task description (default: "e2e team demo <timestamp>")
 #   TEAM_NAME                       Team identifier (default: slugified TEAM_TASK)
-#   OMX_TEAM_WORKER_CLI             Worker CLI mode (default: auto)
-#   OMX_TEAM_WORKER_CLI_MAP         Comma-separated CLI assignments per worker
-#   OMX_TEAM_WORKER_LAUNCH_ARGS     Arguments passed to worker CLIs
+#   OMK_TEAM_WORKER_CLI             Worker CLI mode (default: auto)
+#   OMK_TEAM_WORKER_CLI_MAP         Comma-separated CLI assignments per worker
+#   OMK_TEAM_WORKER_LAUNCH_ARGS     Arguments passed to worker CLIs
 #
 # Example:
 #   WORKER_COUNT=8 ./scripts/demo-team-e2e.sh
@@ -58,7 +58,7 @@ build_default_cli_map() {
   (IFS=,; echo "${entries[*]}")
 }
 
-require_bin omx
+require_bin omk
 require_bin jq
 
 WORKER_COUNT="${WORKER_COUNT:-6}"
@@ -72,45 +72,45 @@ if ((WORKER_COUNT < 5)); then
 fi
 
 # Validate CLI map length matches worker count when explicitly provided
-if [[ -n "${OMX_TEAM_WORKER_CLI_MAP:-}" ]]; then
-  IFS=',' read -ra CLI_MAP_ENTRIES <<< "$OMX_TEAM_WORKER_CLI_MAP"
+if [[ -n "${OMK_TEAM_WORKER_CLI_MAP:-}" ]]; then
+  IFS=',' read -ra CLI_MAP_ENTRIES <<< "$OMK_TEAM_WORKER_CLI_MAP"
   if (("${#CLI_MAP_ENTRIES[@]}" != WORKER_COUNT)); then
-    echo "error: OMX_TEAM_WORKER_CLI_MAP has ${#CLI_MAP_ENTRIES[@]} entries but WORKER_COUNT is $WORKER_COUNT" >&2
+    echo "error: OMK_TEAM_WORKER_CLI_MAP has ${#CLI_MAP_ENTRIES[@]} entries but WORKER_COUNT is $WORKER_COUNT" >&2
     exit 1
   fi
 fi
 
 TEAM_TASK="${TEAM_TASK:-e2e team demo $(date -u +%Y%m%d%H%M%S)}"
 TEAM_NAME="${TEAM_NAME:-$(slugify "$TEAM_TASK")}"
-OMX_TEAM_WORKER_CLI="${OMX_TEAM_WORKER_CLI:-auto}"
-OMX_TEAM_WORKER_CLI_MAP="${OMX_TEAM_WORKER_CLI_MAP:-$(build_default_cli_map "$WORKER_COUNT")}"
-OMX_TEAM_WORKER_LAUNCH_ARGS="${OMX_TEAM_WORKER_LAUNCH_ARGS:---model gpt-5.3-codex-spark -c model_reasoning_effort=\"low\"}"
+OMK_TEAM_WORKER_CLI="${OMK_TEAM_WORKER_CLI:-auto}"
+OMK_TEAM_WORKER_CLI_MAP="${OMK_TEAM_WORKER_CLI_MAP:-$(build_default_cli_map "$WORKER_COUNT")}"
+OMK_TEAM_WORKER_LAUNCH_ARGS="${OMK_TEAM_WORKER_LAUNCH_ARGS:---model gpt-5.3-codex-spark -c model_reasoning_effort=\"low\"}"
 
 TEAM_STARTED=0
 cleanup() {
   if ((TEAM_STARTED == 1)); then
     echo "[cleanup] shutting down team: $TEAM_NAME"
-    omx team shutdown "$TEAM_NAME" >/dev/null 2>&1 || true
+    omk team shutdown "$TEAM_NAME" >/dev/null 2>&1 || true
     echo "[cleanup] cleaning state for team: $TEAM_NAME"
-    omx team api cleanup --input "{\"team_name\":\"$TEAM_NAME\"}" --json >/dev/null 2>&1 || true
+    omk team api cleanup --input "{\"team_name\":\"$TEAM_NAME\"}" --json >/dev/null 2>&1 || true
   fi
 }
 trap cleanup EXIT
 
-echo "== OMX Team E2E demo =="
+echo "== OMK Team E2E demo =="
 echo "TEAM_TASK=$TEAM_TASK"
 echo "TEAM_NAME=$TEAM_NAME"
 echo "WORKER_COUNT=$WORKER_COUNT"
-echo "OMX_TEAM_WORKER_CLI=$OMX_TEAM_WORKER_CLI"
-echo "OMX_TEAM_WORKER_CLI_MAP=$OMX_TEAM_WORKER_CLI_MAP"
-echo "OMX_TEAM_WORKER_LAUNCH_ARGS=$OMX_TEAM_WORKER_LAUNCH_ARGS"
+echo "OMK_TEAM_WORKER_CLI=$OMK_TEAM_WORKER_CLI"
+echo "OMK_TEAM_WORKER_CLI_MAP=$OMK_TEAM_WORKER_CLI_MAP"
+echo "OMK_TEAM_WORKER_LAUNCH_ARGS=$OMK_TEAM_WORKER_LAUNCH_ARGS"
 
 echo "[1/8] start team (${WORKER_COUNT} mixed workers)"
-omx team "${WORKER_COUNT}:executor" "$TEAM_TASK"
+omk team "${WORKER_COUNT}:executor" "$TEAM_TASK"
 TEAM_STARTED=1
 
 echo "[2/8] status"
-omx team status "$TEAM_NAME"
+omk team status "$TEAM_NAME"
 
 echo "[3/8] create task"
 CREATE_INPUT="$(jq -nc \
@@ -119,7 +119,7 @@ CREATE_INPUT="$(jq -nc \
   --arg description "demo task" \
   --arg owner "worker-1" \
   '{team_name:$team,subject:$subject,description:$description,owner:$owner}')"
-CREATE_JSON="$(omx team api create-task --input "$CREATE_INPUT" --json)"
+CREATE_JSON="$(omk team api create-task --input "$CREATE_INPUT" --json)"
 TASK_ID="$(echo "$CREATE_JSON" | jq -r '.data.task.id // empty')"
 if [[ -z "$TASK_ID" ]]; then
   echo "error: failed to parse task id from create-task response" >&2
@@ -133,7 +133,7 @@ CLAIM_INPUT="$(jq -nc \
   --arg task "$TASK_ID" \
   --arg worker "worker-1" \
   '{team_name:$team,task_id:$task,worker:$worker,expected_version:1}')"
-CLAIM_JSON="$(omx team api claim-task --input "$CLAIM_INPUT" --json)"
+CLAIM_JSON="$(omk team api claim-task --input "$CLAIM_INPUT" --json)"
 CLAIM_TOKEN="$(echo "$CLAIM_JSON" | jq -r '.data.claimToken // empty')"
 if [[ -z "$CLAIM_TOKEN" ]]; then
   echo "error: failed to parse claimToken from claim-task response" >&2
@@ -146,34 +146,34 @@ TRANSITION_INPUT="$(jq -nc \
   --arg task "$TASK_ID" \
   --arg token "$CLAIM_TOKEN" \
   '{team_name:$team,task_id:$task,from:"in_progress",to:"completed",claim_token:$token}')"
-omx team api transition-task-status --input "$TRANSITION_INPUT" --json >/dev/null
+omk team api transition-task-status --input "$TRANSITION_INPUT" --json >/dev/null
 
 echo "[6/8] mailbox flow"
 SEND_INPUT="$(jq -nc \
   --arg team "$TEAM_NAME" \
   --arg body "ACK one-shot" \
   '{team_name:$team,from_worker:"leader-fixed",to_worker:"worker-1",body:$body}')"
-omx team api send-message --input "$SEND_INPUT" --json >/dev/null
+omk team api send-message --input "$SEND_INPUT" --json >/dev/null
 MAILBOX_INPUT="$(jq -nc --arg team "$TEAM_NAME" '{team_name:$team,worker:"worker-1"}')"
-MAILBOX_JSON="$(omx team api mailbox-list --input "$MAILBOX_INPUT" --json)"
+MAILBOX_JSON="$(omk team api mailbox-list --input "$MAILBOX_INPUT" --json)"
 MESSAGE_ID="$(echo "$MAILBOX_JSON" | jq -r '.data.messages[0].id // empty')"
 if [[ -n "$MESSAGE_ID" ]]; then
   MARK_INPUT="$(jq -nc \
     --arg team "$TEAM_NAME" \
     --arg id "$MESSAGE_ID" \
     '{team_name:$team,worker:"worker-1",message_id:$id}')"
-  omx team api mailbox-mark-notified --input "$MARK_INPUT" --json >/dev/null
-  omx team api mailbox-mark-delivered --input "$MARK_INPUT" --json >/dev/null
+  omk team api mailbox-mark-notified --input "$MARK_INPUT" --json >/dev/null
+  omk team api mailbox-mark-delivered --input "$MARK_INPUT" --json >/dev/null
 fi
 
 echo "[7/8] summary envelope check"
 SUMMARY_INPUT="$(jq -nc --arg team "$TEAM_NAME" '{team_name:$team}')"
-SUMMARY_JSON="$(omx team api get-summary --input "$SUMMARY_INPUT" --json)"
+SUMMARY_JSON="$(omk team api get-summary --input "$SUMMARY_INPUT" --json)"
 echo "$SUMMARY_JSON" | jq -e '.schema_version == "1.0" and .operation == "get-summary" and .ok == true' >/dev/null
 
 echo "[8/8] shutdown + cleanup"
-omx team shutdown "$TEAM_NAME"
-omx team api cleanup --input "{\"team_name\":\"$TEAM_NAME\"}" --json >/dev/null
+omk team shutdown "$TEAM_NAME"
+omk team api cleanup --input "{\"team_name\":\"$TEAM_NAME\"}" --json >/dev/null
 TEAM_STARTED=0
 
 echo "E2E demo complete."

@@ -9,11 +9,11 @@ import {
   codexPromptsDir,
   userSkillsDir,
   projectSkillsDir,
-  omxStateDir,
-  omxProjectMemoryPath,
-  omxNotepadPath,
-  omxPlansDir,
-  omxLogsDir,
+  omkStateDir,
+  omkProjectMemoryPath,
+  omkNotepadPath,
+  omkPlansDir,
+  omkLogsDir,
   packageRoot,
 } from '../paths.js';
 
@@ -101,59 +101,59 @@ describe('projectSkillsDir', () => {
   });
 });
 
-describe('omxStateDir', () => {
+describe('omkStateDir', () => {
   it('uses provided projectRoot', () => {
-    assert.equal(omxStateDir('/my/project'), '/my/project/.omx/state');
+    assert.equal(omkStateDir('/my/project'), '/my/project/.omk/state');
   });
 
   it('defaults to cwd when no projectRoot given', () => {
-    assert.equal(omxStateDir(), join(process.cwd(), '.omx', 'state'));
+    assert.equal(omkStateDir(), join(process.cwd(), '.omk', 'state'));
   });
 });
 
-describe('omxProjectMemoryPath', () => {
+describe('omkProjectMemoryPath', () => {
   it('uses provided projectRoot', () => {
     assert.equal(
-      omxProjectMemoryPath('/my/project'),
-      '/my/project/.omx/project-memory.json',
+      omkProjectMemoryPath('/my/project'),
+      '/my/project/.omk/project-memory.json',
     );
   });
 
   it('defaults to cwd when no projectRoot given', () => {
     assert.equal(
-      omxProjectMemoryPath(),
-      join(process.cwd(), '.omx', 'project-memory.json'),
+      omkProjectMemoryPath(),
+      join(process.cwd(), '.omk', 'project-memory.json'),
     );
   });
 });
 
-describe('omxNotepadPath', () => {
+describe('omkNotepadPath', () => {
   it('uses provided projectRoot', () => {
-    assert.equal(omxNotepadPath('/my/project'), '/my/project/.omx/notepad.md');
+    assert.equal(omkNotepadPath('/my/project'), '/my/project/.omk/notepad.md');
   });
 
   it('defaults to cwd when no projectRoot given', () => {
-    assert.equal(omxNotepadPath(), join(process.cwd(), '.omx', 'notepad.md'));
+    assert.equal(omkNotepadPath(), join(process.cwd(), '.omk', 'notepad.md'));
   });
 });
 
-describe('omxPlansDir', () => {
+describe('omkPlansDir', () => {
   it('uses provided projectRoot', () => {
-    assert.equal(omxPlansDir('/my/project'), '/my/project/.omx/plans');
+    assert.equal(omkPlansDir('/my/project'), '/my/project/.omk/plans');
   });
 
   it('defaults to cwd when no projectRoot given', () => {
-    assert.equal(omxPlansDir(), join(process.cwd(), '.omx', 'plans'));
+    assert.equal(omkPlansDir(), join(process.cwd(), '.omk', 'plans'));
   });
 });
 
-describe('omxLogsDir', () => {
+describe('omkLogsDir', () => {
   it('uses provided projectRoot', () => {
-    assert.equal(omxLogsDir('/my/project'), '/my/project/.omx/logs');
+    assert.equal(omkLogsDir('/my/project'), '/my/project/.omk/logs');
   });
 
   it('defaults to cwd when no projectRoot given', () => {
-    assert.equal(omxLogsDir(), join(process.cwd(), '.omx', 'logs'));
+    assert.equal(omkLogsDir(), join(process.cwd(), '.omk', 'logs'));
   });
 });
 

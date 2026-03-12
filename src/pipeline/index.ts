@@ -1,5 +1,5 @@
 /**
- * Pipeline orchestrator for oh-my-codex
+ * Pipeline orchestrator for oh-my-kiro
  *
  * Configurable pipeline that sequences: RALPLAN -> teams (codex workers) -> ralph verification.
  * Mirrors OMC #1130 pipeline design.

@@ -2,7 +2,7 @@
 
 ## Canonical Ralph state schema
 
-Ralph runtime state is stored at `.omx/state/{scope}/ralph-state.json` and MUST use this schema:
+Ralph runtime state is stored at `.omk/state/{scope}/ralph-state.json` and MUST use this schema:
 
 - `active: boolean` **(required)**
 - `iteration: number` **(required while active)**
@@ -37,8 +37,8 @@ starting
 
 ## Frozen scope policy
 
-1. If `session_id` is present (explicit argument or current `.omx/state/session.json`), session scope (`.omx/state/sessions/{session_id}/...`) is authoritative.
-2. Root scope (`.omx/state/*.json`) is compatibility fallback only.
+1. If `session_id` is present (explicit argument or current `.omk/state/session.json`), session scope (`.omk/state/sessions/{session_id}/...`) is authoritative.
+2. Root scope (`.omk/state/*.json`) is compatibility fallback only.
 3. Writes MUST target one scope (authoritative scope), never broadcast to unrelated sessions.
 
 ## Consumer compatibility matrix
@@ -53,9 +53,9 @@ starting
 
 ## Canonical PRD/progress sources
 
-- Canonical PRD: `.omx/plans/prd-{slug}.md`
-- Canonical progress ledger: `.omx/state/{scope}/ralph-progress.json`
+- Canonical PRD: `.omk/plans/prd-{slug}.md`
+- Canonical progress ledger: `.omk/state/{scope}/ralph-progress.json`
 - Legacy compatibility migration:
-  - `.omx/prd.json` migrates one-way to canonical PRD markdown when no canonical PRD exists.
-  - `.omx/progress.txt` migrates one-way to canonical `ralph-progress.json` when no canonical ledger exists.
+  - `.omk/prd.json` migrates one-way to canonical PRD markdown when no canonical PRD exists.
+  - `.omk/progress.txt` migrates one-way to canonical `ralph-progress.json` when no canonical ledger exists.
   - Legacy files remain read-only compatibility artifacts for one release cycle.

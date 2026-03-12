@@ -1,5 +1,5 @@
 /**
- * Tests for issue #215: tmux scrollback preservation during OMX output injection.
+ * Tests for issue #215: tmux scrollback preservation during OMK output injection.
  *
  * When a pane is in copy-mode (scrollback), tmux's `pane_in_mode` format
  * variable returns "1".  Injecting send-keys into such a pane would kick the
@@ -17,7 +17,7 @@ import { join } from 'node:path';
 const NOTIFY_HOOK_SCRIPT = new URL('../../../scripts/notify-hook.js', import.meta.url);
 
 async function withTempWorkingDir(run: (cwd: string) => Promise<void>): Promise<void> {
-  const cwd = await mkdtemp(join(tmpdir(), 'omx-notify-scroll-'));
+  const cwd = await mkdtemp(join(tmpdir(), 'omk-notify-scroll-'));
   try {
     await run(cwd);
   } finally {
@@ -83,10 +83,10 @@ exit 1
 }
 
 async function setupFixture(cwd: string, paneInMode: '0' | '1', skipIfScrolling = true) {
-  const omxDir = join(cwd, '.omx');
-  const stateDir = join(omxDir, 'state');
-  const logsDir = join(omxDir, 'logs');
-  const sessionId = 'omx-scroll-test';
+  const omkDir = join(cwd, '.omk');
+  const stateDir = join(omkDir, 'state');
+  const logsDir = join(omkDir, 'logs');
+  const sessionId = 'omk-scroll-test';
   const sessionStateDir = join(stateDir, 'sessions', sessionId);
   const fakeBinDir = join(cwd, 'fake-bin');
   const fakeTmuxPath = join(fakeBinDir, 'tmux');
@@ -97,14 +97,14 @@ async function setupFixture(cwd: string, paneInMode: '0' | '1', skipIfScrolling 
 
   await writeJson(join(stateDir, 'session.json'), { session_id: sessionId });
   await writeJson(join(sessionStateDir, 'ralph-state.json'), { active: true, iteration: 0 });
-  await writeJson(join(omxDir, 'tmux-hook.json'), {
+  await writeJson(join(omkDir, 'tmux-hook.json'), {
     enabled: true,
     target: { type: 'pane', value: '%42' },
     allowed_modes: ['ralph'],
     cooldown_ms: 0,
     max_injections_per_session: 10,
-    prompt_template: 'Continue [OMX_TMUX_INJECT]',
-    marker: '[OMX_TMUX_INJECT]',
+    prompt_template: 'Continue [OMK_TMUX_INJECT]',
+    marker: '[OMK_TMUX_INJECT]',
     dry_run: false,
     log_level: 'debug',
     skip_if_scrolling: skipIfScrolling,
@@ -130,7 +130,7 @@ function runNotifyHook(cwd: string, fakeBinDir: string, threadId: string) {
     env: {
       ...process.env,
       PATH: `${fakeBinDir}:${process.env.PATH || ''}`,
-      OMX_TEAM_WORKER: '',
+      OMK_TEAM_WORKER: '',
       TMUX_PANE: '%42',
     },
   });

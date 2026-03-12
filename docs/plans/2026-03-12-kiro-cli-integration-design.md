@@ -1,16 +1,16 @@
-# OMX + Kiro CLI Integration Design
+# OMK + Kiro CLI Integration Design
 
 ## Goal
 
-Add `kiro` as a first-class team worker CLI in OMX, alongside `codex`, `claude`, and `gemini`. Kiro workers run in tmux panes (same as existing workers), receive tasks via `send-keys`, and communicate state through OMX MCP servers.
+Add `kiro` as a first-class team worker CLI in OMK, alongside `codex`, `claude`, and `gemini`. Kiro workers run in tmux panes (same as existing workers), receive tasks via `send-keys`, and communicate state through OMK MCP servers.
 
 ## Architecture Overview
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        OMX Control Plane                        │
+│                        OMK Control Plane                        │
 │                                                                 │
-│  omx team 3:executor "task"                                     │
+│  omk team 3:executor "task"                                     │
 │    │                                                            │
 │    ├─ resolveTeamWorkerCliPlan()  ← adds 'kiro' option         │
 │    ├─ generateKiroAgentConfig()   ← NEW: writes .kiro/agents/  │
@@ -25,7 +25,7 @@ Add `kiro` as a first-class team worker CLI in OMX, alongside `codex`, `claude`,
 │  │ (codex/  │ │ kiro-cli │ │ kiro-cli │ │ kiro-cli │          │
 │  │  kiro)   │ │  chat    │ │  chat    │ │  chat    │          │
 │  │          │ │ --agent  │ │ --agent  │ │ --agent  │          │
-│  │          │ │ omx-w-1  │ │ omx-w-2  │ │ omx-w-3  │          │
+│  │          │ │ omk-w-1  │ │ omk-w-2  │ │ omk-w-3  │          │
 │  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘          │
 │       │             │            │             │                │
 │       │    tmux send-keys / capture-pane       │                │
@@ -34,11 +34,11 @@ Add `kiro` as a first-class team worker CLI in OMX, alongside `codex`, `claude`,
 │                      MCP Server Layer                           │
 │                                                                 │
 │  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌─────────────┐ │
-│  │ omx_state  │ │ omx_memory │ │ omx_trace  │ │ omx_team_run│ │
+│  │ omk_state  │ │ omk_memory │ │ omk_trace  │ │ omk_team_run│ │
 │  │ (per-proc) │ │ (per-proc) │ │ (per-proc) │ │ (per-proc)  │ │
 │  └─────┬──────┘ └─────┬──────┘ └─────┬──────┘ └──────┬──────┘ │
 │        └───────────────┴──────────────┴───────────────┘        │
-│                         .omx/ (shared filesystem state)         │
+│                         .omk/ (shared filesystem state)         │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -47,13 +47,13 @@ Add `kiro` as a first-class team worker CLI in OMX, alongside `codex`, `claude`,
 ```
 Codex Worker Launch:
   codex \
-    -c model_instructions_file=".omx/state/team/{name}/workers/worker-1/AGENTS.md" \
+    -c model_instructions_file=".omk/state/team/{name}/workers/worker-1/AGENTS.md" \
     -c model_reasoning_effort="high" \
     --dangerously-bypass-approvals-and-sandbox
 
 Kiro Worker Launch:
   kiro-cli chat \
-    --agent omx-worker-1 \
+    --agent omk-worker-1 \
     --trust-all-tools
 ```
 
@@ -80,14 +80,14 @@ buildWorkerProcessLaunchSpec():  add kiro-specific env/args
 if (workerCli === 'kiro') {
   // Kiro uses --agent for config, --trust-all-tools for bypass
   // Model/reasoning are in the agent config, not CLI args
-  const agentName = extraEnv?.OMX_KIRO_AGENT_NAME ?? `omx-worker-${workerIndex}`;
+  const agentName = extraEnv?.OMK_KIRO_AGENT_NAME ?? `omk-worker-${workerIndex}`;
   return ['chat', '--trust-all-tools', '--agent', agentName];
 }
 ```
 
 ### 2. `src/team/kiro-agent-generator.ts` — NEW module
 
-Generates `.kiro/agents/omx-worker-{N}.json` before worker launch.
+Generates `.kiro/agents/omk-worker-{N}.json` before worker launch.
 
 ```typescript
 interface KiroWorkerAgentConfig {
@@ -119,9 +119,9 @@ What it generates:
 
 ```json
 {
-  "name": "omx-worker-1",
-  "description": "OMX team worker (executor) for team ship-oauth",
-  "prompt": "file:///path/to/.omx/state/team/ship-oauth/workers/worker-1/AGENTS.md",
+  "name": "omk-worker-1",
+  "description": "OMK team worker (executor) for team ship-oauth",
+  "prompt": "file:///path/to/.omk/state/team/ship-oauth/workers/worker-1/AGENTS.md",
   "tools": [
     "fs_read", "fs_write", "execute_bash",
     "grep", "glob", "code"
@@ -133,24 +133,24 @@ What it generates:
   ],
   "hooks": {
     "agentSpawn": [{
-      "command": "node /path/to/omx-kiro-hooks.js agentSpawn",
-      "description": "OMX worker init"
+      "command": "node /path/to/omk-kiro-hooks.js agentSpawn",
+      "description": "OMK worker init"
     }],
     "stop": [{
-      "command": "node /path/to/omx-kiro-hooks.js stop",
-      "description": "OMX per-turn state sync"
+      "command": "node /path/to/omk-kiro-hooks.js stop",
+      "description": "OMK per-turn state sync"
     }]
   },
   "mcpServers": {
-    "omx_state": {
+    "omk_state": {
       "command": "node",
       "args": ["/path/to/dist/mcp/state-server.js"]
     },
-    "omx_memory": {
+    "omk_memory": {
       "command": "node",
       "args": ["/path/to/dist/mcp/memory-server.js"]
     },
-    "omx_trace": {
+    "omk_trace": {
       "command": "node",
       "args": ["/path/to/dist/mcp/trace-server.js"]
     }
@@ -158,7 +158,7 @@ What it generates:
 }
 ```
 
-File location: `.kiro/agents/omx-worker-{N}.json` (workspace-scoped, auto-cleaned on shutdown).
+File location: `.kiro/agents/omk-worker-{N}.json` (workspace-scoped, auto-cleaned on shutdown).
 
 ### 3. `src/team/worker-bootstrap.ts` — Small addition
 
@@ -185,14 +185,14 @@ if (plan.workerCli === 'kiro') {
 }
 ```
 
-### 5. `scripts/omx-kiro-hooks.js` — NEW: Kiro stop hook
+### 5. `scripts/omk-kiro-hooks.js` — NEW: Kiro stop hook
 
 Lightweight hook script that runs on each Kiro worker turn:
 
 ```javascript
 // Receives hook event via STDIN: {"hook_event_name":"stop","cwd":"/path"}
 // Responsibilities:
-//   1. Write worker heartbeat to .omx/state/team/{name}/workers/{worker}/heartbeat.json
+//   1. Write worker heartbeat to .omk/state/team/{name}/workers/{worker}/heartbeat.json
 //   2. Check mailbox for new messages, output to stdout (injected into agent context)
 //   3. Write turn count to worker status
 // stdout → injected into next agent turn context
@@ -219,7 +219,7 @@ Need to verify what Kiro CLI's interactive prompt looks like.
 
 In `shutdownTeam()` / `cleanupTeamState()`, add:
 ```typescript
-// Remove generated .kiro/agents/omx-worker-*.json files
+// Remove generated .kiro/agents/omk-worker-*.json files
 ```
 
 ## What Does NOT Change
@@ -240,13 +240,13 @@ In `shutdownTeam()` / `cleanupTeamState()`, add:
 
 ```bash
 # All workers as kiro
-OMX_TEAM_WORKER_CLI=kiro omx team 3:executor "ship the feature"
+OMK_TEAM_WORKER_CLI=kiro omk team 3:executor "ship the feature"
 
 # Mixed: kiro leader + codex workers
-OMX_TEAM_WORKER_CLI_MAP=kiro,codex,codex omx team 3:executor "ship the feature"
+OMK_TEAM_WORKER_CLI_MAP=kiro,codex,codex omk team 3:executor "ship the feature"
 
 # Auto-detect from model name (future)
-OMX_TEAM_WORKER_LAUNCH_ARGS='--model kiro-model-name' omx team 2:executor "task"
+OMK_TEAM_WORKER_LAUNCH_ARGS='--model kiro-model-name' omk team 2:executor "task"
 ```
 
 ## Open Questions
@@ -261,14 +261,14 @@ OMX_TEAM_WORKER_LAUNCH_ARGS='--model kiro-model-name' omx team 2:executor "task"
 
 5. **Kiro `stop` hook stdout size limit**: Is there a limit on how much stdout from a stop hook gets injected into agent context? Mailbox messages could be large.
 
-6. **Kiro skills format compatibility**: OMX skills use `SKILL.md` without YAML frontmatter. Kiro skills require frontmatter (`name`, `description`). Need a converter or dual-format support.
+6. **Kiro skills format compatibility**: OMK skills use `SKILL.md` without YAML frontmatter. Kiro skills require frontmatter (`name`, `description`). Need a converter or dual-format support.
 
 ## Implementation Order
 
 1. Add `'kiro'` to `TeamWorkerCli` type + CLI resolution (tmux-session.ts)
 2. Create `kiro-agent-generator.ts` module
-3. Create `omx-kiro-hooks.js` stop hook script
+3. Create `omk-kiro-hooks.js` stop hook script
 4. Wire into `runtime.ts` startTeam flow
 5. Adapt `paneLooksReady()` for Kiro prompt detection
 6. Add cleanup in shutdown path
-7. Test with `OMX_TEAM_WORKER_CLI=kiro omx team 1:executor "simple task"`
+7. Test with `OMK_TEAM_WORKER_CLI=kiro omk team 1:executor "simple task"`

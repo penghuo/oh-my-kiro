@@ -248,7 +248,7 @@
       "internalRequired": false
     },
     {
-      "name": "omx-setup",
+      "name": "omk-setup",
       "category": "utility",
       "status": "active",
       "core": false,

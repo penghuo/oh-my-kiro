@@ -4,7 +4,7 @@
  * In OMC, this runs as a UserPromptSubmit hook that detects magic keywords
  * and injects skill prompts via system-reminder.
  *
- * In OMX, this logic is embedded in the AGENTS.md orchestration brain,
+ * In OMK, this logic is embedded in the AGENTS.md orchestration brain,
  * and can also be used by the notify hook for state tracking.
  *
  * When Codex CLI adds pre-hook support, this module can be promoted
@@ -242,7 +242,7 @@ export async function recordSkillActivation(input: RecordSkillActivationInput): 
     try {
       await writeFile(statePath, JSON.stringify(state, null, 2));
     } catch (error) {
-      console.warn('[omx] warning: failed to persist keyword activation state', error);
+      console.warn('[omk] warning: failed to persist keyword activation state', error);
     }
 
     return state;
@@ -273,7 +273,7 @@ export async function recordSkillActivation(input: RecordSkillActivationInput): 
   try {
     await writeFile(statePath, JSON.stringify(state, null, 2));
   } catch (error) {
-    console.warn('[omx] warning: failed to persist keyword activation state', error);
+    console.warn('[omk] warning: failed to persist keyword activation state', error);
   }
 
   return state;
@@ -283,7 +283,7 @@ export async function recordSkillActivation(input: RecordSkillActivationInput): 
  * Pre-execution gate — ported from OMC src/hooks/keyword-detector/index.ts
  *
  * In OMC these functions run at prompt time in bridge.ts (mandatory enforcement).
- * In OMX they generate AGENTS.md instructions and serve as test infrastructure.
+ * In OMK they generate AGENTS.md instructions and serve as test infrastructure.
  * See task-size-detector.ts for full advisory-nature documentation.
  */
 

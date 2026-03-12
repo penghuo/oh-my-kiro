@@ -3,7 +3,7 @@
  *
  * Wraps the existing team mode (tmux-based Codex CLI workers) into a
  * PipelineStage. The execution backend is always teams — this is the
- * canonical OMX execution surface.
+ * canonical OMK execution surface.
  */
 
 import type { PipelineStage, StageContext, StageResult } from '../types.js';
@@ -29,7 +29,7 @@ export interface TeamExecStageOptions {
 /**
  * Create a team-exec pipeline stage.
  *
- * This stage delegates to the existing `omx team` infrastructure, which
+ * This stage delegates to the existing `omk team` infrastructure, which
  * starts real Codex CLI workers in tmux panes. The stage collects the
  * plan artifacts from the previous RALPLAN stage and passes them as
  * the team task description.
@@ -112,9 +112,9 @@ export interface TeamExecDescriptor {
 }
 
 /**
- * Build the `omx team` CLI instruction from a descriptor.
+ * Build the `omk team` CLI instruction from a descriptor.
  */
 export function buildTeamInstruction(descriptor: TeamExecDescriptor): string {
-  const launchCommand = `omx team ralph ${descriptor.workerCount}:${descriptor.agentType} ${JSON.stringify(descriptor.task)}`;
+  const launchCommand = `omk team ralph ${descriptor.workerCount}:${descriptor.agentType} ${JSON.stringify(descriptor.task)}`;
   return `${launchCommand} # staffing=${descriptor.staffingPlan.staffingSummary} # verify=${descriptor.staffingPlan.verificationPlan.summary}`;
 }

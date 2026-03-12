@@ -6,18 +6,18 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { setup } from '../setup.js';
 
-describe('omx setup prompt/native-agent overwrite behavior', () => {
+describe('omk setup prompt/native-agent overwrite behavior', () => {
   it('installs only active/internal catalog prompts and native agents', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-setup-prompts-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-setup-prompts-'));
     const previousCwd = process.cwd();
     try {
-      await mkdir(join(wd, '.omx', 'state'), { recursive: true });
+      await mkdir(join(wd, '.omk', 'state'), { recursive: true });
       process.chdir(wd);
 
       await setup({ scope: 'project' });
 
       const promptsDir = join(wd, '.codex', 'prompts');
-      const nativeAgentsDir = join(wd, '.omx', 'agents');
+      const nativeAgentsDir = join(wd, '.omk', 'agents');
       const installedPrompts = new Set(await readdir(promptsDir));
       const installedNativeAgents = new Set(await readdir(nativeAgentsDir));
 
@@ -54,10 +54,10 @@ describe('omx setup prompt/native-agent overwrite behavior', () => {
   });
 
   it('removes stale merged/unlisted prompts on --force', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-setup-prompts-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-setup-prompts-'));
     const previousCwd = process.cwd();
     try {
-      await mkdir(join(wd, '.omx', 'state'), { recursive: true });
+      await mkdir(join(wd, '.omk', 'state'), { recursive: true });
       process.chdir(wd);
 
       await setup({ scope: 'project' });
@@ -81,17 +81,17 @@ describe('omx setup prompt/native-agent overwrite behavior', () => {
     }
   });
   it('removes stale merged native agents on --force', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-setup-prompts-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-setup-prompts-'));
     const previousCwd = process.cwd();
     try {
-      await mkdir(join(wd, '.omx', 'state'), { recursive: true });
+      await mkdir(join(wd, '.omk', 'state'), { recursive: true });
       process.chdir(wd);
 
       await setup({ scope: 'project' });
 
       const staleAgents = ['style-reviewer.toml', 'quality-reviewer.toml'];
       for (const staleAgent of staleAgents) {
-        const stalePath = join(wd, '.omx', 'agents', staleAgent);
+        const stalePath = join(wd, '.omk', 'agents', staleAgent);
         await writeFile(stalePath, '# stale native agent\n');
         assert.equal(existsSync(stalePath), true);
       }
@@ -99,9 +99,9 @@ describe('omx setup prompt/native-agent overwrite behavior', () => {
       await setup({ scope: 'project', force: true });
 
       for (const staleAgent of staleAgents) {
-        assert.equal(existsSync(join(wd, '.omx', 'agents', staleAgent)), false);
+        assert.equal(existsSync(join(wd, '.omk', 'agents', staleAgent)), false);
       }
-      assert.equal(existsSync(join(wd, '.omx', 'agents', 'executor.toml')), true);
+      assert.equal(existsSync(join(wd, '.omk', 'agents', 'executor.toml')), true);
     } finally {
       process.chdir(previousCwd);
       await rm(wd, { recursive: true, force: true });

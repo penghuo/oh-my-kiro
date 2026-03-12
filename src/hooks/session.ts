@@ -1,5 +1,5 @@
 /**
- * Session Lifecycle Manager for oh-my-codex
+ * Session Lifecycle Manager for oh-my-kiro
  *
  * Tracks session start/end, detects stale sessions from crashed launches,
  * and provides structured logging for session events.
@@ -8,7 +8,7 @@
 import { readFile, writeFile, mkdir, unlink, appendFile } from 'fs/promises';
 import { join } from 'path';
 import { existsSync, readFileSync } from 'fs';
-import { omxStateDir, omxLogsDir } from '../utils/paths.js';
+import { omkStateDir, omkLogsDir } from '../utils/paths.js';
 
 export interface SessionState {
   session_id: string;
@@ -26,11 +26,11 @@ const HISTORY_FILE = 'session-history.jsonl';
 // Long-running sessions (>2h) are legitimate and should not be reaped.
 
 function sessionPath(cwd: string): string {
-  return join(omxStateDir(cwd), SESSION_FILE);
+  return join(omkStateDir(cwd), SESSION_FILE);
 }
 
 function historyPath(cwd: string): string {
-  return join(omxLogsDir(cwd), HISTORY_FILE);
+  return join(omkLogsDir(cwd), HISTORY_FILE);
 }
 
 /**
@@ -38,13 +38,13 @@ function historyPath(cwd: string): string {
  * into a new Codex session.
  */
 export async function resetSessionMetrics(cwd: string): Promise<void> {
-  const omxDir = join(cwd, '.omx');
-  const stateDir = omxStateDir(cwd);
-  await mkdir(omxDir, { recursive: true });
+  const omkDir = join(cwd, '.omk');
+  const stateDir = omkStateDir(cwd);
+  await mkdir(omkDir, { recursive: true });
   await mkdir(stateDir, { recursive: true });
 
   const now = new Date().toISOString();
-  await writeFile(join(omxDir, 'metrics.json'), JSON.stringify({
+  await writeFile(join(omkDir, 'metrics.json'), JSON.stringify({
     total_turns: 0,
     session_turns: 0,
     last_activity: now,
@@ -177,7 +177,7 @@ export function isSessionStale(
  * Write session start state.
  */
 export async function writeSessionStart(cwd: string, sessionId: string): Promise<void> {
-  const stateDir = omxStateDir(cwd);
+  const stateDir = omkStateDir(cwd);
   await mkdir(stateDir, { recursive: true });
   const linuxIdentity = process.platform === 'linux'
     ? readLinuxProcessIdentity(process.pid)
@@ -210,7 +210,7 @@ export async function writeSessionEnd(cwd: string, sessionId: string): Promise<v
   const endTime = new Date().toISOString();
 
   // Archive to session history
-  const logsDir = omxLogsDir(cwd);
+  const logsDir = omkLogsDir(cwd);
   await mkdir(logsDir, { recursive: true });
 
   const historyEntry = {
@@ -239,11 +239,11 @@ export async function writeSessionEnd(cwd: string, sessionId: string): Promise<v
  * Append a structured JSONL entry to the daily log file.
  */
 export async function appendToLog(cwd: string, entry: Record<string, unknown>): Promise<void> {
-  const logsDir = omxLogsDir(cwd);
+  const logsDir = omkLogsDir(cwd);
   await mkdir(logsDir, { recursive: true });
 
   const date = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-  const logFile = join(logsDir, `omx-${date}.jsonl`);
+  const logFile = join(logsDir, `omk-${date}.jsonl`);
   const line = JSON.stringify({ ...entry, _ts: new Date().toISOString() }) + '\n';
 
   await appendFile(logFile, line);

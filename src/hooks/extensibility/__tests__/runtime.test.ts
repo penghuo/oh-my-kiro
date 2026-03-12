@@ -8,11 +8,11 @@ import { buildHookEvent } from '../events.js';
 
 describe('dispatchHookEventRuntime', () => {
   it('returns disabled when plugins env var is not set', async () => {
-    const originalEnv = process.env.OMX_HOOK_PLUGINS;
+    const originalEnv = process.env.OMK_HOOK_PLUGINS;
     try {
-      delete process.env.OMX_HOOK_PLUGINS;
+      delete process.env.OMK_HOOK_PLUGINS;
 
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-runtime-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-runtime-'));
       try {
         const event = buildHookEvent('session-start');
         const result = await dispatchHookEventRuntime({ cwd, event });
@@ -26,21 +26,21 @@ describe('dispatchHookEventRuntime', () => {
       }
     } finally {
       if (originalEnv !== undefined) {
-        process.env.OMX_HOOK_PLUGINS = originalEnv;
+        process.env.OMK_HOOK_PLUGINS = originalEnv;
       } else {
-        delete process.env.OMX_HOOK_PLUGINS;
+        delete process.env.OMK_HOOK_PLUGINS;
       }
     }
   });
 
   it('dispatches when plugins are enabled', async () => {
-    const originalEnv = process.env.OMX_HOOK_PLUGINS;
+    const originalEnv = process.env.OMK_HOOK_PLUGINS;
     try {
-      process.env.OMX_HOOK_PLUGINS = '1';
+      process.env.OMK_HOOK_PLUGINS = '1';
 
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-runtime-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-runtime-'));
       try {
-        const dir = join(cwd, '.omx', 'hooks');
+        const dir = join(cwd, '.omk', 'hooks');
         await mkdir(dir, { recursive: true });
         await writeFile(
           join(dir, 'rt-test.mjs'),
@@ -59,19 +59,19 @@ describe('dispatchHookEventRuntime', () => {
       }
     } finally {
       if (originalEnv !== undefined) {
-        process.env.OMX_HOOK_PLUGINS = originalEnv;
+        process.env.OMK_HOOK_PLUGINS = originalEnv;
       } else {
-        delete process.env.OMX_HOOK_PLUGINS;
+        delete process.env.OMK_HOOK_PLUGINS;
       }
     }
   });
 
   it('passes allowTeamWorkerSideEffects through to dispatcher', async () => {
-    const originalEnv = process.env.OMX_HOOK_PLUGINS;
+    const originalEnv = process.env.OMK_HOOK_PLUGINS;
     try {
-      process.env.OMX_HOOK_PLUGINS = '1';
+      process.env.OMK_HOOK_PLUGINS = '1';
 
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-runtime-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-runtime-'));
       try {
         const event = buildHookEvent('turn-complete');
         const result = await dispatchHookEventRuntime({
@@ -87,19 +87,19 @@ describe('dispatchHookEventRuntime', () => {
       }
     } finally {
       if (originalEnv !== undefined) {
-        process.env.OMX_HOOK_PLUGINS = originalEnv;
+        process.env.OMK_HOOK_PLUGINS = originalEnv;
       } else {
-        delete process.env.OMX_HOOK_PLUGINS;
+        delete process.env.OMK_HOOK_PLUGINS;
       }
     }
   });
 
   it('returns event name and source in result', async () => {
-    const originalEnv = process.env.OMX_HOOK_PLUGINS;
+    const originalEnv = process.env.OMK_HOOK_PLUGINS;
     try {
-      delete process.env.OMX_HOOK_PLUGINS;
+      delete process.env.OMK_HOOK_PLUGINS;
 
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-runtime-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-runtime-'));
       try {
         const event = buildHookEvent('needs-input');
         const result = await dispatchHookEventRuntime({ cwd, event });
@@ -111,9 +111,9 @@ describe('dispatchHookEventRuntime', () => {
       }
     } finally {
       if (originalEnv !== undefined) {
-        process.env.OMX_HOOK_PLUGINS = originalEnv;
+        process.env.OMK_HOOK_PLUGINS = originalEnv;
       } else {
-        delete process.env.OMX_HOOK_PLUGINS;
+        delete process.env.OMK_HOOK_PLUGINS;
       }
     }
   });

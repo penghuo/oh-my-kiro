@@ -93,10 +93,10 @@ Jumping into code without understanding requirements leads to rework, scope cree
 6. **Apply improvements**: When reviewers approve with improvement suggestions, merge all accepted improvements into the plan file before proceeding. Final consensus output **MUST** include an **ADR** section with: **Decision**, **Drivers**, **Alternatives considered**, **Why chosen**, **Consequences**, **Follow-ups**. Specifically:
    a. Collect all improvement suggestions from Architect and Critic responses
    b. Deduplicate and categorize the suggestions
-   c. Update the plan file in `.omx/plans/` with the accepted improvements (add missing details, refine steps, strengthen acceptance criteria, ADR updates, etc.)
+   c. Update the plan file in `.omk/plans/` with the accepted improvements (add missing details, refine steps, strengthen acceptance criteria, ADR updates, etc.)
    d. Note which improvements were applied in a brief changelog section at the end of the plan
    e. Before any execution handoff, derive an explicit **available-agent-types roster** from the known prompt catalog and add concrete **follow-up staffing guidance** for both `$ralph` and `$team` (recommended roles, counts, suggested reasoning levels by lane, and why each lane exists)
-   f. For the `$team` path, add an explicit launch-hint block with concrete `omx team` / `$team` commands and a **team -> ralph verification path** (what team proves before shutdown, what Ralph verifies after handoff)
+   f. For the `$team` path, add an explicit launch-hint block with concrete `omk team` / `$team` commands and a **team -> ralph verification path** (what team proves before shutdown, what Ralph verifies after handoff)
 7. On Critic approval (with improvements applied): *(--interactive only)* If running with `--interactive`, use `AskUserQuestion` to present the plan with these options:
    - **Approve and execute** — proceed to implementation via ralph+ultrawork
    - **Approve and implement via team** — proceed to implementation via coordinated parallel team agents
@@ -105,13 +105,13 @@ Jumping into code without understanding requirements leads to rework, scope cree
    If NOT running with `--interactive`, output the final approved plan and stop. Do NOT auto-execute.
 8. *(--interactive only)* User chooses via the structured `AskUserQuestion` UI (never ask for approval in plain text)
 9. On user approval (--interactive only):
-   - **Approve and execute**: **MUST** invoke `$ralph` with the approved plan path from `.omx/plans/` as context **plus the explicit available-agent-types roster, suggested reasoning levels, concrete role allocation guidance, and direct launch hints for Ralph follow-up work**. Do NOT implement directly. Do NOT edit source code files in the planning agent. The ralph skill handles execution via ultrawork parallel agents.
-   - **Approve and implement via team**: **MUST** invoke `$team` with the approved plan path from `.omx/plans/` as context **plus the explicit available-agent-types roster, suggested reasoning levels, concrete staffing / worker-role allocation guidance, explicit `omx team` / `$team` launch hints, and the team -> ralph verification path**. Do NOT implement directly. The team skill coordinates parallel agents across the staged pipeline for faster execution on large tasks.
+   - **Approve and execute**: **MUST** invoke `$ralph` with the approved plan path from `.omk/plans/` as context **plus the explicit available-agent-types roster, suggested reasoning levels, concrete role allocation guidance, and direct launch hints for Ralph follow-up work**. Do NOT implement directly. Do NOT edit source code files in the planning agent. The ralph skill handles execution via ultrawork parallel agents.
+   - **Approve and implement via team**: **MUST** invoke `$team` with the approved plan path from `.omk/plans/` as context **plus the explicit available-agent-types roster, suggested reasoning levels, concrete staffing / worker-role allocation guidance, explicit `omk team` / `$team` launch hints, and the team -> ralph verification path**. Do NOT implement directly. The team skill coordinates parallel agents across the staged pipeline for faster execution on large tasks.
 
 ### Review Mode (`--review`)
 
 0. Treat review as a reviewer-only pass. The context that wrote the plan, cleanup proposal, or diff MUST NOT be the context that approves it.
-1. Read plan file from `.omx/plans/`
+1. Read plan file from `.omk/plans/`
 2. Evaluate via Critic using `ask_codex` with `agent_role: "critic"`
 3. For cleanup/refactor/anti-slop work, verify that the artifact includes a cleanup plan, regression tests or an explicit test gap, smell-by-smell passes, and quality gates.
 4. Return verdict: APPROVED, REVISE (with specific feedback), or REJECT (replanning required)
@@ -127,10 +127,10 @@ Every plan includes:
 - Verification Steps
 - For consensus/ralplan: **RALPLAN-DR summary** (Principles, Decision Drivers, Options)
 - For consensus/ralplan final output: **ADR** (Decision, Drivers, Alternatives considered, Why chosen, Consequences, Follow-ups)
-- For consensus/ralplan execution handoff: **Available-Agent-Types Roster**, **Follow-up Staffing Guidance** (including suggested reasoning levels by lane), explicit `omx team` / `$team` **Launch Hints**, and **team -> ralph Verification Path**
+- For consensus/ralplan execution handoff: **Available-Agent-Types Roster**, **Follow-up Staffing Guidance** (including suggested reasoning levels by lane), explicit `omk team` / `$team` **Launch Hints**, and **team -> ralph Verification Path**
 - For deliberate consensus mode: **Pre-mortem (3 scenarios)** and **Expanded Test Plan** (unit/integration/e2e/observability)
 
-Plans are saved to `.omx/plans/`. Drafts go to `.omx/drafts/`.
+Plans are saved to `.omk/plans/`. Drafts go to `.omk/drafts/`.
 </Steps>
 
 <Tool_Usage>
@@ -141,12 +141,12 @@ Plans are saved to `.omx/plans/`. Drafts go to `.omx/drafts/`.
 - Use `ask_codex` with `agent_role: "planner"` for planning validation on large-scope plans
 - Use `ask_codex` with `agent_role: "analyst"` for requirements analysis
 - Use `ask_codex` with `agent_role: "critic"` for plan review in consensus and review modes
-- If ToolSearch finds no MCP tools or Codex is unavailable, fall back to equivalent OMX prompt agents -- never block on external tools
+- If ToolSearch finds no MCP tools or Codex is unavailable, fall back to equivalent OMK prompt agents -- never block on external tools
 - **CRITICAL — Consensus mode agent calls MUST be sequential, never parallel.** Always await the Architect result before issuing the Critic call.
 - In consensus mode, default to RALPLAN-DR short mode; enable deliberate mode on `--deliberate` or explicit high-risk signals (auth/security, migrations, destructive changes, production incidents, compliance/PII, public API breakage)
 - In consensus mode with `--interactive`: use `AskUserQuestion` for the user feedback step (step 2) and the final approval step (step 7) -- never ask for approval in plain text. Without `--interactive`, auto-proceed through planning steps without pausing. Output the final plan without execution.
 - In consensus mode with `--interactive`, on user approval **MUST** invoke `$ralph` for execution (step 9) -- never implement directly in the planning agent
-- In consensus mode, execution follow-up handoff **MUST** include an explicit available-agent-types roster plus concrete staffing / role-allocation guidance grounded in that roster, suggested reasoning levels by lane, explicit `omx team` / `$team` launch hints, and a team -> ralph verification path
+- In consensus mode, execution follow-up handoff **MUST** include an explicit available-agent-types roster plus concrete staffing / role-allocation guidance grounded in that roster, suggested reasoning levels by lane, explicit `omk team` / `$team` launch hints, and a team -> ralph verification path
 </Tool_Usage>
 
 
@@ -221,7 +221,7 @@ Why bad: Decision fatigue. Present one option with trade-offs, get reaction, the
 - [ ] Plan references specific files/lines where applicable (80%+ claims)
 - [ ] All risks have mitigations identified
 - [ ] No vague terms without metrics ("fast" -> "p99 < 200ms")
-- [ ] Plan saved to `.omx/plans/`
+- [ ] Plan saved to `.omk/plans/`
 - [ ] In consensus mode: RALPLAN-DR summary includes 3-5 principles, top 3 drivers, and >=2 viable options (or explicit invalidation rationale)
 - [ ] In consensus mode final output: ADR section included (Decision / Drivers / Alternatives considered / Why chosen / Consequences / Follow-ups)
 - [ ] In deliberate consensus mode: pre-mortem (3 scenarios) + expanded test plan (unit/integration/e2e/observability) included

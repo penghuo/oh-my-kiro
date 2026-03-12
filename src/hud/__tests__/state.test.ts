@@ -7,7 +7,7 @@ import { readGitBranch, readRalphState } from '../state.js';
 
 describe('readGitBranch', () => {
   it('returns null in a non-git directory without printing git fatal noise', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-hud-state-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-hud-state-'));
     const stderrChunks: string[] = [];
     const originalWrite = process.stderr.write.bind(process.stderr);
 
@@ -34,9 +34,9 @@ describe('readGitBranch', () => {
 
 describe('readRalphState scope precedence', () => {
   it('prefers session-scoped Ralph state when session.json points to a session', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-hud-ralph-session-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-hud-ralph-session-'));
     try {
-      const rootStateDir = join(cwd, '.omx', 'state');
+      const rootStateDir = join(cwd, '.omk', 'state');
       const sessionId = 'sess-hud';
       const sessionStateDir = join(rootStateDir, 'sessions', sessionId);
       await mkdir(sessionStateDir, { recursive: true });
@@ -61,9 +61,9 @@ describe('readRalphState scope precedence', () => {
   });
 
   it('falls back to root Ralph state when current session has no Ralph state file', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-hud-ralph-fallback-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-hud-ralph-fallback-'));
     try {
-      const rootStateDir = join(cwd, '.omx', 'state');
+      const rootStateDir = join(cwd, '.omk', 'state');
       const sessionId = 'sess-fallback';
       await mkdir(join(rootStateDir, 'sessions', sessionId), { recursive: true });
       await writeFile(join(rootStateDir, 'session.json'), JSON.stringify({ session_id: sessionId }));
@@ -82,9 +82,9 @@ describe('readRalphState scope precedence', () => {
   });
 
   it('treats session-scoped inactive Ralph state as authoritative over active root fallback', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-hud-ralph-authority-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-hud-ralph-authority-'));
     try {
-      const rootStateDir = join(cwd, '.omx', 'state');
+      const rootStateDir = join(cwd, '.omk', 'state');
       const sessionId = 'sess-authority';
       const sessionStateDir = join(rootStateDir, 'sessions', sessionId);
       await mkdir(sessionStateDir, { recursive: true });

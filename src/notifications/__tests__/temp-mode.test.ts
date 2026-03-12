@@ -9,23 +9,23 @@ import { resetOpenClawConfigCache } from '../../openclaw/config.js';
 
 const ENV_KEYS = [
   'CODEX_HOME',
-  'OMX_NOTIFY_TEMP',
-  'OMX_NOTIFY_TEMP_CONTRACT',
-  'OMX_NOTIFY_PROFILE',
-  'OMX_DISCORD_WEBHOOK_URL',
-  'OMX_DISCORD_NOTIFIER_BOT_TOKEN',
-  'OMX_DISCORD_NOTIFIER_CHANNEL',
-  'OMX_TELEGRAM_BOT_TOKEN',
-  'OMX_TELEGRAM_CHAT_ID',
-  'OMX_SLACK_WEBHOOK_URL',
-  'OMX_OPENCLAW',
+  'OMK_NOTIFY_TEMP',
+  'OMK_NOTIFY_TEMP_CONTRACT',
+  'OMK_NOTIFY_PROFILE',
+  'OMK_DISCORD_WEBHOOK_URL',
+  'OMK_DISCORD_NOTIFIER_BOT_TOKEN',
+  'OMK_DISCORD_NOTIFIER_CHANNEL',
+  'OMK_TELEGRAM_BOT_TOKEN',
+  'OMK_TELEGRAM_CHAT_ID',
+  'OMK_SLACK_WEBHOOK_URL',
+  'OMK_OPENCLAW',
 ] as const;
 
 let tempCodexHome: string;
 
 async function writeCodexConfig(contents: unknown): Promise<void> {
   await mkdir(tempCodexHome, { recursive: true });
-  await writeFile(join(tempCodexHome, '.omx-config.json'), JSON.stringify(contents, null, 2));
+  await writeFile(join(tempCodexHome, '.omk-config.json'), JSON.stringify(contents, null, 2));
 }
 
 function clearEnv(): void {
@@ -38,7 +38,7 @@ describe('notification temp mode', () => {
   beforeEach(async () => {
     clearEnv();
     resetOpenClawConfigCache();
-    tempCodexHome = await mkdtemp(join(tmpdir(), 'omx-notify-temp-'));
+    tempCodexHome = await mkdtemp(join(tmpdir(), 'omk-notify-temp-'));
     process.env.CODEX_HOME = tempCodexHome;
   });
 
@@ -63,9 +63,9 @@ describe('notification temp mode', () => {
         },
       },
     });
-    process.env.OMX_NOTIFY_PROFILE = 'file-profile';
-    process.env.OMX_SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/temp-only';
-    process.env.OMX_NOTIFY_TEMP_CONTRACT = JSON.stringify({
+    process.env.OMK_NOTIFY_PROFILE = 'file-profile';
+    process.env.OMK_SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/temp-only';
+    process.env.OMK_NOTIFY_TEMP_CONTRACT = JSON.stringify({
       active: true,
       selectors: ['slack'],
       canonicalSelectors: ['slack'],
@@ -81,7 +81,7 @@ describe('notification temp mode', () => {
   });
 
   it('temp contract with no valid configured provider disables dispatch config', () => {
-    process.env.OMX_NOTIFY_TEMP_CONTRACT = JSON.stringify({
+    process.env.OMK_NOTIFY_TEMP_CONTRACT = JSON.stringify({
       active: true,
       selectors: ['telegram'],
       canonicalSelectors: ['telegram'],
@@ -106,8 +106,8 @@ describe('notification temp mode', () => {
         },
       },
     });
-    process.env.OMX_OPENCLAW = '1';
-    process.env.OMX_NOTIFY_TEMP_CONTRACT = JSON.stringify({
+    process.env.OMK_OPENCLAW = '1';
+    process.env.OMK_NOTIFY_TEMP_CONTRACT = JSON.stringify({
       active: true,
       selectors: ['discord'],
       canonicalSelectors: ['discord'],
@@ -121,8 +121,8 @@ describe('notification temp mode', () => {
   });
 
   it('temp mode enables openclaw config only when explicitly selected', () => {
-    process.env.OMX_OPENCLAW = '1';
-    process.env.OMX_NOTIFY_TEMP_CONTRACT = JSON.stringify({
+    process.env.OMK_OPENCLAW = '1';
+    process.env.OMK_NOTIFY_TEMP_CONTRACT = JSON.stringify({
       active: true,
       selectors: ['openclaw:gateway-main'],
       canonicalSelectors: ['openclaw:gateway-main'],
@@ -137,7 +137,7 @@ describe('notification temp mode', () => {
   });
 
   it('shouldDispatchOpenClaw enforces temp-mode explicit selection and gateway matching', async () => {
-    process.env.OMX_OPENCLAW = '1';
+    process.env.OMK_OPENCLAW = '1';
     await writeCodexConfig({
       notifications: {
         enabled: true,
@@ -201,7 +201,7 @@ describe('notification temp mode', () => {
       true,
     );
     assert.equal(
-      await shouldDispatchOpenClaw('session-end', activeWithOpenClaw, { OMX_OPENCLAW: '0', CODEX_HOME: tempCodexHome }),
+      await shouldDispatchOpenClaw('session-end', activeWithOpenClaw, { OMK_OPENCLAW: '0', CODEX_HOME: tempCodexHome }),
       false,
     );
   });

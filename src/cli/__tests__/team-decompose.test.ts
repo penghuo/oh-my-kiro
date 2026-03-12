@@ -72,12 +72,12 @@ describe('decomposeTaskString', () => {
   });
 
   it('keeps long analytic prose prompts in a single-worker lane by default', () => {
-    const task = 'Analyze OMX team mode reliability/efficiency weaknesses, focusing on orchestration progress detection, heartbeat/task-state coupling, tmux/state-plane brittleness, and verification gaps. Produce concrete findings with root cause, user impact, evidence pointers, and actionable recommendations suitable for a GitHub issue.';
+    const task = 'Analyze OMK team mode reliability/efficiency weaknesses, focusing on orchestration progress detection, heartbeat/task-state coupling, tmux/state-plane brittleness, and verification gaps. Produce concrete findings with root cause, user impact, evidence pointers, and actionable recommendations suitable for a GitHub issue.';
     const plan = buildTeamExecutionPlan(task, 3, 'executor', false);
     assert.equal(plan.workerCount, 1);
     assert.equal(plan.tasks.length, 1);
     assert.equal(plan.tasks[0].owner, 'worker-1');
-    assert.match(plan.tasks[0].description, /Analyze OMX team mode reliability\/efficiency weaknesses/i);
+    assert.match(plan.tasks[0].description, /Analyze OMK team mode reliability\/efficiency weaknesses/i);
   });
 
   it('preserves backward compat: explicit agentType overrides routing', () => {
@@ -102,7 +102,7 @@ describe('decomposeTaskString', () => {
   });
 
   it('preserves explicit worker-count fanout for analytic prompts', () => {
-    const task = 'Analyze OMX team mode reliability/efficiency weaknesses, focusing on orchestration progress detection, heartbeat/task-state coupling, tmux/state-plane brittleness, and verification gaps. Produce concrete findings with root cause, user impact, evidence pointers, and actionable recommendations suitable for a GitHub issue.';
+    const task = 'Analyze OMK team mode reliability/efficiency weaknesses, focusing on orchestration progress detection, heartbeat/task-state coupling, tmux/state-plane brittleness, and verification gaps. Produce concrete findings with root cause, user impact, evidence pointers, and actionable recommendations suitable for a GitHub issue.';
     const plan = buildTeamExecutionPlan(task, 3, 'executor', false, true);
     assert.equal(plan.workerCount, 3);
     assert.equal(plan.tasks.length, 3);

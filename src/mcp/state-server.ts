@@ -1,7 +1,7 @@
 /**
- * OMX State Management MCP Server
+ * OMK State Management MCP Server
  * Provides state read/write/clear/list tools for workflow modes
- * Storage: .omx/state/{mode}-state.json
+ * Storage: .omk/state/{mode}-state.json
  */
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
@@ -96,7 +96,7 @@ async function writeAtomicFile(path: string, data: string): Promise<void> {
 }
 
 const server = new Server(
-	{ name: "omx-state", version: "0.1.0" },
+	{ name: "omk-state", version: "0.1.0" },
 	{ capabilities: { tools: {} } },
 );
 

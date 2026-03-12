@@ -1,9 +1,9 @@
 import { searchSessionHistory, type SessionSearchReport, type SessionSearchOptions } from '../session-history/search.js';
 
-const HELP = `omx session - Search prior local session history
+const HELP = `omk session - Search prior local session history
 
 Usage:
-  omx session search <query> [options]
+  omk session search <query> [options]
 
 Options:
   --limit <n>          Maximum results to return (default: 10)
@@ -16,9 +16,9 @@ Options:
   -h, --help           Show this help
 
 Examples:
-  omx session search "worker inbox path"
-  omx session search all_workers_idle --since 7d --limit 5
-  omx session search "team api" --project current --json
+  omk session search "worker inbox path"
+  omk session search all_workers_idle --since 7d --limit 5
+  omk session search "team api" --project current --json
 `;
 
 const HELP_TOKENS = new Set(['--help', '-h', 'help']);

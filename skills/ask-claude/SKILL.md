@@ -16,10 +16,10 @@ Use the locally installed Claude CLI as a direct external advisor for focused qu
 ## Routing
 
 ### Preferred: Local CLI execution
-Run Claude through the canonical OMX CLI command path (no MCP routing):
+Run Claude through the canonical OMK CLI command path (no MCP routing):
 
 ```bash
-omx ask claude "{{ARGUMENTS}}"
+omk ask claude "{{ARGUMENTS}}"
 ```
 
 Exact non-interactive Claude CLI command from `claude --help`:
@@ -48,7 +48,7 @@ claude --version
 After local execution, save a markdown artifact to:
 
 ```text
-.omx/artifacts/claude-<slug>-<timestamp>.md
+.omk/artifacts/claude-<slug>-<timestamp>.md
 ```
 
 Minimum artifact sections:

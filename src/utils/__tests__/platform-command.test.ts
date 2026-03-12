@@ -12,7 +12,7 @@ import {
 
 describe('buildPlatformCommandSpec', () => {
   it('wraps .cmd shims through ComSpec on Windows', async () => {
-    const fakeBin = await mkdtemp(join(tmpdir(), 'omx-platform-cmd-'));
+    const fakeBin = await mkdtemp(join(tmpdir(), 'omk-platform-cmd-'));
     try {
       const cmdPath = join(fakeBin, 'codex.cmd');
       await writeFile(cmdPath, '@echo off\r\n');
@@ -38,7 +38,7 @@ describe('buildPlatformCommandSpec', () => {
   });
 
   it('launches .exe binaries directly on Windows', async () => {
-    const fakeBin = await mkdtemp(join(tmpdir(), 'omx-platform-exe-'));
+    const fakeBin = await mkdtemp(join(tmpdir(), 'omk-platform-exe-'));
     try {
       const exePath = join(fakeBin, 'tmux.exe');
       await writeFile(exePath, '');
@@ -61,7 +61,7 @@ describe('buildPlatformCommandSpec', () => {
   });
 
   it('prefers PowerShell shims over cmd shims when both exist', async () => {
-    const fakeBin = await mkdtemp(join(tmpdir(), 'omx-platform-ps1-'));
+    const fakeBin = await mkdtemp(join(tmpdir(), 'omk-platform-ps1-'));
     try {
       const ps1Path = join(fakeBin, 'codex.ps1');
       const cmdPath = join(fakeBin, 'codex.cmd');
@@ -88,7 +88,7 @@ describe('buildPlatformCommandSpec', () => {
 
 describe('resolveCommandPathForPlatform', () => {
   it('prefers PATHEXT candidates on Windows', async () => {
-    const fakeBin = await mkdtemp(join(tmpdir(), 'omx-platform-path-'));
+    const fakeBin = await mkdtemp(join(tmpdir(), 'omk-platform-path-'));
     try {
       const exePath = join(fakeBin, 'tmux.exe');
       await writeFile(exePath, '');
@@ -125,7 +125,7 @@ describe('classifySpawnError', () => {
 
 describe('spawnPlatformCommandSync', () => {
   it('passes the Windows-resolved spec into the spawn implementation', async () => {
-    const fakeBin = await mkdtemp(join(tmpdir(), 'omx-platform-spawn-'));
+    const fakeBin = await mkdtemp(join(tmpdir(), 'omk-platform-spawn-'));
     try {
       const cmdPath = join(fakeBin, 'codex.cmd');
       await writeFile(cmdPath, '@echo off\r\n');

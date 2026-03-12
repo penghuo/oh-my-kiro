@@ -10,7 +10,7 @@ import { monitorTeam } from '../runtime.js';
 import { planWorktreeTarget, ensureWorktree } from '../worktree.js';
 
 async function initRepo(): Promise<string> {
-  const cwd = await mkdtemp(join(tmpdir(), 'omx-team-hardening-e2e-repo-'));
+  const cwd = await mkdtemp(join(tmpdir(), 'omk-team-hardening-e2e-repo-'));
   execFileSync('git', ['init'], { cwd, stdio: 'ignore' });
   execFileSync('git', ['config', 'user.email', 'test@example.com'], { cwd, stdio: 'ignore' });
   execFileSync('git', ['config', 'user.name', 'Test User'], { cwd, stdio: 'ignore' });
@@ -22,7 +22,7 @@ async function initRepo(): Promise<string> {
 
 describe('team hardening e2e', () => {
   it('reopens an expired in-progress task and allows the next worker to complete the flow', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-team-hardening-e2e-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-team-hardening-e2e-'));
     try {
       await initTeamState('team-hardening-e2e', 'recover stuck work', 'executor', 2, cwd);
       const task = await createTask('team-hardening-e2e', { subject: 'recover me', description: 'd', status: 'pending' }, cwd);
@@ -30,7 +30,7 @@ describe('team hardening e2e', () => {
       assert.equal(firstClaim.ok, true);
       if (!firstClaim.ok) return;
 
-      const taskPath = join(cwd, '.omx', 'state', 'team', 'team-hardening-e2e', 'tasks', `task-${task.id}.json`);
+      const taskPath = join(cwd, '.omk', 'state', 'team', 'team-hardening-e2e', 'tasks', `task-${task.id}.json`);
       const current = JSON.parse(await readFile(taskPath, 'utf-8')) as any;
       current.claim.leased_until = new Date(Date.now() - 1_000).toISOString();
       await writeAtomic(taskPath, JSON.stringify(current, null, 2));

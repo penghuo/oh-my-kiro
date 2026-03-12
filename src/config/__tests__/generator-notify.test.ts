@@ -7,7 +7,7 @@ import { mergeConfig } from '../generator.js';
 
 describe('config generator', () => {
   it('places top-level keys before [features]', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-config-gen-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-config-gen-'));
     try {
       const configPath = join(wd, 'config.toml');
       await mergeConfig(configPath, wd);
@@ -42,7 +42,7 @@ describe('config generator', () => {
   });
 
   it('writes notify as a TOML array', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-config-gen-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-config-gen-'));
     try {
       const configPath = join(wd, 'config.toml');
       await mergeConfig(configPath, wd);
@@ -55,7 +55,7 @@ describe('config generator', () => {
   });
 
   it('seeds gpt-5.4 model and context defaults for fresh configs', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-config-gen-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-config-gen-'));
     try {
       const configPath = join(wd, 'config.toml');
       await mergeConfig(configPath, wd);
@@ -70,7 +70,7 @@ describe('config generator', () => {
   });
 
   it('seeds default model and context settings on fresh config', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-config-gen-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-config-gen-'));
     try {
       const configPath = join(wd, 'config.toml');
       await mergeConfig(configPath, wd);
@@ -89,14 +89,14 @@ describe('config generator', () => {
   });
 
   it('writes model_reasoning_effort and strengthened developer_instructions', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-config-gen-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-config-gen-'));
     try {
       const configPath = join(wd, 'config.toml');
       await mergeConfig(configPath, wd);
       const toml = await readFile(configPath, 'utf-8');
 
       assert.match(toml, /^model_reasoning_effort = "high"$/m);
-      assert.match(toml, /^developer_instructions = "You have oh-my-codex installed/m);
+      assert.match(toml, /^developer_instructions = "You have oh-my-kiro installed/m);
       assert.match(toml, /AGENTS\.md is your orchestration brain and the main orchestration surface/);
       assert.match(toml, /Use \/prompts:<role> and spawned role prompts for specialized subagent work/);
       assert.match(toml, /Treat role prompts as narrower execution surfaces under AGENTS\.md authority/);
@@ -106,7 +106,7 @@ describe('config generator', () => {
   });
 
   it('handles paths with spaces in notify array', async () => {
-    const base = await mkdtemp(join(tmpdir(), 'omx config gen space-'));
+    const base = await mkdtemp(join(tmpdir(), 'omk config gen space-'));
     const wd = join(base, 'pkg root');
     try {
       await mkdir(wd, { recursive: true });
@@ -123,8 +123,8 @@ describe('config generator', () => {
     }
   });
 
-  it('re-runs setup replacing OMX config cleanly', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-config-gen-'));
+  it('re-runs setup replacing OMK config cleanly', async () => {
+    const wd = await mkdtemp(join(tmpdir(), 'omk-config-gen-'));
     try {
       const configPath = join(wd, 'config.toml');
       await mergeConfig(configPath, wd);
@@ -138,12 +138,12 @@ describe('config generator', () => {
       await mergeConfig(configPath, wd);
       const rerun = await readFile(configPath, 'utf-8');
 
-      // OMX block appears exactly once
+      // OMK block appears exactly once
       assert.equal(
-        (rerun.match(/# oh-my-codex \(OMX\) Configuration/g) ?? []).length,
+        (rerun.match(/# oh-my-kiro \(OMK\) Configuration/g) ?? []).length,
         1
       );
-      assert.equal((rerun.match(/# End oh-my-codex/g) ?? []).length, 1);
+      assert.equal((rerun.match(/# End oh-my-kiro/g) ?? []).length, 1);
 
       // Features correct
       assert.equal((rerun.match(/^\[features\]$/gm) ?? []).length, 1);
@@ -166,7 +166,7 @@ describe('config generator', () => {
   });
 
   it('does not seed 1M context keys for non-gpt-5.4 models', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-config-gen-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-config-gen-'));
     try {
       const configPath = join(wd, 'config.toml');
       await writeFile(configPath, 'model = \"o3\"\n');
@@ -183,7 +183,7 @@ describe('config generator', () => {
   });
 
   it('preserves existing user top-level config', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-config-gen-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-config-gen-'));
     try {
       const configPath = join(wd, 'config.toml');
       const existing = [
@@ -203,14 +203,14 @@ describe('config generator', () => {
       assert.match(toml, /^model = "o3"$/m);
       assert.match(toml, /^approval_policy = "on-failure"$/m);
 
-      // OMX keys added
+      // OMK keys added
       assert.match(toml, /^notify = \[/m);
       assert.match(toml, /^model_reasoning_effort = "high"$/m);
 
       // User's feature flag preserved
       assert.match(toml, /^web_search = true$/m);
 
-      // OMX feature flags added
+      // OMK feature flags added
       assert.match(toml, /^multi_agent = true$/m);
     } finally {
       await rm(wd, { recursive: true, force: true });
@@ -218,7 +218,7 @@ describe('config generator', () => {
   });
 
   it('removes deprecated collab flag from [features]', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-config-gen-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-config-gen-'));
     try {
       const configPath = join(wd, 'config.toml');
       const existing = [
@@ -249,21 +249,21 @@ describe('config generator', () => {
     }
   });
 
-  it('migrates a legacy OMX block and preserves user settings', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-config-gen-'));
+  it('migrates a legacy OMK block and preserves user settings', async () => {
+    const wd = await mkdtemp(join(tmpdir(), 'omk-config-gen-'));
     try {
       const configPath = join(wd, 'config.toml');
       const legacy = [
         '[user.before]',
         'name = "kept-before"',
         '',
-        '# oh-my-codex (OMX) Configuration',
+        '# oh-my-kiro (OMK) Configuration',
         '# legacy block without top divider',
         'notify = ["node", "/tmp/legacy notify-hook.js"]',
-        '[mcp_servers.omx_state]',
+        '[mcp_servers.omk_state]',
         'command = "node"',
         'args = ["/tmp/state-server.js"]',
-        '# End oh-my-codex',
+        '# End oh-my-kiro',
         '',
         '[user.after]',
         'name = "kept-after"',
@@ -275,7 +275,7 @@ describe('config generator', () => {
       const toml = await readFile(configPath, 'utf-8');
 
       assert.equal(
-        (toml.match(/oh-my-codex \(OMX\) Configuration/g) ?? []).length,
+        (toml.match(/oh-my-kiro \(OMK\) Configuration/g) ?? []).length,
         1
       );
       assert.match(toml, /^\[user.before\]$/m);
@@ -289,7 +289,7 @@ describe('config generator', () => {
   });
 
   it('merges into existing [features] table without duplicating it', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-config-gen-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-config-gen-'));
     try {
       const configPath = join(wd, 'config.toml');
       const original = [
@@ -318,28 +318,28 @@ describe('config generator', () => {
   });
 
   it('escapes Windows-style backslashes for MCP server args', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-config-gen-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-config-gen-'));
     try {
       const configPath = join(wd, 'config.toml');
-      const windowsPkgRoot = 'C:\\Users\\alice\\oh-my-codex';
+      const windowsPkgRoot = 'C:\\Users\\alice\\oh-my-kiro';
       await mergeConfig(configPath, windowsPkgRoot);
       const toml = await readFile(configPath, 'utf-8');
 
       assert.match(
         toml,
-        /args = \["C:\\\\Users\\\\alice\\\\oh-my-codex\/dist\/mcp\/state-server\.js"\]/,
+        /args = \["C:\\\\Users\\\\alice\\\\oh-my-kiro\/dist\/mcp\/state-server\.js"\]/,
       );
       assert.match(
         toml,
-        /args = \["C:\\\\Users\\\\alice\\\\oh-my-codex\/dist\/mcp\/memory-server\.js"\]/,
+        /args = \["C:\\\\Users\\\\alice\\\\oh-my-kiro\/dist\/mcp\/memory-server\.js"\]/,
       );
       assert.match(
         toml,
-        /args = \["C:\\\\Users\\\\alice\\\\oh-my-codex\/dist\/mcp\/code-intel-server\.js"\]/,
+        /args = \["C:\\\\Users\\\\alice\\\\oh-my-kiro\/dist\/mcp\/code-intel-server\.js"\]/,
       );
       assert.match(
         toml,
-        /args = \["C:\\\\Users\\\\alice\\\\oh-my-codex\/dist\/mcp\/trace-server\.js"\]/,
+        /args = \["C:\\\\Users\\\\alice\\\\oh-my-kiro\/dist\/mcp\/trace-server\.js"\]/,
       );
     } finally {
       await rm(wd, { recursive: true, force: true });

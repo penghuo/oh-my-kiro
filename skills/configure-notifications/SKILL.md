@@ -1,6 +1,6 @@
 ---
 name: configure-notifications
-description: Configure OMX notifications - unified entry point for all platforms
+description: Configure OMK notifications - unified entry point for all platforms
 triggers:
   - "configure notifications"
   - "setup notifications"
@@ -22,7 +22,7 @@ triggers:
   - "slack webhook"
 ---
 
-# Configure OMX Notifications
+# Configure OMK Notifications
 
 Unified and only entry point for notification setup.
 
@@ -34,7 +34,7 @@ Unified and only entry point for notification setup.
 ## Step 1: Inspect Current State
 
 ```bash
-CONFIG_FILE="$HOME/.codex/.omx-config.json"
+CONFIG_FILE="$HOME/.codex/.omk-config.json"
 
 if [ -f "$CONFIG_FILE" ]; then
   jq -r '
@@ -100,7 +100,7 @@ Write:
 jq \
   --arg url "$URL" \
   --arg method "${METHOD:-POST}" \
-  --arg instruction "${INSTRUCTION:-OMX event {{event}} for {{projectPath}}}" \
+  --arg instruction "${INSTRUCTION:-OMK event {{event}} for {{projectPath}}}" \
   '.notifications = (.notifications // {enabled: true}) |
    .notifications.enabled = true |
    .notifications.custom_webhook_command = {
@@ -124,7 +124,7 @@ Write:
 ```bash
 jq \
   --arg command "$COMMAND_TEMPLATE" \
-  --arg instruction "${INSTRUCTION:-OMX event {{event}} for {{projectPath}}}" \
+  --arg instruction "${INSTRUCTION:-OMK event {{event}} for {{projectPath}}}" \
   '.notifications = (.notifications // {enabled: true}) |
    .notifications.enabled = true |
    .notifications.custom_cli_command = {
@@ -135,9 +135,9 @@ jq \
    }' "$CONFIG_FILE" > "$CONFIG_FILE.tmp" && mv "$CONFIG_FILE.tmp" "$CONFIG_FILE"
 ```
 
-> Activation gate: OpenClaw-backed dispatch is active only when `OMX_OPENCLAW=1`.
-> For command gateways, also require `OMX_OPENCLAW_COMMAND=1`.
-> Optional timeout env override: `OMX_OPENCLAW_COMMAND_TIMEOUT_MS` (ms).
+> Activation gate: OpenClaw-backed dispatch is active only when `OMK_OPENCLAW=1`.
+> For command gateways, also require `OMK_OPENCLAW_COMMAND=1`.
+> Optional timeout env override: `OMK_OPENCLAW_COMMAND_TIMEOUT_MS` (ms).
 
 ### 4b-1) OpenClaw + Clawdbot Agent Workflow (recommended for dev)
 
@@ -147,15 +147,15 @@ If the user explicitly asks to route hook notifications through **clawdbot agent
 
 Notes:
 - Hook name mapping is intentional: notifications `session-stop` -> OpenClaw hook `stop`.
-- OMX shell-escapes template substitutions for command gateways (including `{{instruction}}`).
+- OMK shell-escapes template substitutions for command gateways (including `{{instruction}}`).
 - Keep `instruction` templates concise and avoid untrusted shell metacharacters.
 - During troubleshooting, avoid swallowing command output; route it to a log file.
-- Timeout precedence: `gateways.<name>.timeout` > `OMX_OPENCLAW_COMMAND_TIMEOUT_MS` > `5000`.
+- Timeout precedence: `gateways.<name>.timeout` > `OMK_OPENCLAW_COMMAND_TIMEOUT_MS` > `5000`.
 - For clawdbot agent workflows, set `gateways.<name>.timeout` to `120000` (recommended).
 - For dev operations, enforce Korean output in all hook instructions.
 - Include both `session={{sessionId}}` and `tmux={{tmuxSession}}` in hook text for traceability.
 - If follow-up is needed, explicitly instruct clawdbot to consult `SOUL.md` and continue in `#omc-dev`.
-- **Error handling**: Append `|| true` to prevent OMX hook failures from blocking the session.
+- **Error handling**: Append `|| true` to prevent OMK hook failures from blocking the session.
 - **JSONL logging**: Use `.jsonl` extension and append (`>>`) for structured log aggregation.
 - **Reply target format**: Use `--reply-to 'channel:CHANNEL_ID'` for reliability (preferred over channel aliases).
 
@@ -163,7 +163,7 @@ Example (targeting `#omc-dev` with production-tested settings):
 
 ```bash
 jq \
-  --arg command "(clawdbot agent --session-id omx-hooks --message {{instruction}} --thinking minimal --deliver --reply-channel discord --reply-to 'channel:1468539002985644084' --timeout 120 --json >>/tmp/omx-openclaw-agent.jsonl 2>&1 || true)" \
+  --arg command "(clawdbot agent --session-id omk-hooks --message {{instruction}} --thinking minimal --deliver --reply-channel discord --reply-to 'channel:1468539002985644084' --timeout 120 --json >>/tmp/omk-openclaw-agent.jsonl 2>&1 || true)" \
   '.notifications = (.notifications // {enabled: true}) |
    .notifications.enabled = true |
    .notifications.verbosity = "verbose" |
@@ -185,56 +185,56 @@ jq \
    .notifications.openclaw.hooks["session-start"] = {
      enabled: true,
      gateway: "local",
-     instruction: "OMX hook=session-start project={{projectName}} session={{sessionId}} tmux={{tmuxSession}}. 한국어로 상태를 공유하고 SOUL.md를 참고해 필요한 후속 조치를 #omc-dev에 안내하세요."
+     instruction: "OMK hook=session-start project={{projectName}} session={{sessionId}} tmux={{tmuxSession}}. 한국어로 상태를 공유하고 SOUL.md를 참고해 필요한 후속 조치를 #omc-dev에 안내하세요."
    } |
    .notifications.openclaw.hooks["session-idle"] = {
      enabled: true,
      gateway: "local",
-     instruction: "OMX hook=session-idle project={{projectName}} session={{sessionId}} tmux={{tmuxSession}}. 한국어로 idle 상황을 간단히 공유하고 진행중인 작업 팔로업을 안내하세요."
+     instruction: "OMK hook=session-idle project={{projectName}} session={{sessionId}} tmux={{tmuxSession}}. 한국어로 idle 상황을 간단히 공유하고 진행중인 작업 팔로업을 안내하세요."
    } |
    .notifications.openclaw.hooks["ask-user-question"] = {
      enabled: true,
      gateway: "local",
-     instruction: "OMX hook=ask-user-question session={{sessionId}} tmux={{tmuxSession}} question={{question}}. 한국어로 사용자 응답 필요를 #omc-dev에 알리고 즉시 액션 아이템을 제시하세요."
+     instruction: "OMK hook=ask-user-question session={{sessionId}} tmux={{tmuxSession}} question={{question}}. 한국어로 사용자 응답 필요를 #omc-dev에 알리고 즉시 액션 아이템을 제시하세요."
    } |
    .notifications.openclaw.hooks["stop"] = {
      enabled: true,
      gateway: "local",
-     instruction: "OMX hook=session-stop project={{projectName}} session={{sessionId}} tmux={{tmuxSession}}. 한국어로 중단 상태와 정리 액션을 SOUL.md 기준으로 전달하세요."
+     instruction: "OMK hook=session-stop project={{projectName}} session={{sessionId}} tmux={{tmuxSession}}. 한국어로 중단 상태와 정리 액션을 SOUL.md 기준으로 전달하세요."
    } |
    .notifications.openclaw.hooks["session-end"] = {
      enabled: true,
      gateway: "local",
-     instruction: "OMX hook=session-end project={{projectName}} session={{sessionId}} tmux={{tmuxSession}} reason={{reason}}. 한국어로 완료 요약을 1줄로 남기고 필요한 후속 조치를 안내하세요."
+     instruction: "OMK hook=session-end project={{projectName}} session={{sessionId}} tmux={{tmuxSession}} reason={{reason}}. 한국어로 완료 요약을 1줄로 남기고 필요한 후속 조치를 안내하세요."
    }' "$CONFIG_FILE" > "$CONFIG_FILE.tmp" && mv "$CONFIG_FILE.tmp" "$CONFIG_FILE"
 ```
 
 Verification for this mode:
 
 ```bash
-clawdbot agent --session-id omx-hooks --message "OMX hook test via clawdbot agent path" \
+clawdbot agent --session-id omk-hooks --message "OMK hook test via clawdbot agent path" \
   --thinking minimal --deliver --reply-channel discord --reply-to 'channel:1468539002985644084' --timeout 120 --json
 ```
 
 Dev runbook (Korean + tmux follow-up):
 
 ```bash
-# 1) identify active OMX tmux sessions
-tmux list-sessions -F '#{session_name}' | rg '^omx-' || true
+# 1) identify active OMK tmux sessions
+tmux list-sessions -F '#{session_name}' | rg '^omk-' || true
 
 # 2) confirm hook templates include session/tmux context
 jq '.notifications.openclaw.hooks' "$CONFIG_FILE"
 
 # 3) inspect agent JSONL logs when delivery looks broken
-tail -n 120 /tmp/omx-openclaw-agent.jsonl | jq -s '.[] | {timestamp: (.timestamp // .time), status: (.status // .error // "ok")}'
+tail -n 120 /tmp/omk-openclaw-agent.jsonl | jq -s '.[] | {timestamp: (.timestamp // .time), status: (.status // .error // "ok")}'
 
 # 4) check for recent errors in logs
-rg '"error"|"failed"|"timeout"' /tmp/omx-openclaw-agent.jsonl | tail -20
+rg '"error"|"failed"|"timeout"' /tmp/omk-openclaw-agent.jsonl | tail -20
 ```
 
 ### 4c) Compatibility + precedence contract
 
-OMX accepts both:
+OMK accepts both:
 - explicit `notifications.openclaw` schema (legacy/runtime shape)
 - generic aliases (`custom_webhook_command`, `custom_cli_command`)
 
@@ -256,7 +256,7 @@ Deterministic precedence:
 
 ### Reply listener
 - `notifications.reply.enabled`
-- env gates: `OMX_REPLY_ENABLED=true`, and for Discord `OMX_REPLY_DISCORD_USER_IDS=...`
+- env gates: `OMK_REPLY_ENABLED=true`, and for Discord `OMK_REPLY_DISCORD_USER_IDS=...`
 
 ## Step 6: Disable All Notifications
 
@@ -283,4 +283,4 @@ Show:
 - Generic aliases enabled (`custom_webhook_command`, `custom_cli_command`)
 - Whether explicit `notifications.openclaw` exists (and therefore overrides aliases)
 - Verbosity + idle cooldown + reply listener state
-- Config path (`~/.codex/.omx-config.json`)
+- Config path (`~/.codex/.omk-config.json`)

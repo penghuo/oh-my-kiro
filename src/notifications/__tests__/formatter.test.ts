@@ -205,14 +205,14 @@ describe('parseTmuxTail', () => {
     assert.ok(result.includes('Actual output'));
   });
 
-  it('removes OMX HUD status lines', () => {
+  it('removes OMK HUD status lines', () => {
     const raw = [
-      '[OMX#3] ultrawork active',
-      '[OMX] idle',
+      '[OMK#3] ultrawork active',
+      '[OMK] idle',
       'Normal output line',
     ].join('\n');
     const result = parseTmuxTail(raw);
-    assert.ok(!result.includes('[OMX'));
+    assert.ok(!result.includes('[OMK'));
     assert.ok(result.includes('Normal output line'));
   });
 

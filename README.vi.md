@@ -1,16 +1,16 @@
-# oh-my-codex (OMX)
+# oh-my-kiro (OMK)
 
 <p align="center">
-  <img src="https://yeachan-heo.github.io/oh-my-codex-website/omx-character-nobg.png" alt="oh-my-codex character" width="280">
+  <img src="https://penghuo.github.io/oh-my-kiro-website/omk-character-nobg.png" alt="oh-my-kiro character" width="280">
   <br>
   <em>Codex của bạn không đơn độc.</em>
 </p>
 
-[![npm version](https://img.shields.io/npm/v/oh-my-codex)](https://www.npmjs.com/package/oh-my-codex)
+[![npm version](https://img.shields.io/npm/v/oh-my-kiro)](https://www.npmjs.com/package/oh-my-kiro)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org)
 
-> **[Website](https://yeachan-heo.github.io/oh-my-codex-website/)** | **[Documentation](https://yeachan-heo.github.io/oh-my-codex-website/docs.html)** | **[CLI Reference](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#cli-reference)** | **[Workflows](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#workflows)** | **[Hướng dẫn tích hợp OpenClaw](./docs/openclaw-integration.vi.md)** | **[GitHub](https://github.com/Yeachan-Heo/oh-my-codex)** | **[npm](https://www.npmjs.com/package/oh-my-codex)**
+> **[Website](https://penghuo.github.io/oh-my-kiro-website/)** | **[Documentation](https://penghuo.github.io/oh-my-kiro-website/docs.html)** | **[CLI Reference](https://penghuo.github.io/oh-my-kiro-website/docs.html#cli-reference)** | **[Workflows](https://penghuo.github.io/oh-my-kiro-website/docs.html#workflows)** | **[Hướng dẫn tích hợp OpenClaw](./docs/openclaw-integration.vi.md)** | **[GitHub](https://github.com/penghuo/oh-my-kiro)** | **[npm](https://www.npmjs.com/package/oh-my-kiro)**
 
 Lớp điều phối đa tác nhân cho [OpenAI Codex CLI](https://github.com/openai/codex).
 
@@ -35,21 +35,21 @@ Lớp điều phối đa tác nhân cho [OpenAI Codex CLI](https://github.com/op
 - [Italiano (Italian)](./README.it.md)
 
 
-OMX biến Codex từ một tác nhân phiên đơn thành một hệ thống phối hợp với:
+OMK biến Codex từ một tác nhân phiên đơn thành một hệ thống phối hợp với:
 - Role prompts (`/prompts:name`) cho các tác nhân chuyên biệt
 - Workflow skills (`$name`) cho các chế độ thực thi lặp lại
-- Điều phối đội ngũ trong tmux (`omx team`, `$team`)
+- Điều phối đội ngũ trong tmux (`omk team`, `$team`)
 - Trạng thái bền vững và bộ nhớ qua máy chủ MCP
 
-## Tại sao chọn OMX
+## Tại sao chọn OMK
 
-Codex CLI mạnh mẽ cho các tác vụ trực tiếp. OMX thêm cấu trúc cho công việc lớn hơn:
+Codex CLI mạnh mẽ cho các tác vụ trực tiếp. OMK thêm cấu trúc cho công việc lớn hơn:
 - Phân tách và thực thi theo giai đoạn (`team-plan -> team-prd -> team-exec -> team-verify -> team-fix`)
-- Trạng thái vòng đời chế độ bền vững (`.omx/state/`)
+- Trạng thái vòng đời chế độ bền vững (`.omk/state/`)
 - Bề mặt bộ nhớ và sổ ghi chú cho phiên làm việc dài
 - Điều khiển vận hành cho khởi chạy, xác minh và hủy bỏ
 
-OMX là một tiện ích bổ sung, không phải fork. Nó sử dụng các điểm mở rộng gốc của Codex.
+OMK là một tiện ích bổ sung, không phải fork. Nó sử dụng các điểm mở rộng gốc của Codex.
 
 ## Yêu cầu hệ thống
 
@@ -61,20 +61,20 @@ OMX là một tiện ích bổ sung, không phải fork. Nó sử dụng các đ
 ## Bắt đầu nhanh (3 phút)
 
 ```bash
-npm install -g oh-my-codex
-omx setup
-omx doctor
+npm install -g oh-my-kiro
+omk setup
+omk doctor
 ```
 
 Cấu hình khởi chạy khuyến nghị cho môi trường tin cậy:
 
 ```bash
-omx --xhigh --madmax
+omk --xhigh --madmax
 ```
 
 ## Mới trong v0.5.0
 
-- **Thiết lập nhận biết phạm vi** qua `omx setup --scope user|project` cho các chế độ cài đặt linh hoạt.
+- **Thiết lập nhận biết phạm vi** qua `omk setup --scope user|project` cho các chế độ cài đặt linh hoạt.
 - **Định tuyến Spark worker** qua `--spark` / `--madmax-spark` — worker của đội có thể sử dụng `gpt-5.3-codex-spark` mà không ép buộc model lãnh đạo.
 - **Hợp nhất danh mục** — loại bỏ các prompt không dùng nữa (`deep-executor`, `scientist`) và 9 skill không dùng nữa để có bề mặt gọn hơn.
 - **Mức độ chi tiết thông báo** cho kiểm soát chi tiết đầu ra CCNotifier.
@@ -93,14 +93,14 @@ $team 3:executor "fix all TypeScript errors"
 Từ terminal:
 
 ```bash
-omx team 4:executor "parallelize a multi-module refactor"
-omx team status <team-name>
-omx team shutdown <team-name>
+omk team 4:executor "parallelize a multi-module refactor"
+omk team status <team-name>
+omk team shutdown <team-name>
 ```
 
 ## Mô hình cốt lõi
 
-OMX cài đặt và kết nối các lớp sau:
+OMK cài đặt và kết nối các lớp sau:
 
 ```text
 User
@@ -109,34 +109,34 @@ User
     -> ~/.codex/prompts/*.md (danh mục prompt tác nhân)
     -> ~/.agents/skills/*/SKILL.md (danh mục skill)
     -> ~/.codex/config.toml (tính năng, thông báo, MCP)
-    -> .omx/ (trạng thái runtime, bộ nhớ, kế hoạch, nhật ký)
+    -> .omk/ (trạng thái runtime, bộ nhớ, kế hoạch, nhật ký)
 ```
 
 ## Các lệnh chính
 
 ```bash
-omx                # Khởi chạy Codex (+ HUD trong tmux khi có sẵn)
-omx setup          # Cài đặt prompt/skill/config theo phạm vi + dự án AGENTS.md/.omx
-omx doctor         # Chẩn đoán cài đặt/runtime
-omx doctor --team  # Chẩn đoán Team/swarm
-omx team ...       # Khởi động/trạng thái/tiếp tục/tắt worker tmux của đội
-omx status         # Hiển thị các chế độ đang hoạt động
-omx cancel         # Hủy các chế độ thực thi đang hoạt động
-omx reasoning <mode> # low|medium|high|xhigh
-omx tmux-hook ...  # init|status|validate|test
-omx hooks ...      # init|status|validate|test (quy trình mở rộng plugin)
-omx hud ...        # --watch|--json|--preset
-omx help
+omk                # Khởi chạy Codex (+ HUD trong tmux khi có sẵn)
+omk setup          # Cài đặt prompt/skill/config theo phạm vi + dự án AGENTS.md/.omk
+omk doctor         # Chẩn đoán cài đặt/runtime
+omk doctor --team  # Chẩn đoán Team/swarm
+omk team ...       # Khởi động/trạng thái/tiếp tục/tắt worker tmux của đội
+omk status         # Hiển thị các chế độ đang hoạt động
+omk cancel         # Hủy các chế độ thực thi đang hoạt động
+omk reasoning <mode> # low|medium|high|xhigh
+omk tmux-hook ...  # init|status|validate|test
+omk hooks ...      # init|status|validate|test (quy trình mở rộng plugin)
+omk hud ...        # --watch|--json|--preset
+omk help
 ```
 
 ## Mở rộng Hooks (Bề mặt bổ sung)
 
-OMX hiện bao gồm `omx hooks` cho scaffolding và xác thực plugin.
+OMK hiện bao gồm `omk hooks` cho scaffolding và xác thực plugin.
 
-- `omx tmux-hook` vẫn được hỗ trợ và không thay đổi.
-- `omx hooks` là bổ sung và không thay thế quy trình tmux-hook.
-- Tệp plugin nằm tại `.omx/hooks/*.mjs`.
-- Plugin tắt theo mặc định; kích hoạt bằng `OMX_HOOK_PLUGINS=1`.
+- `omk tmux-hook` vẫn được hỗ trợ và không thay đổi.
+- `omk hooks` là bổ sung và không thay thế quy trình tmux-hook.
+- Tệp plugin nằm tại `.omk/hooks/*.mjs`.
+- Plugin tắt theo mặc định; kích hoạt bằng `OMK_HOOK_PLUGINS=1`.
 
 Xem `docs/hooks-extension.md` cho quy trình mở rộng đầy đủ và mô hình sự kiện.
 
@@ -162,14 +162,14 @@ Theo mặc định, các công cụ MCP state/memory/trace chấp nhận `workin
 Để hạn chế điều này, đặt danh sách gốc được phép:
 
 ```bash
-export OMX_MCP_WORKDIR_ROOTS="/path/to/project:/path/to/another-root"
+export OMK_MCP_WORKDIR_ROOTS="/path/to/project:/path/to/another-root"
 ```
 
 Khi được đặt, các giá trị `workingDirectory` ngoài các gốc này sẽ bị từ chối.
 
 ## Kiểm soát Prompt Codex-First
 
-Theo mặc định, OMX tiêm:
+Theo mặc định, OMK tiêm:
 
 ```text
 -c model_instructions_file="<cwd>/AGENTS.md"
@@ -181,8 +181,8 @@ Mở rộng hành vi Codex, nhưng không thay thế/bỏ qua các chính sách 
 Điều khiển:
 
 ```bash
-OMX_BYPASS_DEFAULT_SYSTEM_PROMPT=0 omx     # tắt tiêm AGENTS.md
-OMX_MODEL_INSTRUCTIONS_FILE=/path/to/instructions.md omx
+OMK_BYPASS_DEFAULT_SYSTEM_PROMPT=0 omk     # tắt tiêm AGENTS.md
+OMK_MODEL_INSTRUCTIONS_FILE=/path/to/instructions.md omk
 ```
 
 ## Chế độ đội
@@ -198,17 +198,17 @@ start -> assign scoped lanes -> monitor -> verify terminal tasks -> shutdown
 Các lệnh vận hành:
 
 ```bash
-omx team <args>
-omx team status <team-name>
-omx team resume <team-name>
-omx team shutdown <team-name>
+omk team <args>
+omk team status <team-name>
+omk team resume <team-name>
+omk team shutdown <team-name>
 ```
 
 Quy tắc quan trọng: không tắt khi các tác vụ vẫn đang ở trạng thái `in_progress` trừ khi đang hủy bỏ.
 
 ### Chính sách dọn dẹp Ralph
 
-Khi đội chạy trong chế độ ralph (`omx team ralph ...`), việc dọn dẹp khi tắt
+Khi đội chạy trong chế độ ralph (`omk team ralph ...`), việc dọn dẹp khi tắt
 áp dụng chính sách chuyên dụng khác với đường dẫn thông thường:
 
 | Hành vi | Đội thông thường | Đội Ralph |
@@ -218,41 +218,41 @@ Khi đội chạy trong chế độ ralph (`omx team ralph ...`), việc dọn d
 | Ghi nhật ký hoàn thành | Sự kiện `shutdown_gate` tiêu chuẩn | Sự kiện `ralph_cleanup_summary` bổ sung với phân tích tác vụ |
 
 Chính sách Ralph được phát hiện tự động từ trạng thái chế độ đội (`linked_ralph`) hoặc
-có thể được truyền rõ ràng qua `omx team shutdown <name> --ralph`.
+có thể được truyền rõ ràng qua `omk team shutdown <name> --ralph`.
 
 Chọn Worker CLI cho worker của đội:
 
 ```bash
-OMX_TEAM_WORKER_CLI=auto    # mặc định; sử dụng claude khi worker --model chứa "claude"
-OMX_TEAM_WORKER_CLI=codex   # ép buộc worker Codex CLI
-OMX_TEAM_WORKER_CLI=claude  # ép buộc worker Claude CLI
-OMX_TEAM_WORKER_CLI_MAP=codex,codex,claude,claude  # hỗn hợp CLI theo worker (độ dài=1 hoặc số worker)
-OMX_TEAM_AUTO_INTERRUPT_RETRY=0  # tùy chọn: tắt fallback thích ứng queue->resend
+OMK_TEAM_WORKER_CLI=auto    # mặc định; sử dụng claude khi worker --model chứa "claude"
+OMK_TEAM_WORKER_CLI=codex   # ép buộc worker Codex CLI
+OMK_TEAM_WORKER_CLI=claude  # ép buộc worker Claude CLI
+OMK_TEAM_WORKER_CLI_MAP=codex,codex,claude,claude  # hỗn hợp CLI theo worker (độ dài=1 hoặc số worker)
+OMK_TEAM_AUTO_INTERRUPT_RETRY=0  # tùy chọn: tắt fallback thích ứng queue->resend
 ```
 
 Lưu ý:
-- Tham số khởi chạy worker vẫn được chia sẻ qua `OMX_TEAM_WORKER_LAUNCH_ARGS`.
-- `OMX_TEAM_WORKER_CLI_MAP` ghi đè `OMX_TEAM_WORKER_CLI` cho lựa chọn theo worker.
+- Tham số khởi chạy worker vẫn được chia sẻ qua `OMK_TEAM_WORKER_LAUNCH_ARGS`.
+- `OMK_TEAM_WORKER_CLI_MAP` ghi đè `OMK_TEAM_WORKER_CLI` cho lựa chọn theo worker.
 - Gửi trigger sử dụng thử lại thích ứng theo mặc định (queue/submit, sau đó fallback an toàn clear-line+resend khi cần).
-- Trong chế độ Claude worker, OMX khởi chạy worker dưới dạng `claude` thuần túy (không có tham số khởi chạy thêm) và bỏ qua các ghi đè rõ ràng `--model` / `--config` / `--effort` để Claude sử dụng `settings.json` mặc định.
+- Trong chế độ Claude worker, OMK khởi chạy worker dưới dạng `claude` thuần túy (không có tham số khởi chạy thêm) và bỏ qua các ghi đè rõ ràng `--model` / `--config` / `--effort` để Claude sử dụng `settings.json` mặc định.
 
-## `omx setup` ghi những gì
+## `omk setup` ghi những gì
 
-- `.omx/setup-scope.json` (phạm vi cài đặt được lưu trữ)
+- `.omk/setup-scope.json` (phạm vi cài đặt được lưu trữ)
 - Cài đặt phụ thuộc phạm vi:
-  - `user`: `~/.codex/prompts/`, `~/.agents/skills/`, `~/.codex/config.toml`, `~/.omx/agents/`
-  - `project`: `./.codex/prompts/`, `./.agents/skills/`, `./.codex/config.toml`, `./.omx/agents/`
-- Hành vi khởi chạy: nếu phạm vi được lưu trữ là `project`, khởi chạy `omx` tự động sử dụng `CODEX_HOME=./.codex` (trừ khi `CODEX_HOME` đã được đặt).
+  - `user`: `~/.codex/prompts/`, `~/.agents/skills/`, `~/.codex/config.toml`, `~/.omk/agents/`
+  - `project`: `./.codex/prompts/`, `./.agents/skills/`, `./.codex/config.toml`, `./.omk/agents/`
+- Hành vi khởi chạy: nếu phạm vi được lưu trữ là `project`, khởi chạy `omk` tự động sử dụng `CODEX_HOME=./.codex` (trừ khi `CODEX_HOME` đã được đặt).
 - `AGENTS.md` hiện có được giữ nguyên theo mặc định. Trong các lần chạy TTY tương tác, setup hỏi trước khi ghi đè; `--force` ghi đè không hỏi (kiểm tra an toàn phiên hoạt động vẫn áp dụng).
 - Cập nhật `config.toml` (cho cả hai phạm vi):
   - `notify = ["node", "..."]`
   - `model_reasoning_effort = "high"`
   - `developer_instructions = "..."`
   - `[features] multi_agent = true, child_agents_md = true`
-  - Mục máy chủ MCP (`omx_state`, `omx_memory`, `omx_code_intel`, `omx_trace`)
+  - Mục máy chủ MCP (`omk_state`, `omk_memory`, `omk_code_intel`, `omk_trace`)
   - `[tui] status_line`
 - `AGENTS.md` của dự án
-- Thư mục `.omx/` runtime và cấu hình HUD
+- Thư mục `.omk/` runtime và cấu hình HUD
 
 ## Tác nhân và skill
 
@@ -266,8 +266,8 @@ Ví dụ:
 ## Cấu trúc dự án
 
 ```text
-oh-my-codex/
-  bin/omx.js
+oh-my-kiro/
+  bin/omk.js
   src/
     cli/
     team/
@@ -287,8 +287,8 @@ oh-my-codex/
 ## Phát triển
 
 ```bash
-git clone https://github.com/Yeachan-Heo/oh-my-codex.git
-cd oh-my-codex
+git clone https://github.com/penghuo/oh-my-kiro.git
+cd oh-my-kiro
 npm install
 npm run build
 npm test
@@ -296,11 +296,11 @@ npm test
 
 ## Tài liệu
 
-- **[Tài liệu đầy đủ](https://yeachan-heo.github.io/oh-my-codex-website/docs.html)** — Hướng dẫn hoàn chỉnh
-- **[Tham chiếu CLI](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#cli-reference)** — Tất cả lệnh `omx`, cờ và công cụ
-- **[Hướng dẫn thông báo](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#notifications)** — Cài đặt Discord, Telegram, Slack và webhook
-- **[Quy trình công việc khuyến nghị](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#workflows)** — Chuỗi skill đã thử nghiệm thực chiến cho các tác vụ phổ biến
-- **[Ghi chú phát hành](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#release-notes)** — Tính năng mới trong mỗi phiên bản
+- **[Tài liệu đầy đủ](https://penghuo.github.io/oh-my-kiro-website/docs.html)** — Hướng dẫn hoàn chỉnh
+- **[Tham chiếu CLI](https://penghuo.github.io/oh-my-kiro-website/docs.html#cli-reference)** — Tất cả lệnh `omk`, cờ và công cụ
+- **[Hướng dẫn thông báo](https://penghuo.github.io/oh-my-kiro-website/docs.html#notifications)** — Cài đặt Discord, Telegram, Slack và webhook
+- **[Quy trình công việc khuyến nghị](https://penghuo.github.io/oh-my-kiro-website/docs.html#workflows)** — Chuỗi skill đã thử nghiệm thực chiến cho các tác vụ phổ biến
+- **[Ghi chú phát hành](https://penghuo.github.io/oh-my-kiro-website/docs.html#release-notes)** — Tính năng mới trong mỗi phiên bản
 
 ## Ghi chú
 

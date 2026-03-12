@@ -152,7 +152,7 @@ describe('notify-hook/operational-events – parseCommandResult', () => {
 describe('notify-hook/operational-events – buildOperationalContext', () => {
   it('resolves a stable session_name from cwd + session id', async () => {
     const { buildOperationalContext } = await loadModule('notify-hook/operational-events.js');
-    const sessionId = 'omx-issue-663-session';
+    const sessionId = 'omk-issue-663-session';
     const originalTmux = process.env.TMUX;
     delete process.env.TMUX;
     try {
@@ -165,7 +165,7 @@ describe('notify-hook/operational-events – buildOperationalContext', () => {
 
       assert.equal(typeof context.session_name, 'string');
       assert.notEqual(context.session_name, sessionId);
-      assert.match(context.session_name || '', /^omx-/);
+      assert.match(context.session_name || '', /^omk-/);
       assert.match(context.session_name || '', /issue-663-session/);
     } finally {
       if (originalTmux === undefined) delete process.env.TMUX;
@@ -349,7 +349,7 @@ describe('notify-hook/auto-nudge – inferSkillPhaseFromText', () => {
 describe('notify-hook/auto-nudge – blocked deep-interview auto approvals', () => {
   it('normalizes injected approval text before matching blocked inputs', async () => {
     const { normalizeBlockedAutoApprovalInput } = await loadModule('notify-hook/auto-nudge.js');
-    assert.equal(normalizeBlockedAutoApprovalInput(' yes, proceed [OMX_TMUX_INJECT] '), 'yes proceed');
+    assert.equal(normalizeBlockedAutoApprovalInput(' yes, proceed [OMK_TMUX_INJECT] '), 'yes proceed');
   });
 
   it('matches each blocked approval keyword or phrase', async () => {
@@ -488,15 +488,15 @@ describe('notify-hook/payload-parser – language reminder injection', () => {
 
   it('injects language reminder for non-Latin input', async () => {
     const { injectLanguageReminder, LANGUAGE_REMINDER_MARKER } = await loadModule('notify-hook/payload-parser.js');
-    const prompt = injectLanguageReminder('Continue from current mode state. [OMX_TMUX_INJECT]', '帮我修复这个问题');
-    assert.match(prompt, /\[OMX_LANG_REMINDER\]/);
+    const prompt = injectLanguageReminder('Continue from current mode state. [OMK_TMUX_INJECT]', '帮我修复这个问题');
+    assert.match(prompt, /\[OMK_LANG_REMINDER\]/);
     assert.match(prompt, /Continue in the user's language\./);
     assert.match(prompt, new RegExp(LANGUAGE_REMINDER_MARKER.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   });
 
   it('does not inject reminder for Latin-only text', async () => {
     const { injectLanguageReminder } = await loadModule('notify-hook/payload-parser.js');
-    const prompt = injectLanguageReminder('Continue [OMX_TMUX_INJECT]', 'Please fix issue 253');
-    assert.equal(prompt, 'Continue [OMX_TMUX_INJECT]');
+    const prompt = injectLanguageReminder('Continue [OMK_TMUX_INJECT]', 'Please fix issue 253');
+    assert.equal(prompt, 'Continue [OMK_TMUX_INJECT]');
   });
 });

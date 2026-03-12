@@ -24,7 +24,7 @@ import {
 } from '../state.js';
 
 async function setupTeam(name: string): Promise<{ cwd: string; cleanup: () => Promise<void> }> {
-  const cwd = await mkdtemp(join(tmpdir(), `omx-interop-${name}-`));
+  const cwd = await mkdtemp(join(tmpdir(), `omk-interop-${name}-`));
   await initTeamState(name, 'test task', 'executor', 2, cwd);
   return { cwd, cleanup: () => rm(cwd, { recursive: true, force: true }) };
 }
@@ -68,13 +68,13 @@ describe('resolveTeamApiOperation', () => {
 describe('buildLegacyTeamDeprecationHint', () => {
   it('produces CLI hint with resolved operation name', () => {
     const hint = buildLegacyTeamDeprecationHint('team_send_message', { team_name: 'alpha' });
-    assert.match(hint, /omx team api send-message/);
+    assert.match(hint, /omk team api send-message/);
     assert.match(hint, /"team_name":"alpha"/);
   });
 
   it('falls back to generic hint for unresolvable legacy name', () => {
     const hint = buildLegacyTeamDeprecationHint('team_nonexistent', { foo: 'bar' });
-    assert.match(hint, /omx team api <operation>/);
+    assert.match(hint, /omk team api <operation>/);
   });
 
   it('uses empty JSON when no args provided', () => {
@@ -266,7 +266,7 @@ describe('executeTeamApiOperation: mailbox-mark-delivered', () => {
     const { cwd, cleanup } = await setupTeam('mark-dlv');
     try {
       // Ensure the worker-2 mailbox directory exists so sendDirectMessage can write
-      await mkdir(join(cwd, '.omx', 'state', 'team', 'mark-dlv', 'mailbox', 'worker-2'), { recursive: true });
+      await mkdir(join(cwd, '.omk', 'state', 'team', 'mark-dlv', 'mailbox', 'worker-2'), { recursive: true });
       const sendResult = await executeTeamApiOperation('send-message', {
         team_name: 'mark-dlv', from_worker: 'worker-1', to_worker: 'worker-2', body: 'ack',
       }, cwd);
@@ -333,7 +333,7 @@ describe('executeTeamApiOperation: mailbox-mark-notified', () => {
     const { cwd, cleanup } = await setupTeam('mark-ntf');
     try {
       // Ensure the worker-2 mailbox directory exists so sendDirectMessage can write
-      await mkdir(join(cwd, '.omx', 'state', 'team', 'mark-ntf', 'mailbox', 'worker-2'), { recursive: true });
+      await mkdir(join(cwd, '.omk', 'state', 'team', 'mark-ntf', 'mailbox', 'worker-2'), { recursive: true });
       const sendResult = await executeTeamApiOperation('send-message', {
         team_name: 'mark-ntf', from_worker: 'worker-1', to_worker: 'worker-2', body: 'notify me',
       }, cwd);
@@ -698,7 +698,7 @@ describe('executeTeamApiOperation: read-config', () => {
   });
 
   it('returns team_not_found for nonexistent team', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-interop-cfg-nf-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-interop-cfg-nf-'));
     try {
       const result = await executeTeamApiOperation('read-config', {
         team_name: 'nonexistent-cfg',
@@ -1176,7 +1176,7 @@ describe('executeTeamApiOperation: get-summary', () => {
   });
 
   it('returns team_not_found for nonexistent team', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-interop-sum-nf-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-interop-sum-nf-'));
     try {
       const result = await executeTeamApiOperation('get-summary', {
         team_name: 'nonexistent-sum',
@@ -1397,10 +1397,10 @@ describe('executeTeamApiOperation: write-task-approval', () => {
 
 describe('executeTeamApiOperation: error handling', () => {
   it('wraps thrown errors in an error envelope', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-interop-err-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-interop-err-'));
     try {
-      await mkdir(join(cwd, '.omx', 'state', 'team', 'err-team'), { recursive: true });
-      await writeFile(join(cwd, '.omx', 'state', 'team', 'err-team', 'config.json'), '{}', 'utf8');
+      await mkdir(join(cwd, '.omk', 'state', 'team', 'err-team'), { recursive: true });
+      await writeFile(join(cwd, '.omk', 'state', 'team', 'err-team', 'config.json'), '{}', 'utf8');
 
       const result = await executeTeamApiOperation('claim-task', {
         team_name: 'err-team', task_id: '1', worker: 'w1',

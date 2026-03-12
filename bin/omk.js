@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// oh-my-codex CLI entry point
+// oh-my-kiro CLI entry point
 // Requires compiled JavaScript output in dist/
 
 import { fileURLToPath, pathToFileURL } from 'url';
@@ -19,6 +19,6 @@ if (existsSync(distEntry)) {
   await main(process.argv.slice(2));
   process.exit(process.exitCode ?? 0);
 } else {
-  console.error('oh-my-codex: run "npm run build" first');
+  console.error('oh-my-kiro: run "npm run build" first');
   process.exit(1);
 }

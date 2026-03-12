@@ -17,7 +17,7 @@ describe("getOpenClawConfig", () => {
 
   beforeEach(() => {
     originalEnv = { ...process.env };
-    tmpDir = join(tmpdir(), `omx-openclaw-test-${Date.now()}`);
+    tmpDir = join(tmpdir(), `omk-openclaw-test-${Date.now()}`);
     mkdirSync(tmpDir, { recursive: true });
     process.env.CODEX_HOME = join(tmpDir, ".codex");
   });
@@ -35,33 +35,33 @@ describe("getOpenClawConfig", () => {
     // Reset cache between tests (dynamic import to allow resetting)
   });
 
-  it("returns null when OMX_OPENCLAW is not set", async () => {
-    delete process.env.OMX_OPENCLAW;
+  it("returns null when OMK_OPENCLAW is not set", async () => {
+    delete process.env.OMK_OPENCLAW;
     const { getOpenClawConfig, resetOpenClawConfigCache } = await import("../config.js");
     resetOpenClawConfigCache();
     const result = getOpenClawConfig();
     assert.equal(result, null);
   });
 
-  it("returns null when OMX_OPENCLAW !== '1'", async () => {
-    process.env.OMX_OPENCLAW = "0";
+  it("returns null when OMK_OPENCLAW !== '1'", async () => {
+    process.env.OMK_OPENCLAW = "0";
     const { getOpenClawConfig, resetOpenClawConfigCache } = await import("../config.js");
     resetOpenClawConfigCache();
     const result = getOpenClawConfig();
     assert.equal(result, null);
   });
 
-  it("returns null when OMX_OPENCLAW_CONFIG file does not exist", async () => {
-    process.env.OMX_OPENCLAW = "1";
-    process.env.OMX_OPENCLAW_CONFIG = join(tmpDir, "nonexistent.json");
+  it("returns null when OMK_OPENCLAW_CONFIG file does not exist", async () => {
+    process.env.OMK_OPENCLAW = "1";
+    process.env.OMK_OPENCLAW_CONFIG = join(tmpDir, "nonexistent.json");
     const { getOpenClawConfig, resetOpenClawConfigCache } = await import("../config.js");
     resetOpenClawConfigCache();
     const result = getOpenClawConfig();
     assert.equal(result, null);
   });
 
-  it("reads config from OMX_OPENCLAW_CONFIG override file", async () => {
-    process.env.OMX_OPENCLAW = "1";
+  it("reads config from OMK_OPENCLAW_CONFIG override file", async () => {
+    process.env.OMK_OPENCLAW = "1";
     const configPath = join(tmpDir, "openclaw.json");
     const config = {
       enabled: true,
@@ -73,7 +73,7 @@ describe("getOpenClawConfig", () => {
       },
     };
     writeFileSync(configPath, JSON.stringify(config));
-    process.env.OMX_OPENCLAW_CONFIG = configPath;
+    process.env.OMK_OPENCLAW_CONFIG = configPath;
     const { getOpenClawConfig, resetOpenClawConfigCache } = await import("../config.js");
     resetOpenClawConfigCache();
     const result = getOpenClawConfig();
@@ -83,10 +83,10 @@ describe("getOpenClawConfig", () => {
   });
 
   it("returns null when config has enabled: false", async () => {
-    process.env.OMX_OPENCLAW = "1";
+    process.env.OMK_OPENCLAW = "1";
     const configPath = join(tmpDir, "openclaw.json");
     writeFileSync(configPath, JSON.stringify({ enabled: false, gateways: {}, hooks: {} }));
-    process.env.OMX_OPENCLAW_CONFIG = configPath;
+    process.env.OMK_OPENCLAW_CONFIG = configPath;
     const { getOpenClawConfig, resetOpenClawConfigCache } = await import("../config.js");
     resetOpenClawConfigCache();
     const result = getOpenClawConfig();
@@ -94,10 +94,10 @@ describe("getOpenClawConfig", () => {
   });
 
   it("returns null for invalid JSON", async () => {
-    process.env.OMX_OPENCLAW = "1";
+    process.env.OMK_OPENCLAW = "1";
     const configPath = join(tmpDir, "openclaw.json");
     writeFileSync(configPath, "not-valid-json{{{");
-    process.env.OMX_OPENCLAW_CONFIG = configPath;
+    process.env.OMK_OPENCLAW_CONFIG = configPath;
     const { getOpenClawConfig, resetOpenClawConfigCache } = await import("../config.js");
     resetOpenClawConfigCache();
     const result = getOpenClawConfig();
@@ -193,12 +193,12 @@ describe("getOpenClawConfig generic alias normalization", () => {
 
   beforeEach(() => {
     originalEnv = { ...process.env };
-    tmpDir = join(tmpdir(), `omx-openclaw-alias-test-${Date.now()}`);
+    tmpDir = join(tmpdir(), `omk-openclaw-alias-test-${Date.now()}`);
     mkdirSync(tmpDir, { recursive: true });
-    process.env.OMX_OPENCLAW = "1";
+    process.env.OMK_OPENCLAW = "1";
     process.env.HOME = tmpDir;
     process.env.CODEX_HOME = join(tmpDir, ".codex");
-    delete process.env.OMX_OPENCLAW_CONFIG;
+    delete process.env.OMK_OPENCLAW_CONFIG;
   });
 
   afterEach(() => {
@@ -212,9 +212,9 @@ describe("getOpenClawConfig generic alias normalization", () => {
   });
 
   it("normalizes custom_webhook_command alias to openclaw runtime config", async () => {
-    const omxConfigPath = join(tmpDir, ".codex", ".omx-config.json");
+    const omkConfigPath = join(tmpDir, ".codex", ".omk-config.json");
     mkdirSync(join(tmpDir, ".codex"), { recursive: true });
-    writeFileSync(omxConfigPath, JSON.stringify({
+    writeFileSync(omkConfigPath, JSON.stringify({
       notifications: {
         enabled: true,
         custom_webhook_command: {
@@ -236,9 +236,9 @@ describe("getOpenClawConfig generic alias normalization", () => {
   });
 
   it("explicit notifications.openclaw wins over generic aliases", async () => {
-    const omxConfigPath = join(tmpDir, ".codex", ".omx-config.json");
+    const omkConfigPath = join(tmpDir, ".codex", ".omk-config.json");
     mkdirSync(join(tmpDir, ".codex"), { recursive: true });
-    writeFileSync(omxConfigPath, JSON.stringify({
+    writeFileSync(omkConfigPath, JSON.stringify({
       notifications: {
         enabled: true,
         openclaw: {

@@ -25,7 +25,7 @@ Deep Interview implements an Ouroboros-inspired Socratic clarification loop befo
 <Why_This_Exists>
 Execution quality is usually bottlenecked by requirement clarity. A single expansion pass often misses hidden assumptions. This workflow applies Socratic pressure + quantitative ambiguity scoring so orchestration modes begin with an explicit, testable spec.
 
-Inspired by Ouroboros (https://github.com/Q00/ouroboros) and adapted for OMX conventions.
+Inspired by Ouroboros (https://github.com/Q00/ouroboros) and adapted for OMK conventions.
 </Why_This_Exists>
 
 <Depth_Profiles>
@@ -52,7 +52,7 @@ If no flag is provided, use **Standard**.
 ## Phase 0: Preflight Context Intake
 
 1. Parse `{{ARGUMENTS}}` and derive a short task slug.
-2. Attempt to load the latest relevant context snapshot from `.omx/context/{slug}-*.md`.
+2. Attempt to load the latest relevant context snapshot from `.omk/context/{slug}-*.md`.
 3. If no snapshot exists, create a minimum context snapshot with:
    - Task statement
    - Desired outcome
@@ -60,7 +60,7 @@ If no flag is provided, use **Standard**.
    - Constraints
    - Unknowns/open questions
    - Likely codebase touchpoints
-4. Save snapshot to `.omx/context/{slug}-{timestamp}.md` (UTC `YYYYMMDDTHHMMSSZ`) and reference it in mode state.
+4. Save snapshot to `.omk/context/{slug}-{timestamp}.md` (UTC `YYYYMMDDTHHMMSSZ`) and reference it in mode state.
 
 ## Phase 1: Initialize
 
@@ -85,7 +85,7 @@ If no flag is provided, use **Standard**.
     "max_rounds": 5,
     "challenge_modes_used": [],
     "codebase_context": null,
-    "context_snapshot_path": ".omx/context/<slug>-<timestamp>.md"
+    "context_snapshot_path": ".omk/context/<slug>-<timestamp>.md"
   }
 }
 ```
@@ -152,10 +152,10 @@ Track used modes in state to prevent repetition.
 When threshold is met (or user exits with warning / hard cap):
 
 1. Write interview transcript summary to:
-   - `.omx/interviews/{slug}-{timestamp}.md`  
+   - `.omk/interviews/{slug}-{timestamp}.md`  
      (kept for ralph PRD compatibility)
 2. Write execution-ready spec to:
-   - `.omx/specs/deep-interview-{slug}.md`
+   - `.omk/specs/deep-interview-{slug}.md`
 
 Spec should include:
 - Metadata (profile, rounds, final ambiguity, threshold, context type)
@@ -192,8 +192,8 @@ Present execution options after artifact generation:
 - Use `request_user_input` / structured user-input tool for each interview round when available
 - If structured question tools are unavailable, use plain-text single-question rounds and keep the same stage order
 - Use `state_write` / `state_read` for resumable mode state
-- Read/write context snapshots under `.omx/context/`
-- Save transcript/spec artifacts under `.omx/interviews/` and `.omx/specs/`
+- Read/write context snapshots under `.omk/context/`
+- Save transcript/spec artifacts under `.omk/interviews/` and `.omk/specs/`
 </Tool_Usage>
 
 <Escalation_And_Stop_Conditions>
@@ -204,12 +204,12 @@ Present execution options after artifact generation:
 </Escalation_And_Stop_Conditions>
 
 <Final_Checklist>
-- [ ] Preflight context snapshot exists under `.omx/context/{slug}-{timestamp}.md`
+- [ ] Preflight context snapshot exists under `.omk/context/{slug}-{timestamp}.md`
 - [ ] Ambiguity score shown each round
 - [ ] Weakest-dimension targeting used
 - [ ] Challenge modes triggered at thresholds (when applicable)
-- [ ] Transcript written to `.omx/interviews/{slug}-{timestamp}.md`
-- [ ] Spec written to `.omx/specs/deep-interview-{slug}.md`
+- [ ] Transcript written to `.omk/interviews/{slug}-{timestamp}.md`
+- [ ] Spec written to `.omk/specs/deep-interview-{slug}.md`
 - [ ] Handoff options provided (`$ralplan`, `$autopilot`, `$ralph`, `$team`)
 - [ ] No direct implementation performed in this mode
 </Final_Checklist>
@@ -218,7 +218,7 @@ Present execution options after artifact generation:
 ## Suggested Config (optional)
 
 ```toml
-[omx.deepInterview]
+[omk.deepInterview]
 defaultProfile = "standard"
 quickThreshold = 0.30
 standardThreshold = 0.20

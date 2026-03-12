@@ -5,7 +5,7 @@ CI/release validation MUST fail when any required scenario below is missing or f
 
 ## Rollout policy (fixed for this port)
 
-- Release N: behind explicit opt-in flag `OMX_RALPH_PERSISTENCE_PORT=1`.
+- Release N: behind explicit opt-in flag `OMK_RALPH_PERSISTENCE_PORT=1`.
 - Release N+1 default enablement decision only after:
   - parity drift remains clean,
   - cancellation metrics show no cross-session corruption,
@@ -51,5 +51,5 @@ CI/release validation MUST fail when any required scenario below is missing or f
 Every release touching Ralph persistence MUST mention:
 
 1. session-authoritative scope policy,
-2. legacy compatibility window (`.omx/prd.json` and `.omx/progress.txt`),
+2. legacy compatibility window (`.omk/prd.json` and `.omk/progress.txt`),
 3. opt-in flag behavior for the current release.

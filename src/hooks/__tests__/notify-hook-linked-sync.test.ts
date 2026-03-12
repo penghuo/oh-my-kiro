@@ -8,8 +8,8 @@ import { join } from 'node:path';
 const NOTIFY_HOOK_SCRIPT = new URL('../../../scripts/notify-hook.js', import.meta.url);
 
 async function withTempWorkingDir(run: (cwd: string) => Promise<void>): Promise<void> {
-  const cwd = await mkdtemp(join(tmpdir(), 'omx-notify-linked-sync-'));
-  await mkdir(join(cwd, '.omx', 'state'), { recursive: true });
+  const cwd = await mkdtemp(join(tmpdir(), 'omk-notify-linked-sync-'));
+  await mkdir(join(cwd, '.omk', 'state'), { recursive: true });
   try {
     await run(cwd);
   } finally {
@@ -32,7 +32,7 @@ function runNotifyHook(cwd: string, extraPayload: Record<string, unknown> = {}):
     encoding: 'utf8',
     env: {
       ...process.env,
-      OMX_TEAM_WORKER: '',
+      OMK_TEAM_WORKER: '',
       TMUX: '',
       TMUX_PANE: '',
     },
@@ -52,7 +52,7 @@ async function readJson<T>(path: string): Promise<T> {
 describe('notify-hook linked team -> ralph terminal sync', () => {
   it('updates root ralph state when linked team enters terminal phase', async () => {
     await withTempWorkingDir(async (cwd) => {
-      const stateDir = join(cwd, '.omx', 'state');
+      const stateDir = join(cwd, '.omk', 'state');
       const teamStatePath = join(stateDir, 'team-state.json');
       const ralphStatePath = join(stateDir, 'ralph-state.json');
 
@@ -83,8 +83,8 @@ describe('notify-hook linked team -> ralph terminal sync', () => {
   it('updates session-scoped ralph state when linked session team enters terminal phase', async () => {
     await withTempWorkingDir(async (cwd) => {
       const sessionId = 'session_1';
-      const stateDir = join(cwd, '.omx', 'state');
-      const sessionStateDir = join(cwd, '.omx', 'state', 'sessions', sessionId);
+      const stateDir = join(cwd, '.omk', 'state');
+      const sessionStateDir = join(cwd, '.omk', 'state', 'sessions', sessionId);
       const teamStatePath = join(sessionStateDir, 'team-state.json');
       const ralphStatePath = join(sessionStateDir, 'ralph-state.json');
 
@@ -115,7 +115,7 @@ describe('notify-hook linked team -> ralph terminal sync', () => {
 
   it('does not update ralph state when team/ralph are not linked', async () => {
     await withTempWorkingDir(async (cwd) => {
-      const stateDir = join(cwd, '.omx', 'state');
+      const stateDir = join(cwd, '.omk', 'state');
       const teamStatePath = join(stateDir, 'team-state.json');
       const ralphStatePath = join(stateDir, 'ralph-state.json');
 
@@ -142,7 +142,7 @@ describe('notify-hook linked team -> ralph terminal sync', () => {
 
   it('does not mutate unrelated sessions when payload session_id is provided', async () => {
     await withTempWorkingDir(async (cwd) => {
-      const stateDir = join(cwd, '.omx', 'state');
+      const stateDir = join(cwd, '.omk', 'state');
       const sessionA = join(stateDir, 'sessions', 'sessA');
       const sessionB = join(stateDir, 'sessions', 'sessB');
       await mkdir(sessionA, { recursive: true });

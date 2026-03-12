@@ -27,11 +27,11 @@ describe('prompt-guidance fragments stay synced with generated surfaces', () => 
     for (const file of ['AGENTS.md', 'templates/AGENTS.md']) {
       const content = read(file);
       assert.equal(
-        extract(content, '<!-- OMX:GUIDANCE:OPERATING:START -->', '<!-- OMX:GUIDANCE:OPERATING:END -->'),
+        extract(content, '<!-- OMK:GUIDANCE:OPERATING:START -->', '<!-- OMK:GUIDANCE:OPERATING:END -->'),
         operating,
       );
       assert.equal(
-        extract(content, '<!-- OMX:GUIDANCE:VERIFYSEQ:START -->', '<!-- OMX:GUIDANCE:VERIFYSEQ:END -->'),
+        extract(content, '<!-- OMK:GUIDANCE:VERIFYSEQ:START -->', '<!-- OMK:GUIDANCE:VERIFYSEQ:END -->'),
         verifySeq,
       );
     }
@@ -40,11 +40,11 @@ describe('prompt-guidance fragments stay synced with generated surfaces', () => 
   it('syncs executor guidance fragments', () => {
     const content = read('prompts/executor.md');
     assert.equal(
-      extract(content, '<!-- OMX:GUIDANCE:EXECUTOR:CONSTRAINTS:START -->', '<!-- OMX:GUIDANCE:EXECUTOR:CONSTRAINTS:END -->'),
+      extract(content, '<!-- OMK:GUIDANCE:EXECUTOR:CONSTRAINTS:START -->', '<!-- OMK:GUIDANCE:EXECUTOR:CONSTRAINTS:END -->'),
       read('docs/prompt-guidance-fragments/executor-constraints.md').trim(),
     );
     assert.equal(
-      extract(content, '<!-- OMX:GUIDANCE:EXECUTOR:OUTPUT:START -->', '<!-- OMX:GUIDANCE:EXECUTOR:OUTPUT:END -->'),
+      extract(content, '<!-- OMK:GUIDANCE:EXECUTOR:OUTPUT:START -->', '<!-- OMK:GUIDANCE:EXECUTOR:OUTPUT:END -->'),
       read('docs/prompt-guidance-fragments/executor-output.md').trim(),
     );
   });
@@ -52,15 +52,15 @@ describe('prompt-guidance fragments stay synced with generated surfaces', () => 
   it('syncs planner guidance fragments', () => {
     const content = read('prompts/planner.md');
     assert.equal(
-      extract(content, '<!-- OMX:GUIDANCE:PLANNER:CONSTRAINTS:START -->', '<!-- OMX:GUIDANCE:PLANNER:CONSTRAINTS:END -->'),
+      extract(content, '<!-- OMK:GUIDANCE:PLANNER:CONSTRAINTS:START -->', '<!-- OMK:GUIDANCE:PLANNER:CONSTRAINTS:END -->'),
       read('docs/prompt-guidance-fragments/planner-constraints.md').trim(),
     );
     assert.equal(
-      extract(content, '<!-- OMX:GUIDANCE:PLANNER:INVESTIGATION:START -->', '<!-- OMX:GUIDANCE:PLANNER:INVESTIGATION:END -->'),
+      extract(content, '<!-- OMK:GUIDANCE:PLANNER:INVESTIGATION:START -->', '<!-- OMK:GUIDANCE:PLANNER:INVESTIGATION:END -->'),
       read('docs/prompt-guidance-fragments/planner-investigation.md').trim(),
     );
     assert.equal(
-      extract(content, '<!-- OMX:GUIDANCE:PLANNER:OUTPUT:START -->', '<!-- OMX:GUIDANCE:PLANNER:OUTPUT:END -->'),
+      extract(content, '<!-- OMK:GUIDANCE:PLANNER:OUTPUT:START -->', '<!-- OMK:GUIDANCE:PLANNER:OUTPUT:END -->'),
       read('docs/prompt-guidance-fragments/planner-output.md').trim(),
     );
   });
@@ -68,11 +68,11 @@ describe('prompt-guidance fragments stay synced with generated surfaces', () => 
   it('syncs verifier guidance fragments', () => {
     const content = read('prompts/verifier.md');
     assert.equal(
-      extract(content, '<!-- OMX:GUIDANCE:VERIFIER:CONSTRAINTS:START -->', '<!-- OMX:GUIDANCE:VERIFIER:CONSTRAINTS:END -->'),
+      extract(content, '<!-- OMK:GUIDANCE:VERIFIER:CONSTRAINTS:START -->', '<!-- OMK:GUIDANCE:VERIFIER:CONSTRAINTS:END -->'),
       read('docs/prompt-guidance-fragments/verifier-constraints.md').trim(),
     );
     assert.equal(
-      extract(content, '<!-- OMX:GUIDANCE:VERIFIER:INVESTIGATION:START -->', '<!-- OMX:GUIDANCE:VERIFIER:INVESTIGATION:END -->'),
+      extract(content, '<!-- OMK:GUIDANCE:VERIFIER:INVESTIGATION:START -->', '<!-- OMK:GUIDANCE:VERIFIER:INVESTIGATION:END -->'),
       read('docs/prompt-guidance-fragments/verifier-investigation.md').trim(),
     );
   });

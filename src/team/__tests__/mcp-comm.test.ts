@@ -17,7 +17,7 @@ import {
 
 describe('mcp-comm', () => {
   it('queueInboxInstruction writes inbox before notifying', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-mcp-comm-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-mcp-comm-'));
     try {
       await initTeamState('alpha', 't', 'executor', 1, cwd);
 
@@ -31,7 +31,7 @@ describe('mcp-comm', () => {
         cwd,
         notify: async () => {
           events.push('notify');
-          const inboxPath = join(cwd, '.omx', 'state', 'team', 'alpha', 'workers', 'worker-1', 'inbox.md');
+          const inboxPath = join(cwd, '.omk', 'state', 'team', 'alpha', 'workers', 'worker-1', 'inbox.md');
           const content = await readFile(inboxPath, 'utf-8');
           assert.match(content, /# hi/);
           return { ok: true, transport: 'tmux_send_keys', reason: 'sent' };
@@ -47,7 +47,7 @@ describe('mcp-comm', () => {
   });
 
   it('queueDirectMailboxMessage writes message and marks notified only on successful notify', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-mcp-comm-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-mcp-comm-'));
     try {
       await initTeamState('alpha', 't', 'executor', 2, cwd);
 
@@ -78,7 +78,7 @@ describe('mcp-comm', () => {
   });
 
   it('queueDirectMailboxMessage keeps leader-fixed missing-pane request pending/deferred', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-mcp-comm-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-mcp-comm-'));
     try {
       await initTeamState('alpha', 't', 'executor', 1, cwd);
 
@@ -112,7 +112,7 @@ describe('mcp-comm', () => {
   });
 
   it('queueBroadcastMailboxMessage notifies and marks notified per recipient', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-mcp-comm-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-mcp-comm-'));
     try {
       await initTeamState('alpha', 't', 'executor', 2, cwd);
 
@@ -147,7 +147,7 @@ describe('mcp-comm', () => {
   });
 
   it('prevents duplicate pending mailbox dispatch requests for same message id', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-mcp-comm-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-mcp-comm-'));
     try {
       await initTeamState('alpha', 't', 'executor', 2, cwd);
 
@@ -187,7 +187,7 @@ describe('mcp-comm', () => {
   });
 
   it('marks direct dispatch request failed when notify transport fails (prevents poisoned pending)', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-mcp-comm-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-mcp-comm-'));
     try {
       await initTeamState('alpha', 't', 'executor', 1, cwd);
 
@@ -227,7 +227,7 @@ describe('mcp-comm', () => {
   });
 
   it('marks prompt dispatch request failed when notify throws (prevents poisoned pending)', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-mcp-comm-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-mcp-comm-'));
     try {
       await initTeamState('alpha', 't', 'executor', 2, cwd);
 

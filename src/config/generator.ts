@@ -1,6 +1,6 @@
 /**
- * Config.toml generator/merger for oh-my-codex
- * Merges OMX MCP server entries and feature flags into existing config.toml
+ * Config.toml generator/merger for oh-my-kiro
+ * Merges OMK MCP server entries and feature flags into existing config.toml
  *
  * TOML structure reminder: bare key=value pairs after a [table] header belong
  * to that table.  Top-level (root-table) keys MUST appear before the first
@@ -15,7 +15,7 @@ import { existsSync } from "fs";
 import { join } from "path";
 import { AGENT_DEFINITIONS } from "../agents/definitions.js";
 import { tryReadCatalogManifest } from "../catalog/reader.js";
-import { omxAgentsConfigDir } from "../utils/paths.js";
+import { omkAgentsConfigDir } from "../utils/paths.js";
 
 interface MergeOptions {
   agentsConfigDir?: string;
@@ -28,11 +28,11 @@ function escapeTomlString(value: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// Top-level OMX keys (must live before any [table] header)
+// Top-level OMK keys (must live before any [table] header)
 // ---------------------------------------------------------------------------
 
 /** Keys we own at the TOML root level. Used for upsert + strip. */
-const OMX_TOP_LEVEL_KEYS = [
+const OMK_TOP_LEVEL_KEYS = [
   "notify",
   "model_reasoning_effort",
   "developer_instructions",
@@ -62,7 +62,7 @@ function parseRootKeyValues(config: string): Map<string, string> {
   return values;
 }
 
-function getOmxTopLevelLines(
+function getOmkTopLevelLines(
   pkgRoot: string,
   existingConfig = "",
   modelOverride?: string,
@@ -72,10 +72,10 @@ function getOmxTopLevelLines(
   const rootValues = parseRootKeyValues(existingConfig);
 
   const lines = [
-    "# oh-my-codex top-level settings (must be before any [table])",
+    "# oh-my-kiro top-level settings (must be before any [table])",
     `notify = ["node", "${escapedPath}"]`,
     'model_reasoning_effort = "high"',
-    `developer_instructions = "You have oh-my-codex installed. AGENTS.md is your orchestration brain and the main orchestration surface. Use /prompts:<role> and spawned role prompts for specialized subagent work. Use workflow skills via $name when explicitly invoked or clearly routed by AGENTS.md. Treat role prompts as narrower execution surfaces under AGENTS.md authority."`,
+    `developer_instructions = "You have oh-my-kiro installed. AGENTS.md is your orchestration brain and the main orchestration surface. Use /prompts:<role> and spawned role prompts for specialized subagent work. Use workflow skills via $name when explicitly invoked or clearly routed by AGENTS.md. Treat role prompts as narrower execution surfaces under AGENTS.md authority."`,
   ];
 
   const existingModel = rootValues.get("model");
@@ -107,13 +107,13 @@ function stripRootLevelKeys(config: string, keys: readonly string[]): string {
 
   if (
     keys.some((key) =>
-      OMX_TOP_LEVEL_KEYS.includes(key as (typeof OMX_TOP_LEVEL_KEYS)[number]),
+      OMK_TOP_LEVEL_KEYS.includes(key as (typeof OMK_TOP_LEVEL_KEYS)[number]),
     )
   ) {
     lines = lines.filter(
       (l) =>
         l.trim() !==
-        "# oh-my-codex top-level settings (must be before any [table])",
+        "# oh-my-kiro top-level settings (must be before any [table])",
     );
   }
 
@@ -135,11 +135,11 @@ function stripRootLevelKeys(config: string, keys: readonly string[]): string {
 }
 
 /**
- * Remove any existing OMX-owned top-level keys so we can re-insert them
+ * Remove any existing OMK-owned top-level keys so we can re-insert them
  * cleanly. Also removes the comment line that precedes them.
  */
-export function stripOmxTopLevelKeys(config: string): string {
-  return stripRootLevelKeys(config, OMX_TOP_LEVEL_KEYS);
+export function stripOmkTopLevelKeys(config: string): string {
+  return stripRootLevelKeys(config, OMK_TOP_LEVEL_KEYS);
 }
 
 // ---------------------------------------------------------------------------
@@ -209,10 +209,10 @@ function upsertFeatureFlags(config: string): string {
 }
 
 /**
- * Remove OMX-owned feature flags from the [features] section.
+ * Remove OMK-owned feature flags from the [features] section.
  * If the section becomes empty after removal, remove the section header too.
  */
-export function stripOmxFeatureFlags(config: string): string {
+export function stripOmkFeatureFlags(config: string): string {
   const lines = config.split(/\r?\n/);
   const featuresStart = lines.findIndex((line) =>
     /^\s*\[features\]\s*$/.test(line),
@@ -228,14 +228,14 @@ export function stripOmxFeatureFlags(config: string): string {
     }
   }
 
-  const omxFlags = ["multi_agent", "child_agents_md", "collab"];
+  const omkFlags = ["multi_agent", "child_agents_md", "collab"];
   const filtered: string[] = [];
   for (let i = 0; i < lines.length; i++) {
     if (i > featuresStart && i < sectionEnd) {
-      const isOmxFlag = omxFlags.some((f) =>
+      const isOmkFlag = omkFlags.some((f) =>
         new RegExp(`^\\s*${f}\\s*=`).test(lines[i]),
       );
-      if (isOmxFlag) continue;
+      if (isOmkFlag) continue;
     }
     filtered.push(lines[i]);
   }
@@ -262,14 +262,14 @@ export function stripOmxFeatureFlags(config: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// Orphaned OMX table sections (no marker block)
+// Orphaned OMK table sections (no marker block)
 // ---------------------------------------------------------------------------
 
 /**
- * Check whether a TOML table name belongs to an OMX-defined agent.
+ * Check whether a TOML table name belongs to an OMK-defined agent.
  * Handles both `agents.name` and `agents."name"` forms.
  */
-function isOmxAgentSection(
+function isOmkAgentSection(
   tableName: string,
   agentNames: Set<string>,
 ): boolean {
@@ -279,16 +279,16 @@ function isOmxAgentSection(
 }
 
 /**
- * Strip OMX-owned table sections that exist outside the marker block.
+ * Strip OMK-owned table sections that exist outside the marker block.
  * This covers legacy configs that were written before markers were added,
  * or configs where the marker was accidentally removed.
  *
- * Targets: [mcp_servers.omx_*], [agents.<omx-agent>], [tui]
+ * Targets: [mcp_servers.omk_*], [agents.<omk-agent>], [tui]
  */
-function stripOrphanedOmxSections(config: string): string {
+function stripOrphanedOmkSections(config: string): string {
   const lines = config.split(/\r?\n/);
   const result: string[] = [];
-  const omxAgentNames = new Set(Object.keys(AGENT_DEFINITIONS));
+  const omkAgentNames = new Set(Object.keys(AGENT_DEFINITIONS));
 
   let i = 0;
   while (i < lines.length) {
@@ -298,17 +298,17 @@ function stripOrphanedOmxSections(config: string): string {
     if (tableMatch) {
       const tableName = tableMatch[1];
       // Note: [tui] is NOT stripped here because it could be user-owned.
-      // The marker-based stripExistingOmxBlocks already handles [tui]
-      // when it lives inside the OMX marker block.
-      const isOmxSection =
-        /^mcp_servers\.omx_/.test(tableName) ||
-        isOmxAgentSection(tableName, omxAgentNames);
+      // The marker-based stripExistingOmkBlocks already handles [tui]
+      // when it lives inside the OMK marker block.
+      const isOmkSection =
+        /^mcp_servers\.omk_/.test(tableName) ||
+        isOmkAgentSection(tableName, omkAgentNames);
 
-      if (isOmxSection) {
-        // Remove preceding OMX comment lines and blank lines
+      if (isOmkSection) {
+        // Remove preceding OMK comment lines and blank lines
         while (result.length > 0) {
           const last = result[result.length - 1];
-          if (last.trim() === "" || /^#\s*(OMX|oh-my-codex)/i.test(last)) {
+          if (last.trim() === "" || /^#\s*(OMK|oh-my-kiro)/i.test(last)) {
             result.pop();
           } else {
             break;
@@ -332,15 +332,15 @@ function stripOrphanedOmxSections(config: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// OMX [table] sections block (appended at end of file)
+// OMK [table] sections block (appended at end of file)
 // ---------------------------------------------------------------------------
 
-export function stripExistingOmxBlocks(config: string): {
+export function stripExistingOmkBlocks(config: string): {
   cleaned: string;
   removed: number;
 } {
-  const marker = "oh-my-codex (OMX) Configuration";
-  const endMarker = "# End oh-my-codex";
+  const marker = "oh-my-kiro (OMK) Configuration";
+  const endMarker = "# End oh-my-kiro";
   let cleaned = config;
   let removed = 0;
 
@@ -381,7 +381,7 @@ export function stripExistingOmxBlocks(config: string): {
 
 /**
  * Generate [agents.<name>] entries for Codex native multi-agent support.
- * Each agent gets a description and config_file pointing to ~/.omx/agents/<name>.toml
+ * Each agent gets a description and config_file pointing to ~/.omk/agents/<name>.toml
  */
 
 function getInstallableAgentEntries(): Array<[string, (typeof AGENT_DEFINITIONS)[string]]> {
@@ -402,7 +402,7 @@ function getInstallableAgentEntries(): Array<[string, (typeof AGENT_DEFINITIONS)
 function getAgentEntries(agentsConfigDir: string): string[] {
   const entries: string[] = [
     "",
-    "# OMX Native Agent Roles (Codex multi-agent)",
+    "# OMK Native Agent Roles (Codex multi-agent)",
   ];
 
   for (const [name, agent] of getInstallableAgentEntries()) {
@@ -420,10 +420,10 @@ function getAgentEntries(agentsConfigDir: string): string[] {
 }
 
 /**
- * OMX table-section block (MCP servers, TUI).
+ * OMK table-section block (MCP servers, TUI).
  * Contains ONLY [table] sections — no bare keys.
  */
-function getOmxTablesBlock(pkgRoot: string, agentsConfigDir: string): string {
+function getOmkTablesBlock(pkgRoot: string, agentsConfigDir: string): string {
   const stateServerPath = escapeTomlString(
     join(pkgRoot, "dist", "mcp", "state-server.js"),
   );
@@ -443,52 +443,52 @@ function getOmxTablesBlock(pkgRoot: string, agentsConfigDir: string): string {
   return [
     "",
     "# ============================================================",
-    "# oh-my-codex (OMX) Configuration",
-    "# Managed by omx setup - manual edits preserved on next setup",
+    "# oh-my-kiro (OMK) Configuration",
+    "# Managed by omk setup - manual edits preserved on next setup",
     "# ============================================================",
     "",
-    "# OMX State Management MCP Server",
-    "[mcp_servers.omx_state]",
+    "# OMK State Management MCP Server",
+    "[mcp_servers.omk_state]",
     'command = "node"',
     `args = ["${stateServerPath}"]`,
     "enabled = true",
     "startup_timeout_sec = 5",
     "",
-    "# OMX Project Memory MCP Server",
-    "[mcp_servers.omx_memory]",
+    "# OMK Project Memory MCP Server",
+    "[mcp_servers.omk_memory]",
     'command = "node"',
     `args = ["${memoryServerPath}"]`,
     "enabled = true",
     "startup_timeout_sec = 5",
     "",
-    "# OMX Code Intelligence MCP Server (LSP diagnostics, AST search)",
-    "[mcp_servers.omx_code_intel]",
+    "# OMK Code Intelligence MCP Server (LSP diagnostics, AST search)",
+    "[mcp_servers.omk_code_intel]",
     'command = "node"',
     `args = ["${codeIntelServerPath}"]`,
     "enabled = true",
     "startup_timeout_sec = 10",
     "",
-    "# OMX Trace MCP Server (agent flow timeline & statistics)",
-    "[mcp_servers.omx_trace]",
+    "# OMK Trace MCP Server (agent flow timeline & statistics)",
+    "[mcp_servers.omk_trace]",
     'command = "node"',
     `args = ["${traceServerPath}"]`,
     "enabled = true",
     "startup_timeout_sec = 5",
     "",
-    "# OMX Team MCP Server (team job lifecycle: start, status, wait, cleanup)",
-    "[mcp_servers.omx_team_run]",
+    "# OMK Team MCP Server (team job lifecycle: start, status, wait, cleanup)",
+    "[mcp_servers.omk_team_run]",
     'command = "node"',
     `args = ["${teamServerPath}"]`,
     "enabled = true",
     "startup_timeout_sec = 5",
     ...getAgentEntries(agentsConfigDir),
     "",
-    "# OMX TUI StatusLine (Codex CLI v0.101.0+)",
+    "# OMK TUI StatusLine (Codex CLI v0.101.0+)",
     "[tui]",
     'status_line = ["model-with-reasoning", "git-branch", "context-remaining", "total-input-tokens", "total-output-tokens", "five-hour-limit"]',
     "",
     "# ============================================================",
-    "# End oh-my-codex",
+    "# End oh-my-kiro",
     "",
   ].join("\n");
 }
@@ -498,14 +498,14 @@ function getOmxTablesBlock(pkgRoot: string, agentsConfigDir: string): string {
 // ---------------------------------------------------------------------------
 
 /**
- * Merge OMX config into existing config.toml
- * Preserves existing user settings, appends OMX block if not present.
+ * Merge OMK config into existing config.toml
+ * Preserves existing user settings, appends OMK block if not present.
  *
  * Layout:
- *   1. OMX top-level keys (notify, model_reasoning_effort, developer_instructions)
+ *   1. OMK top-level keys (notify, model_reasoning_effort, developer_instructions)
  *   2. [features] with multi_agent + child_agents_md
  *   3. … user sections …
- *   4. OMX [table] sections (mcp_servers, tui)
+ *   4. OMK [table] sections (mcp_servers, tui)
  */
 export function buildMergedConfig(
   existingConfig: string,
@@ -514,26 +514,26 @@ export function buildMergedConfig(
 ): string {
   let existing = existingConfig;
 
-  if (existing.includes("oh-my-codex (OMX) Configuration")) {
-    const stripped = stripExistingOmxBlocks(existing);
+  if (existing.includes("oh-my-kiro (OMK) Configuration")) {
+    const stripped = stripExistingOmkBlocks(existing);
     existing = stripped.cleaned;
   }
 
-  existing = stripOmxTopLevelKeys(existing);
+  existing = stripOmkTopLevelKeys(existing);
   if (options.modelOverride) {
     existing = stripRootLevelKeys(existing, ["model"]);
   }
-  existing = stripOrphanedOmxSections(existing);
+  existing = stripOrphanedOmkSections(existing);
   existing = upsertFeatureFlags(existing);
 
-  const topLines = getOmxTopLevelLines(
+  const topLines = getOmkTopLevelLines(
     pkgRoot,
     existing,
     options.modelOverride,
   );
-  const tablesBlock = getOmxTablesBlock(
+  const tablesBlock = getOmkTablesBlock(
     pkgRoot,
-    options.agentsConfigDir || omxAgentsConfigDir(),
+    options.agentsConfigDir || omkAgentsConfigDir(),
   );
 
   return topLines.join("\n") + "\n\n" + existing.trimEnd() + "\n" + tablesBlock;
@@ -550,10 +550,10 @@ export async function mergeConfig(
     existing = await readFile(configPath, "utf-8");
   }
 
-  if (existing.includes("oh-my-codex (OMX) Configuration")) {
-    const stripped = stripExistingOmxBlocks(existing);
+  if (existing.includes("oh-my-kiro (OMK) Configuration")) {
+    const stripped = stripExistingOmkBlocks(existing);
     if (options.verbose && stripped.removed > 0) {
-      console.log("  Updating existing OMX config block.");
+      console.log("  Updating existing OMK config block.");
     }
   }
 

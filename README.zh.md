@@ -1,16 +1,16 @@
-# oh-my-codex (OMX)
+# oh-my-kiro (OMK)
 
 <p align="center">
-  <img src="https://yeachan-heo.github.io/oh-my-codex-website/omx-character-nobg.png" alt="oh-my-codex character" width="280">
+  <img src="https://penghuo.github.io/oh-my-kiro-website/omk-character-nobg.png" alt="oh-my-kiro character" width="280">
   <br>
   <em>你的 codex 并不孤单。</em>
 </p>
 
-[![npm version](https://img.shields.io/npm/v/oh-my-codex)](https://www.npmjs.com/package/oh-my-codex)
+[![npm version](https://img.shields.io/npm/v/oh-my-kiro)](https://www.npmjs.com/package/oh-my-kiro)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org)
 
-> **[Website](https://yeachan-heo.github.io/oh-my-codex-website/)** | **[Documentation](https://yeachan-heo.github.io/oh-my-codex-website/docs.html)** | **[CLI Reference](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#cli-reference)** | **[Workflows](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#workflows)** | **[OpenClaw 集成指南](./docs/openclaw-integration.zh.md)** | **[GitHub](https://github.com/Yeachan-Heo/oh-my-codex)** | **[npm](https://www.npmjs.com/package/oh-my-codex)**
+> **[Website](https://penghuo.github.io/oh-my-kiro-website/)** | **[Documentation](https://penghuo.github.io/oh-my-kiro-website/docs.html)** | **[CLI Reference](https://penghuo.github.io/oh-my-kiro-website/docs.html#cli-reference)** | **[Workflows](https://penghuo.github.io/oh-my-kiro-website/docs.html#workflows)** | **[OpenClaw 集成指南](./docs/openclaw-integration.zh.md)** | **[GitHub](https://github.com/penghuo/oh-my-kiro)** | **[npm](https://www.npmjs.com/package/oh-my-kiro)**
 
 [OpenAI Codex CLI](https://github.com/openai/codex) 的多智能体编排层。
 
@@ -35,21 +35,21 @@
 - [Italiano (Italian)](./README.it.md)
 
 
-OMX 将 Codex 从单会话代理转变为协调系统：
+OMK 将 Codex 从单会话代理转变为协调系统：
 - 用于专业代理的 role prompts (`/prompts:name`)
 - 用于可重复执行模式的 workflow skills (`$name`)
-- 在 tmux 中的团队编排 (`omx team`, `$team`)
+- 在 tmux 中的团队编排 (`omk team`, `$team`)
 - 通过 MCP 服务器实现持久状态和记忆
 
-## 为什么选择 OMX
+## 为什么选择 OMK
 
-Codex CLI 擅长处理直接任务。OMX 为更大规模的工作添加结构：
+Codex CLI 擅长处理直接任务。OMK 为更大规模的工作添加结构：
 - 分解和分阶段执行 (`team-plan -> team-prd -> team-exec -> team-verify -> team-fix`)
-- 持久化的模式生命周期状态 (`.omx/state/`)
+- 持久化的模式生命周期状态 (`.omk/state/`)
 - 长时间会话的记忆和记事本表面
 - 用于启动、验证和取消的操作控制
 
-OMX 是一个插件，而非 fork。它使用 Codex 的原生扩展点。
+OMK 是一个插件，而非 fork。它使用 Codex 的原生扩展点。
 
 ## 系统要求
 
@@ -61,20 +61,20 @@ OMX 是一个插件，而非 fork。它使用 Codex 的原生扩展点。
 ## 快速开始（3 分钟）
 
 ```bash
-npm install -g oh-my-codex
-omx setup
-omx doctor
+npm install -g oh-my-kiro
+omk setup
+omk doctor
 ```
 
 推荐的可信环境启动配置：
 
 ```bash
-omx --xhigh --madmax
+omk --xhigh --madmax
 ```
 
 ## v0.5.0 新功能
 
-- 通过 `omx setup --scope user|project` 实现**作用域感知设置** — 灵活的安装模式。
+- 通过 `omk setup --scope user|project` 实现**作用域感知设置** — 灵活的安装模式。
 - 通过 `--spark` / `--madmax-spark` 实现 **Spark worker 路由** — 团队 worker 可以使用 `gpt-5.3-codex-spark` 而无需强制使用领导者模型。
 - **目录整合** — 移除已弃用的 prompt（`deep-executor`、`scientist`）和 9 个已弃用的 skill，使表面更精简。
 - **通知详细级别** — 对 CCNotifier 输出的精细控制。
@@ -93,14 +93,14 @@ $team 3:executor "fix all TypeScript errors"
 从终端：
 
 ```bash
-omx team 4:executor "parallelize a multi-module refactor"
-omx team status <team-name>
-omx team shutdown <team-name>
+omk team 4:executor "parallelize a multi-module refactor"
+omk team status <team-name>
+omk team shutdown <team-name>
 ```
 
 ## 核心模型
 
-OMX 安装并连接以下层：
+OMK 安装并连接以下层：
 
 ```text
 User
@@ -109,34 +109,34 @@ User
     -> ~/.codex/prompts/*.md (代理 prompt 目录)
     -> ~/.agents/skills/*/SKILL.md (skill 目录)
     -> ~/.codex/config.toml (功能、通知、MCP)
-    -> .omx/ (运行时状态、记忆、计划、日志)
+    -> .omk/ (运行时状态、记忆、计划、日志)
 ```
 
 ## 主要命令
 
 ```bash
-omx                # 启动 Codex（在 tmux 中附带 HUD）
-omx setup          # 按作用域安装 prompt/skill/config + 项目 AGENTS.md/.omx
-omx doctor         # 安装/运行时诊断
-omx doctor --team  # Team/swarm 诊断
-omx team ...       # 启动/状态/恢复/关闭 tmux 团队 worker
-omx status         # 显示活动模式
-omx cancel         # 取消活动执行模式
-omx reasoning <mode> # low|medium|high|xhigh
-omx tmux-hook ...  # init|status|validate|test
-omx hooks ...      # init|status|validate|test（插件扩展工作流）
-omx hud ...        # --watch|--json|--preset
-omx help
+omk                # 启动 Codex（在 tmux 中附带 HUD）
+omk setup          # 按作用域安装 prompt/skill/config + 项目 AGENTS.md/.omk
+omk doctor         # 安装/运行时诊断
+omk doctor --team  # Team/swarm 诊断
+omk team ...       # 启动/状态/恢复/关闭 tmux 团队 worker
+omk status         # 显示活动模式
+omk cancel         # 取消活动执行模式
+omk reasoning <mode> # low|medium|high|xhigh
+omk tmux-hook ...  # init|status|validate|test
+omk hooks ...      # init|status|validate|test（插件扩展工作流）
+omk hud ...        # --watch|--json|--preset
+omk help
 ```
 
 ## Hooks 扩展（附加表面）
 
-OMX 现在包含用于插件脚手架和验证的 `omx hooks`。
+OMK 现在包含用于插件脚手架和验证的 `omk hooks`。
 
-- `omx tmux-hook` 继续支持且未更改。
-- `omx hooks` 是附加的，不会替代 tmux-hook 工作流。
-- 插件文件位于 `.omx/hooks/*.mjs`。
-- 插件默认关闭；使用 `OMX_HOOK_PLUGINS=1` 启用。
+- `omk tmux-hook` 继续支持且未更改。
+- `omk hooks` 是附加的，不会替代 tmux-hook 工作流。
+- 插件文件位于 `.omk/hooks/*.mjs`。
+- 插件默认关闭；使用 `OMK_HOOK_PLUGINS=1` 启用。
 
 完整的扩展工作流和事件模型请参阅 `docs/hooks-extension.md`。
 
@@ -162,14 +162,14 @@ OMX 现在包含用于插件脚手架和验证的 `omx hooks`。
 要限制此行为，请设置允许的根目录列表：
 
 ```bash
-export OMX_MCP_WORKDIR_ROOTS="/path/to/project:/path/to/another-root"
+export OMK_MCP_WORKDIR_ROOTS="/path/to/project:/path/to/another-root"
 ```
 
 设置后，超出这些根目录的 `workingDirectory` 值将被拒绝。
 
 ## Codex-First Prompt 控制
 
-默认情况下，OMX 注入：
+默认情况下，OMK 注入：
 
 ```text
 -c model_instructions_file="<cwd>/AGENTS.md"
@@ -181,8 +181,8 @@ export OMX_MCP_WORKDIR_ROOTS="/path/to/project:/path/to/another-root"
 控制：
 
 ```bash
-OMX_BYPASS_DEFAULT_SYSTEM_PROMPT=0 omx     # 禁用 AGENTS.md 注入
-OMX_MODEL_INSTRUCTIONS_FILE=/path/to/instructions.md omx
+OMK_BYPASS_DEFAULT_SYSTEM_PROMPT=0 omk     # 禁用 AGENTS.md 注入
+OMK_MODEL_INSTRUCTIONS_FILE=/path/to/instructions.md omk
 ```
 
 ## 团队模式
@@ -198,17 +198,17 @@ start -> assign scoped lanes -> monitor -> verify terminal tasks -> shutdown
 操作命令：
 
 ```bash
-omx team <args>
-omx team status <team-name>
-omx team resume <team-name>
-omx team shutdown <team-name>
+omk team <args>
+omk team status <team-name>
+omk team resume <team-name>
+omk team shutdown <team-name>
 ```
 
 重要规则：除非中止，否则不要在任务仍处于 `in_progress` 状态时关闭。
 
 ### Ralph 清理策略
 
-当团队在 ralph 模式下运行时（`omx team ralph ...`），关闭清理
+当团队在 ralph 模式下运行时（`omk team ralph ...`），关闭清理
 应用与常规路径不同的专用策略：
 
 | 行为 | 普通团队 | Ralph 团队 |
@@ -218,41 +218,41 @@ omx team shutdown <team-name>
 | 完成日志 | 标准 `shutdown_gate` 事件 | 附带任务分解的 `ralph_cleanup_summary` 事件 |
 
 Ralph 策略从团队模式状态（`linked_ralph`）自动检测，或
-可通过 `omx team shutdown <name> --ralph` 显式传递。
+可通过 `omk team shutdown <name> --ralph` 显式传递。
 
 团队 worker 的 Worker CLI 选择：
 
 ```bash
-OMX_TEAM_WORKER_CLI=auto    # 默认；当 worker --model 包含 "claude" 时使用 claude
-OMX_TEAM_WORKER_CLI=codex   # 强制 Codex CLI worker
-OMX_TEAM_WORKER_CLI=claude  # 强制 Claude CLI worker
-OMX_TEAM_WORKER_CLI_MAP=codex,codex,claude,claude  # 每个 worker 的 CLI 混合（长度=1 或 worker 数量）
-OMX_TEAM_AUTO_INTERRUPT_RETRY=0  # 可选：禁用自适应 queue->resend 回退
+OMK_TEAM_WORKER_CLI=auto    # 默认；当 worker --model 包含 "claude" 时使用 claude
+OMK_TEAM_WORKER_CLI=codex   # 强制 Codex CLI worker
+OMK_TEAM_WORKER_CLI=claude  # 强制 Claude CLI worker
+OMK_TEAM_WORKER_CLI_MAP=codex,codex,claude,claude  # 每个 worker 的 CLI 混合（长度=1 或 worker 数量）
+OMK_TEAM_AUTO_INTERRUPT_RETRY=0  # 可选：禁用自适应 queue->resend 回退
 ```
 
 注意：
-- Worker 启动参数仍通过 `OMX_TEAM_WORKER_LAUNCH_ARGS` 共享。
-- `OMX_TEAM_WORKER_CLI_MAP` 覆盖 `OMX_TEAM_WORKER_CLI` 以实现每个 worker 的选择。
+- Worker 启动参数仍通过 `OMK_TEAM_WORKER_LAUNCH_ARGS` 共享。
+- `OMK_TEAM_WORKER_CLI_MAP` 覆盖 `OMK_TEAM_WORKER_CLI` 以实现每个 worker 的选择。
 - 触发器提交默认使用自适应重试（queue/submit，需要时使用安全的 clear-line+resend 回退）。
-- 在 Claude worker 模式下，OMX 以普通 `claude` 启动 worker（无额外启动参数），并忽略显式的 `--model` / `--config` / `--effort` 覆盖，使 Claude 使用默认 `settings.json`。
+- 在 Claude worker 模式下，OMK 以普通 `claude` 启动 worker（无额外启动参数），并忽略显式的 `--model` / `--config` / `--effort` 覆盖，使 Claude 使用默认 `settings.json`。
 
-## `omx setup` 写入的内容
+## `omk setup` 写入的内容
 
-- `.omx/setup-scope.json`（持久化的设置作用域）
+- `.omk/setup-scope.json`（持久化的设置作用域）
 - 依赖作用域的安装：
-  - `user`：`~/.codex/prompts/`、`~/.agents/skills/`、`~/.codex/config.toml`、`~/.omx/agents/`
-  - `project`：`./.codex/prompts/`、`./.agents/skills/`、`./.codex/config.toml`、`./.omx/agents/`
-- 启动行为：如果持久化的作用域是 `project`，`omx` 启动时自动使用 `CODEX_HOME=./.codex`（除非 `CODEX_HOME` 已设置）。
+  - `user`：`~/.codex/prompts/`、`~/.agents/skills/`、`~/.codex/config.toml`、`~/.omk/agents/`
+  - `project`：`./.codex/prompts/`、`./.agents/skills/`、`./.codex/config.toml`、`./.omk/agents/`
+- 启动行为：如果持久化的作用域是 `project`，`omk` 启动时自动使用 `CODEX_HOME=./.codex`（除非 `CODEX_HOME` 已设置）。
 - 现有 `AGENTS.md` 默认保留。在交互式 TTY 运行中，setup 会在覆盖前询问；`--force` 无需询问直接覆盖（活动会话安全检查仍然适用）。
 - `config.toml` 更新（两种作用域均适用）：
   - `notify = ["node", "..."]`
   - `model_reasoning_effort = "high"`
   - `developer_instructions = "..."`
   - `[features] multi_agent = true, child_agents_md = true`
-  - MCP 服务器条目（`omx_state`、`omx_memory`、`omx_code_intel`、`omx_trace`）
+  - MCP 服务器条目（`omk_state`、`omk_memory`、`omk_code_intel`、`omk_trace`）
   - `[tui] status_line`
 - 项目 `AGENTS.md`
-- `.omx/` 运行时目录和 HUD 配置
+- `.omk/` 运行时目录和 HUD 配置
 
 ## 代理和技能
 
@@ -266,8 +266,8 @@ OMX_TEAM_AUTO_INTERRUPT_RETRY=0  # 可选：禁用自适应 queue->resend 回退
 ## 项目结构
 
 ```text
-oh-my-codex/
-  bin/omx.js
+oh-my-kiro/
+  bin/omk.js
   src/
     cli/
     team/
@@ -287,8 +287,8 @@ oh-my-codex/
 ## 开发
 
 ```bash
-git clone https://github.com/Yeachan-Heo/oh-my-codex.git
-cd oh-my-codex
+git clone https://github.com/penghuo/oh-my-kiro.git
+cd oh-my-kiro
 npm install
 npm run build
 npm test
@@ -296,11 +296,11 @@ npm test
 
 ## 文档
 
-- **[完整文档](https://yeachan-heo.github.io/oh-my-codex-website/docs.html)** — 完整指南
-- **[CLI 参考](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#cli-reference)** — 所有 `omx` 命令、标志和工具
-- **[通知指南](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#notifications)** — Discord、Telegram、Slack 和 webhook 设置
-- **[推荐工作流](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#workflows)** — 用于常见任务的经过实战检验的 skill 链
-- **[发行说明](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#release-notes)** — 每个版本的新功能
+- **[完整文档](https://penghuo.github.io/oh-my-kiro-website/docs.html)** — 完整指南
+- **[CLI 参考](https://penghuo.github.io/oh-my-kiro-website/docs.html#cli-reference)** — 所有 `omk` 命令、标志和工具
+- **[通知指南](https://penghuo.github.io/oh-my-kiro-website/docs.html#notifications)** — Discord、Telegram、Slack 和 webhook 设置
+- **[推荐工作流](https://penghuo.github.io/oh-my-kiro-website/docs.html#workflows)** — 用于常见任务的经过实战检验的 skill 链
+- **[发行说明](https://penghuo.github.io/oh-my-kiro-website/docs.html#release-notes)** — 每个版本的新功能
 
 ## 备注
 

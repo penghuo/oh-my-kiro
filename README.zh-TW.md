@@ -1,16 +1,16 @@
-# oh-my-codex (OMX)
+# oh-my-kiro (OMK)
 
 <p align="center">
-  <img src="https://yeachan-heo.github.io/oh-my-codex-website/omx-character-nobg.png" alt="oh-my-codex character" width="280">
+  <img src="https://penghuo.github.io/oh-my-kiro-website/omk-character-nobg.png" alt="oh-my-kiro character" width="280">
   <br>
   <em>你的 Codex，從不孤行。</em>
 </p>
 
-[![npm version](https://img.shields.io/npm/v/oh-my-codex)](https://www.npmjs.com/package/oh-my-codex)
+[![npm version](https://img.shields.io/npm/v/oh-my-kiro)](https://www.npmjs.com/package/oh-my-kiro)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org)
 
-> **[官方網站](https://yeachan-heo.github.io/oh-my-codex-website/)** | **[說明文件](https://yeachan-heo.github.io/oh-my-codex-website/docs.html)** | **[CLI 參考手冊](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#cli-reference)** | **[工作流程](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#workflows)** | **[OpenClaw 整合指南](./docs/openclaw-integration.zh-TW.md)** | **[GitHub](https://github.com/Yeachan-Heo/oh-my-codex)** | **[npm](https://www.npmjs.com/package/oh-my-codex)**
+> **[官方網站](https://penghuo.github.io/oh-my-kiro-website/)** | **[說明文件](https://penghuo.github.io/oh-my-kiro-website/docs.html)** | **[CLI 參考手冊](https://penghuo.github.io/oh-my-kiro-website/docs.html#cli-reference)** | **[工作流程](https://penghuo.github.io/oh-my-kiro-website/docs.html#workflows)** | **[OpenClaw 整合指南](./docs/openclaw-integration.zh-TW.md)** | **[GitHub](https://github.com/penghuo/oh-my-kiro)** | **[npm](https://www.npmjs.com/package/oh-my-kiro)**
 
 [OpenAI Codex CLI](https://github.com/openai/codex) 的多智能體編排層。
 
@@ -35,38 +35,38 @@
 - [Italiano (Italian)](./README.it.md)
 
 
-OMX 讓 Codex 從單一會話代理進化為協同運作的系統，具備以下能力：
+OMK 讓 Codex 從單一會話代理進化為協同運作的系統，具備以下能力：
 - 角色提示詞 (`/prompts:name`)，賦予代理各司其職的專業特質
 - 工作流程技能 (`$name`)，實現可重複執行的作業模式
-- 透過 tmux 互動模式（預設）或非 tmux 提示模式進行團隊編排 (`omx team`、`$team`)
+- 透過 tmux 互動模式（預設）或非 tmux 提示模式進行團隊編排 (`omk team`、`$team`)
 - 透過 MCP 伺服器實現持久化狀態與記憶
 
-## 為何選擇 OMX
+## 為何選擇 OMK
 
-Codex CLI 擅長處理直接明確的任務。OMX 為更大規模的工作注入結構：
+Codex CLI 擅長處理直接明確的任務。OMK 為更大規模的工作注入結構：
 - 分解任務並分階段執行 (`team-plan -> team-prd -> team-exec -> team-verify -> team-fix`)
-- 持久化的模式生命週期狀態 (`.omx/state/`)
+- 持久化的模式生命週期狀態 (`.omk/state/`)
 - 長時間運行會話所需的記憶與備忘錄介面
 - 啟動、驗證與取消的作業控制
 
-OMX 是插件，而非分支版本。它完全運用 Codex 的原生擴充點。
+OMK 是插件，而非分支版本。它完全運用 Codex 的原生擴充點。
 
 ## 定位：CLI 優先的編排層，MCP 支援的狀態管理
 
-OMX 最適合作為**外層 CLI 編排層**使用：
-- **控制平面（CLI/執行期）：** `omx team`、tmux 工作進程、生命週期指令
+OMK 最適合作為**外層 CLI 編排層**使用：
+- **控制平面（CLI/執行期）：** `omk team`、tmux 工作進程、生命週期指令
 - **能力/狀態平面（MCP）：** 任務狀態、信箱、記憶、診斷工具
 
 實際模式分工：
-- **`$team` / `omx team`**：耐久、可檢視、可恢復的多工作進程執行
+- **`$team` / `omk team`**：耐久、可檢視、可恢復的多工作進程執行
 - **`$ultrawork`**：針對獨立任務的輕量平行扇出（元件模式）
 
 低 Token 消耗的團隊設定範例：
 
 ```bash
-OMX_TEAM_WORKER_CLI=codex \
-OMX_TEAM_WORKER_LAUNCH_ARGS='--model gpt-5.3-codex-spark -c model_reasoning_effort="low"' \
-omx team 2:explore "短暫有界的分析任務"
+OMK_TEAM_WORKER_CLI=codex \
+OMK_TEAM_WORKER_LAUNCH_ARGS='--model gpt-5.3-codex-spark -c model_reasoning_effort="low"' \
+omk team 2:explore "短暫有界的分析任務"
 ```
 
 ## 系統需求
@@ -79,20 +79,20 @@ omx team 2:explore "短暫有界的分析任務"
 ## 快速入門（3 分鐘）
 
 ```bash
-npm install -g oh-my-codex
-omx setup
-omx doctor
+npm install -g oh-my-kiro
+omk setup
+omk doctor
 ```
 
 推薦的信任環境啟動設定：
 
 ```bash
-omx --xhigh --madmax
+omk --xhigh --madmax
 ```
 
 ## v0.5.0 新功能
 
-- 透過 `omx setup --scope user|project` 實現**範圍感知設定** — 彈性的安裝模式。
+- 透過 `omk setup --scope user|project` 實現**範圍感知設定** — 彈性的安裝模式。
 - 透過 `--spark` / `--madmax-spark` 實現 **Spark 工作進程路由** — 團隊工作進程可使用 `gpt-5.3-codex-spark`，無需強制套用領導者模型。
 - **目錄整合** — 移除已棄用的提示詞（`deep-executor`、`scientist`）及 9 個已棄用的技能，讓介面更為精簡。
 - **通知詳細程度等級** — 對 CCNotifier 輸出進行精細控制。
@@ -111,14 +111,14 @@ $team 3:executor "fix all TypeScript errors"
 從終端機：
 
 ```bash
-omx team 4:executor "parallelize a multi-module refactor"
-omx team status <team-name>
-omx team shutdown <team-name>
+omk team 4:executor "parallelize a multi-module refactor"
+omk team status <team-name>
+omk team shutdown <team-name>
 ```
 
 ## 核心模型
 
-OMX 安裝並串接以下各層：
+OMK 安裝並串接以下各層：
 
 ```text
 使用者
@@ -127,34 +127,34 @@ OMX 安裝並串接以下各層：
     -> ~/.codex/prompts/*.md（代理提示詞目錄）
     -> ~/.agents/skills/*/SKILL.md（技能目錄）
     -> ~/.codex/config.toml（功能、通知、MCP）
-    -> .omx/（執行期狀態、記憶、計畫、日誌）
+    -> .omk/（執行期狀態、記憶、計畫、日誌）
 ```
 
 ## 主要指令
 
 ```bash
-omx                  # 啟動 Codex（可用時在 tmux 中附帶 HUD）
-omx setup            # 依範圍安裝提示詞/技能/設定 + 專案 AGENTS.md/.omx
-omx doctor           # 安裝/執行期診斷
-omx doctor --team    # 團隊/群集診斷
-omx ask ...          # 詢問本地供應商顧問（claude|gemini），結果寫入 .omx/artifacts/*
-omx team ...         # 啟動/狀態/恢復/關閉團隊工作進程（預設為互動式 tmux）
-omx status           # 顯示目前活動模式
-omx cancel           # 取消活動中的執行模式
-omx reasoning <mode> # low|medium|high|xhigh
-omx tmux-hook ...    # init|status|validate|test
-omx hooks ...        # init|status|validate|test（插件擴充工作流程）
-omx hud ...          # --watch|--json|--preset
-omx help
+omk                  # 啟動 Codex（可用時在 tmux 中附帶 HUD）
+omk setup            # 依範圍安裝提示詞/技能/設定 + 專案 AGENTS.md/.omk
+omk doctor           # 安裝/執行期診斷
+omk doctor --team    # 團隊/群集診斷
+omk ask ...          # 詢問本地供應商顧問（claude|gemini），結果寫入 .omk/artifacts/*
+omk team ...         # 啟動/狀態/恢復/關閉團隊工作進程（預設為互動式 tmux）
+omk status           # 顯示目前活動模式
+omk cancel           # 取消活動中的執行模式
+omk reasoning <mode> # low|medium|high|xhigh
+omk tmux-hook ...    # init|status|validate|test
+omk hooks ...        # init|status|validate|test（插件擴充工作流程）
+omk hud ...          # --watch|--json|--preset
+omk help
 ```
 
 Ask 指令範例：
 
 ```bash
-omx ask claude "review this diff"
-omx ask gemini "brainstorm alternatives"
-omx ask claude --agent-prompt executor "implement feature X with tests"
-omx ask gemini --agent-prompt=planner --prompt "draft a rollout plan"
+omk ask claude "review this diff"
+omk ask gemini "brainstorm alternatives"
+omk ask claude --agent-prompt executor "implement feature X with tests"
+omk ask gemini --agent-prompt=planner --prompt "draft a rollout plan"
 # 底層供應商 CLI 說明中的旗標：
 # claude -p|--print "<prompt>"
 # gemini -p|--prompt "<prompt>"
@@ -163,17 +163,17 @@ omx ask gemini --agent-prompt=planner --prompt "draft a rollout plan"
 非 tmux 團隊啟動（進階）：
 
 ```bash
-OMX_TEAM_WORKER_LAUNCH_MODE=prompt omx team 2:executor "task"
+OMK_TEAM_WORKER_LAUNCH_MODE=prompt omk team 2:executor "task"
 ```
 
 ## Hooks 擴充（附加介面）
 
-OMX 現已包含 `omx hooks`，用於插件鷹架建立與驗證。
+OMK 現已包含 `omk hooks`，用於插件鷹架建立與驗證。
 
-- `omx tmux-hook` 持續受支援，行為不變。
-- `omx hooks` 屬於附加功能，不會取代 tmux-hook 工作流程。
-- 插件檔案位於 `.omx/hooks/*.mjs`。
-- 插件預設關閉；使用 `OMX_HOOK_PLUGINS=1` 啟用。
+- `omk tmux-hook` 持續受支援，行為不變。
+- `omk hooks` 屬於附加功能，不會取代 tmux-hook 工作流程。
+- 插件檔案位於 `.omk/hooks/*.mjs`。
+- 插件預設關閉；使用 `OMK_HOOK_PLUGINS=1` 啟用。
 
 完整的擴充工作流程與事件模型，請參閱 `docs/hooks-extension.md`。
 
@@ -199,14 +199,14 @@ OMX 現已包含 `omx hooks`，用於插件鷹架建立與驗證。
 若要限制此行為，請設定允許的根目錄清單：
 
 ```bash
-export OMX_MCP_WORKDIR_ROOTS="/path/to/project:/path/to/another-root"
+export OMK_MCP_WORKDIR_ROOTS="/path/to/project:/path/to/another-root"
 ```
 
 設定後，超出這些根目錄的 `workingDirectory` 值將被拒絕。
 
 ## Codex 優先的提示詞控制
 
-預設情況下，OMX 注入：
+預設情況下，OMK 注入：
 
 ```text
 -c model_instructions_file="<cwd>/AGENTS.md"
@@ -218,8 +218,8 @@ export OMX_MCP_WORKDIR_ROOTS="/path/to/project:/path/to/another-root"
 控制方式：
 
 ```bash
-OMX_BYPASS_DEFAULT_SYSTEM_PROMPT=0 omx     # 停用 AGENTS.md 注入
-OMX_MODEL_INSTRUCTIONS_FILE=/path/to/instructions.md omx
+OMK_BYPASS_DEFAULT_SYSTEM_PROMPT=0 omk     # 停用 AGENTS.md 注入
+OMK_MODEL_INSTRUCTIONS_FILE=/path/to/instructions.md omk
 ```
 
 ## 團隊模式
@@ -235,17 +235,17 @@ OMX_MODEL_INSTRUCTIONS_FILE=/path/to/instructions.md omx
 作業指令：
 
 ```bash
-omx team <args>
-omx team status <team-name>
-omx team resume <team-name>
-omx team shutdown <team-name>
+omk team <args>
+omk team status <team-name>
+omk team resume <team-name>
+omk team shutdown <team-name>
 ```
 
 重要規則：除非要中止，否則請勿在任務仍處於 `in_progress` 狀態時關閉。
 
 ### Ralph 清理策略
 
-當團隊以 ralph 模式執行（`omx team ralph ...`）時，關閉清理
+當團隊以 ralph 模式執行（`omk team ralph ...`）時，關閉清理
 會套用與一般路徑不同的專屬策略：
 
 | 行為 | 一般團隊 | Ralph 團隊 |
@@ -255,41 +255,41 @@ omx team shutdown <team-name>
 | 完成日誌 | 標準 `shutdown_gate` 事件 | 附帶任務分解的 `ralph_cleanup_summary` 事件 |
 
 Ralph 策略會從團隊模式狀態（`linked_ralph`）自動偵測，
-也可透過 `omx team shutdown <name> --ralph` 明確傳遞。
+也可透過 `omk team shutdown <name> --ralph` 明確傳遞。
 
 團隊工作進程的 Worker CLI 選擇：
 
 ```bash
-OMX_TEAM_WORKER_CLI=auto    # 預設；當 worker --model 包含 "claude" 時使用 claude
-OMX_TEAM_WORKER_CLI=codex   # 強制使用 Codex CLI 工作進程
-OMX_TEAM_WORKER_CLI=claude  # 強制使用 Claude CLI 工作進程
-OMX_TEAM_WORKER_CLI_MAP=codex,codex,claude,claude  # 每個工作進程的 CLI 混合（長度為 1 或等於工作進程數量）
-OMX_TEAM_AUTO_INTERRUPT_RETRY=0  # 選用：停用自適應 queue->resend 回退機制
+OMK_TEAM_WORKER_CLI=auto    # 預設；當 worker --model 包含 "claude" 時使用 claude
+OMK_TEAM_WORKER_CLI=codex   # 強制使用 Codex CLI 工作進程
+OMK_TEAM_WORKER_CLI=claude  # 強制使用 Claude CLI 工作進程
+OMK_TEAM_WORKER_CLI_MAP=codex,codex,claude,claude  # 每個工作進程的 CLI 混合（長度為 1 或等於工作進程數量）
+OMK_TEAM_AUTO_INTERRUPT_RETRY=0  # 選用：停用自適應 queue->resend 回退機制
 ```
 
 注意事項：
-- 工作進程啟動參數仍透過 `OMX_TEAM_WORKER_LAUNCH_ARGS` 共享。
-- `OMX_TEAM_WORKER_CLI_MAP` 會覆寫 `OMX_TEAM_WORKER_CLI`，以實現每個工作進程的個別選擇。
+- 工作進程啟動參數仍透過 `OMK_TEAM_WORKER_LAUNCH_ARGS` 共享。
+- `OMK_TEAM_WORKER_CLI_MAP` 會覆寫 `OMK_TEAM_WORKER_CLI`，以實現每個工作進程的個別選擇。
 - 觸發提交預設使用自適應重試（queue/submit，必要時採用安全的清除行 + 重傳回退）。
-- 在 Claude 工作進程模式下，OMX 以純 `claude` 啟動工作進程（無額外啟動參數），並忽略明確的 `--model` / `--config` / `--effort` 覆寫，讓 Claude 使用預設的 `settings.json`。
+- 在 Claude 工作進程模式下，OMK 以純 `claude` 啟動工作進程（無額外啟動參數），並忽略明確的 `--model` / `--config` / `--effort` 覆寫，讓 Claude 使用預設的 `settings.json`。
 
-## `omx setup` 寫入的內容
+## `omk setup` 寫入的內容
 
-- `.omx/setup-scope.json`（持久化的設定範圍）
+- `.omk/setup-scope.json`（持久化的設定範圍）
 - 依範圍的安裝內容：
-  - `user`：`~/.codex/prompts/`、`~/.agents/skills/`、`~/.codex/config.toml`、`~/.omx/agents/`
-  - `project`：`./.codex/prompts/`、`./.agents/skills/`、`./.codex/config.toml`、`./.omx/agents/`
-- 啟動行為：若持久化範圍為 `project`，`omx` 啟動時自動使用 `CODEX_HOME=./.codex`（除非已設定 `CODEX_HOME`）。
+  - `user`：`~/.codex/prompts/`、`~/.agents/skills/`、`~/.codex/config.toml`、`~/.omk/agents/`
+  - `project`：`./.codex/prompts/`、`./.agents/skills/`、`./.codex/config.toml`、`./.omk/agents/`
+- 啟動行為：若持久化範圍為 `project`，`omk` 啟動時自動使用 `CODEX_HOME=./.codex`（除非已設定 `CODEX_HOME`）。
 - 現有的 `AGENTS.md` 預設會保留。在互動式 TTY 執行時，setup 會在覆寫前詢問確認；`--force` 則不詢問直接覆寫（仍適用活動會話安全檢查）。
 - `config.toml` 更新（兩種範圍均適用）：
   - `notify = ["node", "..."]`
   - `model_reasoning_effort = "high"`
   - `developer_instructions = "..."`
   - `[features] multi_agent = true, child_agents_md = true`
-  - MCP 伺服器項目（`omx_state`、`omx_memory`、`omx_code_intel`、`omx_trace`）
+  - MCP 伺服器項目（`omk_state`、`omk_memory`、`omk_code_intel`、`omk_trace`）
   - `[tui] status_line`
 - 專案 `AGENTS.md`
-- `.omx/` 執行期目錄與 HUD 設定
+- `.omk/` 執行期目錄與 HUD 設定
 
 ## 代理與技能
 
@@ -312,8 +312,8 @@ OMX_TEAM_AUTO_INTERRUPT_RETRY=0  # 選用：停用自適應 queue->resend 回退
 ## 專案結構
 
 ```text
-oh-my-codex/
-  bin/omx.js
+oh-my-kiro/
+  bin/omk.js
   src/
     cli/
     team/
@@ -333,8 +333,8 @@ oh-my-codex/
 ## 開發
 
 ```bash
-git clone https://github.com/Yeachan-Heo/oh-my-codex.git
-cd oh-my-codex
+git clone https://github.com/penghuo/oh-my-kiro.git
+cd oh-my-kiro
 npm install
 npm run lint
 npm run build
@@ -343,11 +343,11 @@ npm test
 
 ## 說明文件
 
-- **[完整說明文件](https://yeachan-heo.github.io/oh-my-codex-website/docs.html)** — 完整指南
-- **[CLI 參考手冊](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#cli-reference)** — 所有 `omx` 指令、旗標與工具
-- **[通知設定指南](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#notifications)** — Discord、Telegram、Slack 及 Webhook 設定
-- **[推薦工作流程](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#workflows)** — 實戰驗證的技能鏈，適用常見任務
-- **[版本發行說明](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#release-notes)** — 每個版本的新功能
+- **[完整說明文件](https://penghuo.github.io/oh-my-kiro-website/docs.html)** — 完整指南
+- **[CLI 參考手冊](https://penghuo.github.io/oh-my-kiro-website/docs.html#cli-reference)** — 所有 `omk` 指令、旗標與工具
+- **[通知設定指南](https://penghuo.github.io/oh-my-kiro-website/docs.html#notifications)** — Discord、Telegram、Slack 及 Webhook 設定
+- **[推薦工作流程](https://penghuo.github.io/oh-my-kiro-website/docs.html#workflows)** — 實戰驗證的技能鏈，適用常見任務
+- **[版本發行說明](https://penghuo.github.io/oh-my-kiro-website/docs.html#release-notes)** — 每個版本的新功能
 
 ## 附註
 

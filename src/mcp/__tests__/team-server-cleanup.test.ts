@@ -5,36 +5,36 @@ import { join } from 'path';
 import { tmpdir, homedir } from 'os';
 import { initTeamState, readTeamConfig, saveTeamConfig } from '../../team/state.js';
 
-const OMX_JOBS_DIR = join(homedir(), '.omx', 'team-jobs');
+const OMK_JOBS_DIR = join(homedir(), '.omk', 'team-jobs');
 
 async function writeJobFiles(
   jobId: string,
   job: Record<string, unknown>,
   panes: { paneIds: string[]; leaderPaneId: string },
 ): Promise<void> {
-  await mkdir(OMX_JOBS_DIR, { recursive: true });
-  await writeFile(join(OMX_JOBS_DIR, `${jobId}.json`), JSON.stringify(job));
-  await writeFile(join(OMX_JOBS_DIR, `${jobId}-panes.json`), JSON.stringify(panes));
+  await mkdir(OMK_JOBS_DIR, { recursive: true });
+  await writeFile(join(OMK_JOBS_DIR, `${jobId}.json`), JSON.stringify(job));
+  await writeFile(join(OMK_JOBS_DIR, `${jobId}-panes.json`), JSON.stringify(panes));
 }
 
 async function cleanupJobFiles(jobId: string): Promise<void> {
-  await rm(join(OMX_JOBS_DIR, `${jobId}.json`), { force: true });
-  await rm(join(OMX_JOBS_DIR, `${jobId}-panes.json`), { force: true });
+  await rm(join(OMK_JOBS_DIR, `${jobId}.json`), { force: true });
+  await rm(join(OMK_JOBS_DIR, `${jobId}-panes.json`), { force: true });
 }
 
 async function loadTeamServer() {
-  process.env.OMX_TEAM_SERVER_DISABLE_AUTO_START = '1';
+  process.env.OMK_TEAM_SERVER_DISABLE_AUTO_START = '1';
   return await import('../team-server.js');
 }
 
 describe('team-server cleanup hardening', () => {
   it('intersects live-session candidates with team config + panes file identities before kill', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-team-cleanup-identity-'));
-    const fakeBinDir = await mkdtemp(join(tmpdir(), 'omx-team-cleanup-bin-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-team-cleanup-identity-'));
+    const fakeBinDir = await mkdtemp(join(tmpdir(), 'omk-team-cleanup-bin-'));
     const tmuxLogPath = join(fakeBinDir, 'tmux.log');
     const tmuxStubPath = join(fakeBinDir, 'tmux');
     const previousPath = process.env.PATH;
-    const jobId = `omx-${Date.now().toString(36)}`;
+    const jobId = `omk-${Date.now().toString(36)}`;
 
     try {
       await writeFile(
@@ -56,7 +56,7 @@ exit 0
       const config = await readTeamConfig('cleanup-team', cwd);
       assert.ok(config);
       if (!config) return;
-      config.tmux_session = 'omx-team-cleanup-team';
+      config.tmux_session = 'omk-team-cleanup-team';
       config.workers[0]!.pane_id = '%2';
       config.workers[1]!.pane_id = '%3';
       config.leader_pane_id = '%1';
@@ -76,7 +76,7 @@ exit 0
       const { handleTeamToolCall } = await loadTeamServer();
       const response = await handleTeamToolCall({
         params: {
-          name: 'omx_run_team_cleanup',
+          name: 'omk_run_team_cleanup',
           arguments: { job_id: jobId, grace_ms: 10 },
         },
       });
@@ -105,12 +105,12 @@ exit 0
   });
 
   it('does not broad-sweep session panes during cleanup target selection', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-team-cleanup-sweep-'));
-    const fakeBinDir = await mkdtemp(join(tmpdir(), 'omx-team-cleanup-sweep-bin-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-team-cleanup-sweep-'));
+    const fakeBinDir = await mkdtemp(join(tmpdir(), 'omk-team-cleanup-sweep-bin-'));
     const tmuxLogPath = join(fakeBinDir, 'tmux.log');
     const tmuxStubPath = join(fakeBinDir, 'tmux');
     const previousPath = process.env.PATH;
-    const jobId = `omx-${Date.now().toString(36)}`;
+    const jobId = `omk-${Date.now().toString(36)}`;
 
     try {
       await writeFile(
@@ -132,7 +132,7 @@ exit 0
       const config = await readTeamConfig('cleanup-sweep', cwd);
       assert.ok(config);
       if (!config) return;
-      config.tmux_session = 'omx-team-cleanup-sweep';
+      config.tmux_session = 'omk-team-cleanup-sweep';
       config.workers[0]!.pane_id = '%2';
       await saveTeamConfig(config, cwd);
 
@@ -149,7 +149,7 @@ exit 0
       const { handleTeamToolCall } = await loadTeamServer();
       await handleTeamToolCall({
         params: {
-          name: 'omx_run_team_cleanup',
+          name: 'omk_run_team_cleanup',
           arguments: { job_id: jobId, grace_ms: 10 },
         },
       });
@@ -168,11 +168,11 @@ exit 0
   });
 
   it('returns unchanged legacy content[0].text plus additive structured JSON in content[1].text', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-team-cleanup-legacy-'));
-    const fakeBinDir = await mkdtemp(join(tmpdir(), 'omx-team-cleanup-legacy-bin-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-team-cleanup-legacy-'));
+    const fakeBinDir = await mkdtemp(join(tmpdir(), 'omk-team-cleanup-legacy-bin-'));
     const tmuxStubPath = join(fakeBinDir, 'tmux');
     const previousPath = process.env.PATH;
-    const jobId = `omx-${Date.now().toString(36)}`;
+    const jobId = `omk-${Date.now().toString(36)}`;
 
     try {
       await writeFile(tmuxStubPath, '#!/bin/sh\nexit 0\n');
@@ -190,7 +190,7 @@ exit 0
       const { handleTeamToolCall } = await loadTeamServer();
       const response = await handleTeamToolCall({
         params: {
-          name: 'omx_run_team_cleanup',
+          name: 'omk_run_team_cleanup',
           arguments: { job_id: jobId, grace_ms: 10 },
         },
       });
@@ -220,14 +220,14 @@ exit 0
   });
 
   it('returns deterministic noop summary when no killable panes remain', async () => {
-    const jobId = `omx-${Date.now().toString(36)}`;
+    const jobId = `omk-${Date.now().toString(36)}`;
     try {
-      await mkdir(OMX_JOBS_DIR, { recursive: true });
-      await writeFile(join(OMX_JOBS_DIR, `${jobId}.json`), JSON.stringify({
+      await mkdir(OMK_JOBS_DIR, { recursive: true });
+      await writeFile(join(OMK_JOBS_DIR, `${jobId}.json`), JSON.stringify({
         status: 'running',
         startedAt: Date.now(),
       }));
-      await writeFile(join(OMX_JOBS_DIR, `${jobId}-panes.json`), JSON.stringify({
+      await writeFile(join(OMK_JOBS_DIR, `${jobId}-panes.json`), JSON.stringify({
         paneIds: [],
         leaderPaneId: '',
       }));
@@ -235,7 +235,7 @@ exit 0
       const { handleTeamToolCall } = await loadTeamServer();
       const response = await handleTeamToolCall({
         params: {
-          name: 'omx_run_team_cleanup',
+          name: 'omk_run_team_cleanup',
           arguments: { job_id: jobId, grace_ms: 10 },
         },
       });

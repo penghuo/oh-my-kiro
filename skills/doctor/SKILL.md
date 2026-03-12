@@ -1,6 +1,6 @@
 ---
 name: doctor
-description: Diagnose and fix oh-my-codex installation issues
+description: Diagnose and fix oh-my-kiro installation issues
 ---
 
 # Doctor Skill
@@ -9,17 +9,17 @@ Note: All `~/.codex/...` paths in this guide respect `CODEX_HOME` when that envi
 
 ## Task: Run Installation Diagnostics
 
-You are the OMX Doctor - diagnose and fix installation issues.
+You are the OMK Doctor - diagnose and fix installation issues.
 
 ### Step 1: Check Plugin Version
 
 ```bash
 # Get installed version
-INSTALLED=$(ls ~/.codex/plugins/cache/omc/oh-my-codex/ 2>/dev/null | sort -V | tail -1)
+INSTALLED=$(ls ~/.codex/plugins/cache/omc/oh-my-kiro/ 2>/dev/null | sort -V | tail -1)
 echo "Installed: $INSTALLED"
 
 # Get latest from npm
-LATEST=$(npm view oh-my-codex version 2>/dev/null)
+LATEST=$(npm view oh-my-kiro version 2>/dev/null)
 echo "Latest: $LATEST"
 ```
 
@@ -55,19 +55,19 @@ ls -la ~/.codex/hooks/*.sh 2>/dev/null
 # Check if AGENTS.md exists
 ls -la ~/.codex/AGENTS.md 2>/dev/null
 
-# Check for OMX marker
-grep -q "oh-my-codex Multi-Agent System" ~/.codex/AGENTS.md 2>/dev/null && echo "Has OMX config" || echo "Missing OMX config"
+# Check for OMK marker
+grep -q "oh-my-kiro Multi-Agent System" ~/.codex/AGENTS.md 2>/dev/null && echo "Has OMK config" || echo "Missing OMK config"
 ```
 
 **Diagnosis**:
 - If missing: CRITICAL - AGENTS.md not configured
-- If missing OMX marker: WARN - outdated AGENTS.md
+- If missing OMK marker: WARN - outdated AGENTS.md
 
 ### Step 5: Check for Stale Plugin Cache
 
 ```bash
 # Count versions in cache
-ls ~/.codex/plugins/cache/omc/oh-my-codex/ 2>/dev/null | wc -l
+ls ~/.codex/plugins/cache/omc/oh-my-kiro/ 2>/dev/null | wc -l
 ```
 
 **Diagnosis**:
@@ -89,14 +89,14 @@ ls -la ~/.codex/skills/ 2>/dev/null
 ```
 
 **Diagnosis**:
-- If `~/.codex/agents/` exists with oh-my-codex-related files: WARN - legacy agents (now provided by plugin)
-- If `~/.codex/commands/` exists with oh-my-codex-related files: WARN - legacy commands (now provided by plugin)
-- If `~/.codex/skills/` exists with oh-my-codex-related files: WARN - legacy skills (now provided by plugin)
+- If `~/.codex/agents/` exists with oh-my-kiro-related files: WARN - legacy agents (now provided by plugin)
+- If `~/.codex/commands/` exists with oh-my-kiro-related files: WARN - legacy commands (now provided by plugin)
+- If `~/.codex/skills/` exists with oh-my-kiro-related files: WARN - legacy skills (now provided by plugin)
 
 Look for files like:
 - `architect.md`, `researcher.md`, `explore.md`, `executor.md`, etc. in agents/
 - `ultrawork.md`, `deepsearch.md`, etc. in commands/
-- Any oh-my-codex-related `.md` files in skills/
+- Any oh-my-kiro-related `.md` files in skills/
 
 ---
 
@@ -105,7 +105,7 @@ Look for files like:
 After running all checks, output a report:
 
 ```
-## OMX Doctor Report
+## OMK Doctor Report
 
 ### Summary
 [HEALTHY / ISSUES FOUND]
@@ -152,21 +152,21 @@ rm -f ~/.codex/hooks/stop-continuation.sh
 
 ### Fix: Outdated Plugin
 ```bash
-rm -rf ~/.codex/plugins/cache/omc/oh-my-codex
+rm -rf ~/.codex/plugins/cache/omc/oh-my-kiro
 echo "Plugin cache cleared. Restart Codex CLI to fetch latest version."
 ```
 
 ### Fix: Stale Cache (multiple versions)
 ```bash
 # Keep only latest version
-cd ~/.codex/plugins/cache/omc/oh-my-codex/
+cd ~/.codex/plugins/cache/omc/oh-my-kiro/
 ls | sort -V | head -n -1 | xargs rm -rf
 ```
 
 ### Fix: Missing/Outdated AGENTS.md
 Fetch latest from GitHub and write to `~/.codex/AGENTS.md`:
 ```
-WebFetch(url: "https://raw.githubusercontent.com/Yeachan-Heo/oh-my-codex/main/docs/AGENTS.md", prompt: "Return the complete raw markdown content exactly as-is")
+WebFetch(url: "https://raw.githubusercontent.com/penghuo/oh-my-kiro/main/docs/AGENTS.md", prompt: "Return the complete raw markdown content exactly as-is")
 ```
 
 ### Fix: Legacy Curl-Installed Content
@@ -185,7 +185,7 @@ rm -rf ~/.codex/commands
 rm -rf ~/.codex/skills
 ```
 
-**Note**: Only remove if these contain oh-my-codex-related files. If user has custom agents/commands/skills, warn them and ask before removing.
+**Note**: Only remove if these contain oh-my-kiro-related files. If user has custom agents/commands/skills, warn them and ask before removing.
 
 ---
 

@@ -1,13 +1,13 @@
 /**
  * Native agent config generator for Codex CLI multi-agent roles
- * Generates per-agent .toml files at ~/.omx/agents/<name>.toml
+ * Generates per-agent .toml files at ~/.omk/agents/<name>.toml
  */
 
 import { existsSync } from 'fs';
 import { mkdir, readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { AGENT_DEFINITIONS, AgentDefinition } from './definitions.js';
-import { omxAgentsConfigDir } from '../utils/paths.js';
+import { omkAgentsConfigDir } from '../utils/paths.js';
 
 const POSTURE_OVERLAYS: Record<AgentDefinition['posture'], string> = {
   'frontier-orchestrator': [
@@ -85,7 +85,7 @@ function buildPromptInstructions(agent: AgentDefinition, promptContent: string):
     '',
     MODEL_CLASS_OVERLAYS[agent.modelClass],
     '',
-    `## OMX Agent Metadata`,
+    `## OMK Agent Metadata`,
     `- role: ${agent.name}`,
     `- posture: ${agent.posture}`,
     `- model_class: ${agent.modelClass}`,
@@ -122,7 +122,7 @@ export function generateAgentToml(agent: AgentDefinition, promptContent: string)
   const escaped = escapeTomlMultiline(instructions);
 
   return [
-    `# oh-my-codex agent: ${agent.name}`,
+    `# oh-my-kiro agent: ${agent.name}`,
     `model_reasoning_effort = "${effort}"`,
     `developer_instructions = """`,
     escaped,
@@ -132,7 +132,7 @@ export function generateAgentToml(agent: AgentDefinition, promptContent: string)
 }
 
 /**
- * Install native agent config .toml files to ~/.omx/agents/
+ * Install native agent config .toml files to ~/.omk/agents/
  * Returns the number of agents installed
  */
 export async function installNativeAgentConfigs(
@@ -143,7 +143,7 @@ export async function installNativeAgentConfigs(
     force = false,
     dryRun = false,
     verbose = false,
-    agentsDir = omxAgentsConfigDir(),
+    agentsDir = omkAgentsConfigDir(),
   } = options;
 
   if (!dryRun) {

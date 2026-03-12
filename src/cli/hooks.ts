@@ -9,14 +9,14 @@ import type { HookPluginDescriptor } from '../hooks/extensibility/types.js';
 
 const HELP = `
 Usage:
-  omx hooks init       Create .omx/hooks/sample-plugin.mjs scaffold
-  omx hooks status     Show plugin directory + discovered plugins
-  omx hooks validate   Validate plugin exports/signatures
-  omx hooks test       Dispatch synthetic turn-complete event to plugins
+  omk hooks init       Create .omk/hooks/sample-plugin.mjs scaffold
+  omk hooks status     Show plugin directory + discovered plugins
+  omk hooks validate   Validate plugin exports/signatures
+  omk hooks test       Dispatch synthetic turn-complete event to plugins
 
 Notes:
-  - This command is additive. Existing \`omx tmux-hook\` behavior is unchanged.
-  - Plugins are disabled by default. Enable with OMX_HOOK_PLUGINS=1.
+  - This command is additive. Existing \`omk tmux-hook\` behavior is unchanged.
+  - Plugins are disabled by default. Enable with OMK_HOOK_PLUGINS=1.
 `;
 
 const SAMPLE_PLUGIN = `export async function onHookEvent(event, sdk) {
@@ -34,7 +34,7 @@ const SAMPLE_PLUGIN = `export async function onHookEvent(event, sdk) {
 `;
 
 function hooksDir(cwd = process.cwd()): string {
-  return join(cwd, '.omx', 'hooks');
+  return join(cwd, '.omk', 'hooks');
 }
 
 function samplePluginPath(cwd = process.cwd()): string {
@@ -100,7 +100,7 @@ async function initHooks(): Promise<void> {
 
   await writeFile(samplePath, SAMPLE_PLUGIN);
   console.log(`Created ${samplePath}`);
-  console.log('Enable plugins with: OMX_HOOK_PLUGINS=1');
+  console.log('Enable plugins with: OMK_HOOK_PLUGINS=1');
 }
 
 async function statusHooks(): Promise<void> {
@@ -111,7 +111,7 @@ async function statusHooks(): Promise<void> {
   console.log('hooks status');
   console.log('-----------');
   console.log(`Directory: ${dir}`);
-  console.log(`Plugins enabled: ${isHookPluginsEnabled(process.env) ? 'yes' : 'no (set OMX_HOOK_PLUGINS=1)'}`);
+  console.log(`Plugins enabled: ${isHookPluginsEnabled(process.env) ? 'yes' : 'no (set OMK_HOOK_PLUGINS=1)'}`);
   console.log(`Discovered plugins: ${plugins.length}`);
   for (const plugin of plugins) {
     console.log(`- ${plugin.fileName}`);
@@ -122,7 +122,7 @@ async function validateHooks(): Promise<void> {
   const cwd = process.cwd();
   const plugins = await discoverHookPlugins(cwd);
   if (plugins.length === 0) {
-    console.log('No plugins found. Run: omx hooks init');
+    console.log('No plugins found. Run: omk hooks init');
     return;
   }
 
@@ -184,9 +184,9 @@ async function testHooks(): Promise<void> {
   const event = buildHookEvent('turn-complete', {
     source: 'native',
     context: {
-      reason: 'omx-hooks-test',
+      reason: 'omk-hooks-test',
     },
-    session_id: 'omx-hooks-test',
+    session_id: 'omk-hooks-test',
     thread_id: `thread-${Date.now()}`,
     turn_id: `turn-${Date.now()}`,
   });
@@ -196,7 +196,7 @@ async function testHooks(): Promise<void> {
     event,
     env: {
       ...process.env,
-      OMX_HOOK_PLUGINS: '1',
+      OMK_HOOK_PLUGINS: '1',
     },
     allowInTeamWorker: false,
   } as never);
@@ -214,7 +214,7 @@ async function testHooks(): Promise<void> {
     console.log(error ? `${label}: ${status} (${error})` : `${label}: ${status}`);
   }
 
-  const logPath = join(cwd, '.omx', 'logs', `hooks-${new Date().toISOString().split('T')[0]}.jsonl`);
+  const logPath = join(cwd, '.omk', 'logs', `hooks-${new Date().toISOString().split('T')[0]}.jsonl`);
   if (existsSync(logPath)) {
     const content = await readFile(logPath, 'utf-8').catch(() => '');
     if (content.trim()) {

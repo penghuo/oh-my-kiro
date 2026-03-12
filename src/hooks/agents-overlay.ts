@@ -1,5 +1,5 @@
 /**
- * AGENTS.md Runtime Overlay for oh-my-codex
+ * AGENTS.md Runtime Overlay for oh-my-kiro
  *
  * Dynamically injects session-specific context into AGENTS.md before Codex
  * launches, then strips it after session ends. Uses marker-bounded sections
@@ -17,21 +17,21 @@
 import { readFile, writeFile, mkdir, rm, readdir } from 'fs/promises';
 import { dirname, join } from 'path';
 import { existsSync } from 'fs';
-import { omxNotepadPath, omxProjectMemoryPath, packageRoot } from '../utils/paths.js';
+import { omkNotepadPath, omkProjectMemoryPath, packageRoot } from '../utils/paths.js';
 import { getReadScopedStateDirs, getStateDir, listModeStateFilesWithScopePreference } from '../mcp/state-paths.js';
 import { generateCodebaseMap } from './codebase-map.js';
 import { SKILL_ACTIVE_STATE_FILE } from './keyword-detector.js';
 
-const START_MARKER = '<!-- OMX:RUNTIME:START -->';
-const END_MARKER = '<!-- OMX:RUNTIME:END -->';
-const WORKER_START_MARKER = '<!-- OMX:TEAM:WORKER:START -->';
-const WORKER_END_MARKER = '<!-- OMX:TEAM:WORKER:END -->';
+const START_MARKER = '<!-- OMK:RUNTIME:START -->';
+const END_MARKER = '<!-- OMK:RUNTIME:END -->';
+const WORKER_START_MARKER = '<!-- OMK:TEAM:WORKER:START -->';
+const WORKER_END_MARKER = '<!-- OMK:TEAM:WORKER:END -->';
 const MAX_OVERLAY_SIZE = 3500;
 
 // ── Lock helpers ─────────────────────────────────────────────────────────────
 
 function lockPath(cwd: string): string {
-  return join(cwd, '.omx', 'state', 'agents-md.lock');
+  return join(cwd, '.omk', 'state', 'agents-md.lock');
 }
 
 async function acquireLock(cwd: string, timeoutMs: number = 5000): Promise<void> {
@@ -151,7 +151,7 @@ async function isRalphActive(cwd: string, sessionId?: string): Promise<boolean> 
 }
 
 async function readRalphPlanningArtifacts(cwd: string): Promise<{ hasPrd: boolean; hasTestSpec: boolean }> {
-  const plansDir = join(cwd, '.omx', 'plans');
+  const plansDir = join(cwd, '.omk', 'plans');
   if (!existsSync(plansDir)) {
     return { hasPrd: false, hasTestSpec: false };
   }
@@ -188,7 +188,7 @@ async function readActiveModes(cwd: string, sessionId?: string): Promise<string>
 }
 
 async function readNotepadPriority(cwd: string): Promise<string> {
-  const notePath = omxNotepadPath(cwd);
+  const notePath = omkNotepadPath(cwd);
   if (!existsSync(notePath)) return '';
 
   try {
@@ -207,7 +207,7 @@ async function readNotepadPriority(cwd: string): Promise<string> {
 }
 
 async function readProjectMemorySummary(cwd: string): Promise<string> {
-  const memPath = omxProjectMemoryPath(cwd);
+  const memPath = omkProjectMemoryPath(cwd);
   if (!existsSync(memPath)) return '';
 
   try {
@@ -355,7 +355,7 @@ export async function generateOverlay(
 
     sections.push({
       key: 'ralph_planning_gate',
-      text: `**Ralph Ralplan-First Gate:** ${gateStatus}\n- Requirement: complete planning artifacts before implementation/tool execution.\n- ${details}\n- Path: \`.omx/plans/\``,
+      text: `**Ralph Ralplan-First Gate:** ${gateStatus}\n- Requirement: complete planning artifacts before implementation/tool execution.\n- ${details}\n- Path: \`.omk/plans/\``,
       optional: false,
     });
   }

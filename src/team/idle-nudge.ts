@@ -1,7 +1,7 @@
 /**
  * Idle Pane Nudge for Team MCP Wait
  *
- * Detects idle teammate panes during omx_run_team_wait polling and sends
+ * Detects idle teammate panes during omk_run_team_wait polling and sends
  * tmux send-keys continuation nudges. Only nudges worker panes (never the
  * leader) in the current team session.
  *
@@ -62,7 +62,7 @@ export async function isPaneIdle(paneId: string): Promise<boolean> {
 // ---------------------------------------------------------------------------
 
 /**
- * Thin wrapper to call OMX's sendToWorker by pane ID only (for NudgeTracker).
+ * Thin wrapper to call OMK's sendToWorker by pane ID only (for NudgeTracker).
  * workerIndex=0 is a dummy — paneTarget() prefers workerPaneId when provided.
  */
 async function sendToWorkerByPaneId(

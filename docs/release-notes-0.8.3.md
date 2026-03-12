@@ -1,4 +1,4 @@
-# oh-my-codex v0.8.3
+# oh-my-kiro v0.8.3
 
 Released: **2026-03-06**
 
@@ -19,7 +19,7 @@ This is a **focused hotfix release** for the Gemini team-worker path shipped in 
 
 ### 1) Gemini prompt-mode workers now start with an explicit initial prompt
 
-Gemini workers launched through OMX team prompt mode are now started with an explicit initial instruction:
+Gemini workers launched through OMK team prompt mode are now started with an explicit initial instruction:
 
 - `--approval-mode yolo`
 - `-i "Read and follow the instructions in .../inbox.md"`
@@ -86,4 +86,4 @@ Planned release gates:
 
 ---
 
-Thanks for using **oh-my-codex**. If anything regresses, please open an issue with reproduction steps, logs, and your CLI/runtime details.
+Thanks for using **oh-my-kiro**. If anything regresses, please open an issue with reproduction steps, logs, and your CLI/runtime details.

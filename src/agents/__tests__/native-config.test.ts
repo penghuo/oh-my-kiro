@@ -23,7 +23,7 @@ describe('agents/native-config', () => {
     const prompt = `---\ntitle: demo\n---\n\nInstruction line\n\"\"\"danger\"\"\"`;
     const toml = generateAgentToml(agent, prompt);
 
-    assert.match(toml, /# oh-my-codex agent: executor/);
+    assert.match(toml, /# oh-my-kiro agent: executor/);
     assert.match(toml, /model_reasoning_effort = "medium"/);
     assert.ok(!toml.includes('title: demo'));
     assert.ok(toml.includes('Instruction line'));
@@ -35,7 +35,7 @@ describe('agents/native-config', () => {
   });
 
   it('installs only agents with prompt files and skips existing files without force', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'omx-native-config-'));
+    const root = await mkdtemp(join(tmpdir(), 'omk-native-config-'));
     const promptsDir = join(root, 'prompts');
     const outDir = join(root, 'agents-out');
 

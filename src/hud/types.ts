@@ -1,5 +1,5 @@
 /**
- * HUD type definitions for oh-my-codex
+ * HUD type definitions for oh-my-kiro
  */
 
 /** Ralph loop state for HUD display */
@@ -70,7 +70,7 @@ export interface HudRenderContext {
 /** HUD preset names */
 export type HudPreset = 'minimal' | 'focused' | 'full';
 
-/** HUD configuration stored in .omx/hud-config.json */
+/** HUD configuration stored in .omk/hud-config.json */
 export interface HudConfig {
   preset: HudPreset;
 }
@@ -80,7 +80,7 @@ export const DEFAULT_HUD_CONFIG: HudConfig = {
   preset: 'focused',
 };
 
-/** CLI flags for omx hud */
+/** CLI flags for omk hud */
 export interface HudFlags {
   watch: boolean;
   json: boolean;

@@ -10,9 +10,9 @@ import { VISUAL_NEXT_ACTIONS_LIMIT } from '../../visual/constants.js';
 
 describe('notify-hook session-scoped iteration updates', () => {
   it('increments iteration for active session-scoped mode states', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-notify-test-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-notify-test-'));
     try {
-      const stateDir = join(wd, '.omx', 'state');
+      const stateDir = join(wd, '.omk', 'state');
       const sessionId = 'sess1';
       const sessionScopedDir = join(stateDir, 'sessions', sessionId);
       await mkdir(sessionScopedDir, { recursive: true });
@@ -36,7 +36,7 @@ describe('notify-hook session-scoped iteration updates', () => {
         encoding: 'utf-8',
         env: {
           ...process.env,
-          OMX_TEAM_WORKER: '',
+          OMK_TEAM_WORKER: '',
           TMUX: '',
           TMUX_PANE: '',
         },
@@ -52,9 +52,9 @@ describe('notify-hook session-scoped iteration updates', () => {
   });
 
   it('marks active mode state complete when max_iterations is reached', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-notify-test-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-notify-test-'));
     try {
-      const stateDir = join(wd, '.omx', 'state');
+      const stateDir = join(wd, '.omk', 'state');
       const sessionId = 'sess1';
       const sessionScopedDir = join(stateDir, 'sessions', sessionId);
       await mkdir(sessionScopedDir, { recursive: true });
@@ -86,7 +86,7 @@ describe('notify-hook session-scoped iteration updates', () => {
         encoding: 'utf-8',
         env: {
           ...process.env,
-          OMX_TEAM_WORKER: '',
+          OMK_TEAM_WORKER: '',
           TMUX: '',
           TMUX_PANE: '',
         },
@@ -106,7 +106,7 @@ describe('notify-hook session-scoped iteration updates', () => {
   });
 
   it('persists visual-verdict feedback from runtime assistant output', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-notify-visual-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-notify-visual-'));
     try {
       const sessionId = 'sessVisual';
       const payload = {
@@ -144,14 +144,14 @@ describe('notify-hook session-scoped iteration updates', () => {
         encoding: 'utf-8',
         env: {
           ...process.env,
-          OMX_TEAM_WORKER: '',
+          OMK_TEAM_WORKER: '',
           TMUX: '',
           TMUX_PANE: '',
         },
       });
       assert.equal(result.status, 0, result.stderr || result.stdout);
 
-      const progressPath = join(wd, '.omx', 'state', 'sessions', sessionId, 'ralph-progress.json');
+      const progressPath = join(wd, '.omk', 'state', 'sessions', sessionId, 'ralph-progress.json');
       assert.equal(existsSync(progressPath), true);
       const progress = JSON.parse(await readFile(progressPath, 'utf-8')) as {
         visual_feedback?: Array<{

@@ -167,8 +167,8 @@ export async function handleTmuxInjection({
   stateDir,
   logsDir,
 }) {
-  const omxDir = join(cwd, '.omx');
-  const configPath = join(omxDir, 'tmux-hook.json');
+  const omkDir = join(cwd, '.omk');
+  const configPath = join(omkDir, 'tmux-hook.json');
   const hookStatePath = join(stateDir, 'tmux-hook-state.json');
   const nowIso = new Date().toISOString();
   const now = Date.now();

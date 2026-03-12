@@ -19,11 +19,11 @@ async function writeRollout(
   await writeFile(join(dir, fileName), `${lines.map((line) => JSON.stringify(line)).join('\n')}\n`, 'utf-8');
 }
 
-function runOmx(cwd: string, argv: string[], envOverrides: Record<string, string> = {}) {
+function runOmk(cwd: string, argv: string[], envOverrides: Record<string, string> = {}) {
   const testDir = dirname(fileURLToPath(import.meta.url));
   const repoRoot = join(testDir, '..', '..', '..');
-  const omxBin = join(repoRoot, 'bin', 'omx.js');
-  const result = spawnSync(process.execPath, [omxBin, ...argv], {
+  const omkBin = join(repoRoot, 'bin', 'omk.js');
+  const result = spawnSync(process.execPath, [omkBin, ...argv], {
     cwd,
     encoding: 'utf-8',
     env: { ...process.env, ...envOverrides },
@@ -45,9 +45,9 @@ describe('parseSessionSearchArgs', () => {
   });
 });
 
-describe('omx session search', () => {
+describe('omk session search', () => {
   it('prints structured JSON results for matching transcripts', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-session-search-cli-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-session-search-cli-'));
     const codexHomeDir = join(cwd, '.codex-home');
     try {
       await writeRollout(codexHomeDir, '2026-03-10T12:00:00.000Z', 'rollout-2026-03-10T12-00-00-session-a.jsonl', [
@@ -68,7 +68,7 @@ describe('omx session search', () => {
         },
       ]);
 
-      const result = runOmx(cwd, ['session', 'search', 'team api', '--project', 'current', '--json'], {
+      const result = runOmk(cwd, ['session', 'search', 'team api', '--project', 'current', '--json'], {
         CODEX_HOME: codexHomeDir,
       });
 

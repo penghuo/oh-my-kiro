@@ -5,12 +5,12 @@ description: Configurable pipeline orchestrator for sequencing stages
 
 # Pipeline Skill
 
-`$pipeline` is the configurable pipeline orchestrator for OMX. It sequences stages
+`$pipeline` is the configurable pipeline orchestrator for OMK. It sequences stages
 through a uniform `PipelineStage` interface, with state persistence and resume support.
 
 ## Default Autopilot Pipeline
 
-The canonical OMX pipeline sequences:
+The canonical OMK pipeline sequences:
 
 ```
 RALPLAN (consensus planning) -> team-exec (Codex CLI workers) -> ralph-verify (architect verification)
@@ -44,12 +44,12 @@ return a `StageResult` with status, artifacts, and duration.
 ## Built-in Stages
 
 - **ralplan**: Consensus planning (planner + architect + critic). Skips if a `prd-*.md` plan already exists.
-- **team-exec**: Team execution via Codex CLI workers. Always the OMX execution backend.
+- **team-exec**: Team execution via Codex CLI workers. Always the OMK execution backend.
 - **ralph-verify**: Ralph verification loop with configurable iteration count.
 
 ## State Management
 
-Pipeline state persists via the ModeState system at `.omx/state/pipeline-state.json`.
+Pipeline state persists via the ModeState system at `.omk/state/pipeline-state.json`.
 The HUD renders pipeline phase automatically. Resume is supported from the last incomplete stage.
 
 - **On start**: `state_write({mode: "pipeline", active: true, current_phase: "stage:ralplan"})`

@@ -346,7 +346,7 @@ function parseValidatedTaskIdArray(value: unknown, fieldName: string): string[] 
 
 function teamStateExists(teamName: string, candidateCwd: string): boolean {
   if (!TEAM_NAME_SAFE_PATTERN.test(teamName)) return false;
-  const teamRoot = join(candidateCwd, '.omx', 'state', 'team', teamName);
+  const teamRoot = join(candidateCwd, '.omk', 'state', 'team', teamName);
   return existsSync(join(teamRoot, 'config.json')) || existsSync(join(teamRoot, 'tasks')) || existsSync(teamRoot);
 }
 
@@ -379,7 +379,7 @@ function resolveTeamWorkingDirectoryFromMetadata(
   candidateCwd: string,
   workerContext: { teamName: string; workerName: string } | null,
 ): string | null {
-  const teamRoot = join(candidateCwd, '.omx', 'state', 'team', teamName);
+  const teamRoot = join(candidateCwd, '.omk', 'state', 'team', teamName);
   if (!existsSync(teamRoot)) return null;
 
   if (workerContext?.teamName === teamName) {
@@ -399,7 +399,7 @@ function resolveTeamWorkingDirectoryFromMetadata(
 function resolveTeamWorkingDirectory(teamName: string, preferredCwd: string): string {
   const normalizedTeamName = String(teamName || '').trim();
   if (!normalizedTeamName) return preferredCwd;
-  const envTeamStateRoot = process.env.OMX_TEAM_STATE_ROOT;
+  const envTeamStateRoot = process.env.OMK_TEAM_STATE_ROOT;
   if (typeof envTeamStateRoot === 'string' && envTeamStateRoot.trim() !== '') {
     return stateRootToWorkingDirectory(envTeamStateRoot.trim());
   }
@@ -410,7 +410,7 @@ function resolveTeamWorkingDirectory(teamName: string, preferredCwd: string): st
     if (!seeds.includes(seed)) seeds.push(seed);
   }
 
-  const workerContext = parseTeamWorkerEnv(process.env.OMX_TEAM_WORKER);
+  const workerContext = parseTeamWorkerEnv(process.env.OMK_TEAM_WORKER);
   for (const seed of seeds) {
     let cursor = seed;
     while (cursor) {
@@ -440,9 +440,9 @@ export function buildLegacyTeamDeprecationHint(legacyName: string, originalArgs?
   const operation = resolveTeamApiOperation(legacyName);
   const payload = JSON.stringify(originalArgs ?? {});
   if (!operation) {
-    return `Use CLI interop: omx team api <operation> --input '${payload}' --json`;
+    return `Use CLI interop: omk team api <operation> --input '${payload}' --json`;
   }
-  return `Use CLI interop: omx team api ${operation} --input '${payload}' --json`;
+  return `Use CLI interop: omk team api ${operation} --input '${payload}' --json`;
 }
 
 function validateCommonFields(args: Record<string, unknown>): void {

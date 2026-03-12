@@ -45,7 +45,7 @@ function normalizeInputLock(raw) {
 export function normalizeBlockedAutoApprovalInput(text) {
   return safeString(text)
     .toLowerCase()
-    .replace(/\[omx_tmux_inject\]/gi, '')
+    .replace(/\[omk_tmux_inject\]/gi, '')
     .replace(/[^a-z]+/g, ' ')
     .trim();
 }
@@ -237,7 +237,7 @@ export function normalizeAutoNudgeConfig(raw) {
 
 export async function loadAutoNudgeConfig() {
   const codexHomePath = process.env.CODEX_HOME || join(homedir(), '.codex');
-  const configPath = join(codexHomePath, '.omx-config.json');
+  const configPath = join(codexHomePath, '.omk-config.json');
   const raw = await readJsonIfExists(configPath, null);
   if (!raw || typeof raw !== 'object') return normalizeAutoNudgeConfig(null);
   return normalizeAutoNudgeConfig(raw.autoNudge);

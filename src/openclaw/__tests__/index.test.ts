@@ -15,7 +15,7 @@ describe("wakeOpenClaw", () => {
 
   beforeEach(() => {
     originalEnv = { ...process.env };
-    tmpDir = join(tmpdir(), `omx-openclaw-index-test-${Date.now()}`);
+    tmpDir = join(tmpdir(), `omk-openclaw-index-test-${Date.now()}`);
     mkdirSync(tmpDir, { recursive: true });
   });
 
@@ -29,8 +29,8 @@ describe("wakeOpenClaw", () => {
     try { rmSync(tmpDir, { recursive: true }); } catch { /* ignore */ }
   });
 
-  it("returns null when OMX_OPENCLAW is not set", async () => {
-    delete process.env.OMX_OPENCLAW;
+  it("returns null when OMK_OPENCLAW is not set", async () => {
+    delete process.env.OMK_OPENCLAW;
     const { wakeOpenClaw } = await import("../index.js");
     const { resetOpenClawConfigCache } = await import("../config.js");
     resetOpenClawConfigCache();
@@ -39,8 +39,8 @@ describe("wakeOpenClaw", () => {
   });
 
   it("returns null when config is not found", async () => {
-    process.env.OMX_OPENCLAW = "1";
-    process.env.OMX_OPENCLAW_CONFIG = join(tmpDir, "nonexistent.json");
+    process.env.OMK_OPENCLAW = "1";
+    process.env.OMK_OPENCLAW_CONFIG = join(tmpDir, "nonexistent.json");
     const { wakeOpenClaw } = await import("../index.js");
     const { resetOpenClawConfigCache } = await import("../config.js");
     resetOpenClawConfigCache();
@@ -49,7 +49,7 @@ describe("wakeOpenClaw", () => {
   });
 
   it("returns null when event is not mapped", async () => {
-    process.env.OMX_OPENCLAW = "1";
+    process.env.OMK_OPENCLAW = "1";
     const configPath = join(tmpDir, "openclaw.json");
     writeFileSync(configPath, JSON.stringify({
       enabled: true,
@@ -58,7 +58,7 @@ describe("wakeOpenClaw", () => {
         // session-start not mapped
       },
     }));
-    process.env.OMX_OPENCLAW_CONFIG = configPath;
+    process.env.OMK_OPENCLAW_CONFIG = configPath;
     const { wakeOpenClaw } = await import("../index.js");
     const { resetOpenClawConfigCache } = await import("../config.js");
     resetOpenClawConfigCache();
@@ -67,7 +67,7 @@ describe("wakeOpenClaw", () => {
   });
 
   it("returns null and does not throw on invalid HTTP URL", async () => {
-    process.env.OMX_OPENCLAW = "1";
+    process.env.OMK_OPENCLAW = "1";
     const configPath = join(tmpDir, "openclaw.json");
     writeFileSync(configPath, JSON.stringify({
       enabled: true,
@@ -76,7 +76,7 @@ describe("wakeOpenClaw", () => {
         "session-start": { gateway: "gw", instruction: "hello", enabled: true },
       },
     }));
-    process.env.OMX_OPENCLAW_CONFIG = configPath;
+    process.env.OMK_OPENCLAW_CONFIG = configPath;
     const { wakeOpenClaw } = await import("../index.js");
     const { resetOpenClawConfigCache } = await import("../config.js");
     resetOpenClawConfigCache();
@@ -92,8 +92,8 @@ describe("wakeOpenClaw", () => {
   });
 
   it("returns result with success:false for disabled command gateway", async () => {
-    process.env.OMX_OPENCLAW = "1";
-    delete process.env.OMX_OPENCLAW_COMMAND;
+    process.env.OMK_OPENCLAW = "1";
+    delete process.env.OMK_OPENCLAW_COMMAND;
     const configPath = join(tmpDir, "openclaw.json");
     writeFileSync(configPath, JSON.stringify({
       enabled: true,
@@ -102,7 +102,7 @@ describe("wakeOpenClaw", () => {
         "stop": { gateway: "cmd", instruction: "Stopped", enabled: true },
       },
     }));
-    process.env.OMX_OPENCLAW_CONFIG = configPath;
+    process.env.OMK_OPENCLAW_CONFIG = configPath;
     const { wakeOpenClaw } = await import("../index.js");
     const { resetOpenClawConfigCache } = await import("../config.js");
     resetOpenClawConfigCache();
@@ -110,11 +110,11 @@ describe("wakeOpenClaw", () => {
     // Should return a result, not null (gateway was found but command gate blocked)
     assert.ok(result !== null);
     assert.equal(result!.success, false);
-    assert.ok(result!.error?.includes("OMX_OPENCLAW_COMMAND"));
+    assert.ok(result!.error?.includes("OMK_OPENCLAW_COMMAND"));
   });
 
   it("includes channel/to/threadId in HTTP payload when OPENCLAW_REPLY_* env vars set", async () => {
-    process.env.OMX_OPENCLAW = "1";
+    process.env.OMK_OPENCLAW = "1";
     process.env.OPENCLAW_REPLY_CHANNEL = "#general";
     process.env.OPENCLAW_REPLY_TARGET = "user42";
     process.env.OPENCLAW_REPLY_THREAD = "thread-abc";
@@ -143,7 +143,7 @@ describe("wakeOpenClaw", () => {
         "session-start": { gateway: "gw", instruction: "hello", enabled: true },
       },
     }));
-    process.env.OMX_OPENCLAW_CONFIG = configPath;
+    process.env.OMK_OPENCLAW_CONFIG = configPath;
     const { wakeOpenClaw } = await import("../index.js");
     const { resetOpenClawConfigCache } = await import("../config.js");
     resetOpenClawConfigCache();
@@ -165,7 +165,7 @@ describe("wakeOpenClaw", () => {
   });
 
   it("omits channel/to/threadId from HTTP payload when env vars not set", async () => {
-    process.env.OMX_OPENCLAW = "1";
+    process.env.OMK_OPENCLAW = "1";
     delete process.env.OPENCLAW_REPLY_CHANNEL;
     delete process.env.OPENCLAW_REPLY_TARGET;
     delete process.env.OPENCLAW_REPLY_THREAD;
@@ -193,7 +193,7 @@ describe("wakeOpenClaw", () => {
         "session-start": { gateway: "gw", instruction: "hello", enabled: true },
       },
     }));
-    process.env.OMX_OPENCLAW_CONFIG = configPath;
+    process.env.OMK_OPENCLAW_CONFIG = configPath;
     const { wakeOpenClaw } = await import("../index.js");
     const { resetOpenClawConfigCache } = await import("../config.js");
     resetOpenClawConfigCache();
@@ -214,7 +214,7 @@ describe("wakeOpenClaw", () => {
   });
 
   it("context.replyChannel takes precedence over env var", async () => {
-    process.env.OMX_OPENCLAW = "1";
+    process.env.OMK_OPENCLAW = "1";
     process.env.OPENCLAW_REPLY_CHANNEL = "env-channel";
 
     const { createServer } = await import("http");
@@ -240,7 +240,7 @@ describe("wakeOpenClaw", () => {
         "session-start": { gateway: "gw", instruction: "hello", enabled: true },
       },
     }));
-    process.env.OMX_OPENCLAW_CONFIG = configPath;
+    process.env.OMK_OPENCLAW_CONFIG = configPath;
     const { wakeOpenClaw } = await import("../index.js");
     const { resetOpenClawConfigCache } = await import("../config.js");
     resetOpenClawConfigCache();
@@ -258,7 +258,7 @@ describe("wakeOpenClaw", () => {
   });
 
   it("includes text field as alias of instruction in HTTP payload", async () => {
-    process.env.OMX_OPENCLAW = "1";
+    process.env.OMK_OPENCLAW = "1";
     delete process.env.OPENCLAW_REPLY_CHANNEL;
     delete process.env.OPENCLAW_REPLY_TARGET;
     delete process.env.OPENCLAW_REPLY_THREAD;
@@ -286,7 +286,7 @@ describe("wakeOpenClaw", () => {
         "session-start": { gateway: "gw", instruction: "do the thing", enabled: true },
       },
     }));
-    process.env.OMX_OPENCLAW_CONFIG = configPath;
+    process.env.OMK_OPENCLAW_CONFIG = configPath;
     const { wakeOpenClaw } = await import("../index.js");
     const { resetOpenClawConfigCache } = await import("../config.js");
     resetOpenClawConfigCache();
@@ -304,8 +304,8 @@ describe("wakeOpenClaw", () => {
   });
 
   it("succeeds with command gateway when both env vars set", async () => {
-    process.env.OMX_OPENCLAW = "1";
-    process.env.OMX_OPENCLAW_COMMAND = "1";
+    process.env.OMK_OPENCLAW = "1";
+    process.env.OMK_OPENCLAW_COMMAND = "1";
     const configPath = join(tmpDir, "openclaw.json");
     writeFileSync(configPath, JSON.stringify({
       enabled: true,
@@ -314,7 +314,7 @@ describe("wakeOpenClaw", () => {
         "session-end": { gateway: "cmd", instruction: "Ended", enabled: true },
       },
     }));
-    process.env.OMX_OPENCLAW_CONFIG = configPath;
+    process.env.OMK_OPENCLAW_CONFIG = configPath;
     const { wakeOpenClaw } = await import("../index.js");
     const { resetOpenClawConfigCache } = await import("../config.js");
     resetOpenClawConfigCache();

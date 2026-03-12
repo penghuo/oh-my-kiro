@@ -18,12 +18,12 @@ Verdict: **GO** ✅
 | Build | `npm run build` | PASS (`0:07.48`) |
 | Full test suite | `npm test` | PASS (`1933` pass / `0` fail, `2:19.38`) |
 | No-unused type gate | `npm run check:no-unused` | PASS (`0:04.48`) |
-| CLI help smoke | `node bin/omx.js --help` | PASS |
-| Version smoke | `node bin/omx.js version` | PASS (`oh-my-codex v0.8.2`) |
-| Status smoke | `node bin/omx.js status` | PASS |
-| Doctor smoke | `node bin/omx.js doctor` | PASS (`9 passed, 0 warnings, 0 failed`) |
-| Setup dry-run smoke | `node bin/omx.js setup --dry-run` | PASS |
-| Cancel smoke | `node bin/omx.js cancel` | PASS |
+| CLI help smoke | `node bin/omk.js --help` | PASS |
+| Version smoke | `node bin/omk.js version` | PASS (`oh-my-kiro v0.8.2`) |
+| Status smoke | `node bin/omk.js status` | PASS |
+| Doctor smoke | `node bin/omk.js doctor` | PASS (`9 passed, 0 warnings, 0 failed`) |
+| Setup dry-run smoke | `node bin/omk.js setup --dry-run` | PASS |
+| Cancel smoke | `node bin/omk.js cancel` | PASS |
 
 ## Risk notes
 

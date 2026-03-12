@@ -1,5 +1,5 @@
 /**
- * Agent role definitions for oh-my-codex
+ * Agent role definitions for oh-my-kiro
  * Each agent has a name, description, default reasoning effort, and tool access pattern.
  * Prompt content is loaded from the prompts/ directory at runtime.
  */

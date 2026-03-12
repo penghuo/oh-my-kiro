@@ -1,14 +1,14 @@
 /**
- * omx uninstall - Remove oh-my-codex configuration and installed artifacts
+ * omk uninstall - Remove oh-my-kiro configuration and installed artifacts
  */
 
 import { readFile, writeFile, readdir, rm } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join, basename } from 'path';
 import {
-  stripExistingOmxBlocks,
-  stripOmxTopLevelKeys,
-  stripOmxFeatureFlags,
+  stripExistingOmkBlocks,
+  stripOmkTopLevelKeys,
+  stripOmkFeatureFlags,
 } from '../config/generator.js';
 import { getPackageRoot } from '../utils/package.js';
 import { AGENT_DEFINITIONS } from '../agents/definitions.js';
@@ -37,16 +37,16 @@ interface UninstallSummary {
   cacheDirectoryRemoved: boolean;
 }
 
-const OMX_MCP_SERVERS = ['omx_state', 'omx_memory', 'omx_code_intel', 'omx_trace'];
+const OMK_MCP_SERVERS = ['omk_state', 'omk_memory', 'omk_code_intel', 'omk_trace'];
 
-function detectOmxConfigArtifacts(config: string): {
+function detectOmkConfigArtifacts(config: string): {
   hasMcpServers: string[];
   hasAgentEntries: number;
   hasTuiSection: boolean;
   hasTopLevelKeys: boolean;
   hasFeatureFlags: boolean;
 } {
-  const hasMcpServers = OMX_MCP_SERVERS.filter((name) =>
+  const hasMcpServers = OMK_MCP_SERVERS.filter((name) =>
     new RegExp(`\\[mcp_servers\\.${name}\\]`).test(config)
   );
 
@@ -60,12 +60,12 @@ function detectOmxConfigArtifacts(config: string): {
   }
 
   const hasTuiSection = /^\[tui\]/m.test(config) &&
-    config.includes('oh-my-codex (OMX) Configuration');
+    config.includes('oh-my-kiro (OMK) Configuration');
 
   const hasTopLevelKeys =
     /^\s*notify\s*=.*node/m.test(config) ||
     /^\s*model_reasoning_effort\s*=/m.test(config) ||
-    /^\s*developer_instructions\s*=.*oh-my-codex/m.test(config);
+    /^\s*developer_instructions\s*=.*oh-my-kiro/m.test(config);
 
   const hasFeatureFlags =
     /^\s*multi_agent\s*=\s*true/m.test(config) ||
@@ -96,7 +96,7 @@ async function cleanConfig(
   }
 
   const original = await readFile(configPath, 'utf-8');
-  const detected = detectOmxConfigArtifacts(original);
+  const detected = detectOmkConfigArtifacts(original);
 
   result.mcpServersRemoved = detected.hasMcpServers;
   result.agentEntriesRemoved = detected.hasAgentEntries;
@@ -104,16 +104,16 @@ async function cleanConfig(
   result.topLevelKeysRemoved = detected.hasTopLevelKeys;
   result.featureFlagsRemoved = detected.hasFeatureFlags;
 
-  // Strip OMX tables block (MCP servers, agents, tui)
+  // Strip OMK tables block (MCP servers, agents, tui)
   let config = original;
-  const { cleaned } = stripExistingOmxBlocks(config);
+  const { cleaned } = stripExistingOmkBlocks(config);
   config = cleaned;
 
   // Strip top-level keys
-  config = stripOmxTopLevelKeys(config);
+  config = stripOmkTopLevelKeys(config);
 
   // Strip feature flags
-  config = stripOmxFeatureFlags(config);
+  config = stripOmkFeatureFlags(config);
 
   // Normalize trailing whitespace
   config = config.trimEnd() + '\n';
@@ -127,7 +127,7 @@ async function cleanConfig(
       console.log(`  ${options.dryRun ? 'Would clean' : 'Cleaned'} ${configPath}`);
     }
   } else {
-    if (options.verbose) console.log('  No OMX config entries found.');
+    if (options.verbose) console.log('  No OMK config entries found.');
   }
 
   return result;
@@ -230,13 +230,13 @@ async function removeAgentsMd(
 
   try {
     const content = await readFile(agentsMdPath, 'utf-8');
-    // Only remove if it's the OMX-generated template (check for machine-parseable marker
+    // Only remove if it's the OMK-generated template (check for machine-parseable marker
     // or the exact template title line to avoid false positives on user files)
-    const isOmxGenerated =
-      content.includes('# oh-my-codex - Intelligent Multi-Agent Orchestration') ||
-      content.includes('<!-- omx:generated:agents-md -->');
-    if (!isOmxGenerated) {
-      if (options.verbose) console.log('  AGENTS.md is not OMX-generated, skipping.');
+    const isOmkGenerated =
+      content.includes('# oh-my-kiro - Intelligent Multi-Agent Orchestration') ||
+      content.includes('<!-- omk:generated:agents-md -->');
+    if (!isOmkGenerated) {
+      if (options.verbose) console.log('  AGENTS.md is not OMK-generated, skipping.');
       return false;
     }
   } catch {
@@ -254,13 +254,13 @@ async function removeCacheDirectory(
   projectRoot: string,
   options: Pick<UninstallOptions, 'dryRun' | 'verbose'>,
 ): Promise<boolean> {
-  const omxDir = join(projectRoot, '.omx');
-  if (!existsSync(omxDir)) return false;
+  const omkDir = join(projectRoot, '.omk');
+  if (!existsSync(omkDir)) return false;
 
   if (!options.dryRun) {
-    await rm(omxDir, { recursive: true, force: true });
+    await rm(omkDir, { recursive: true, force: true });
   }
-  if (options.verbose) console.log(`  ${options.dryRun ? 'Would remove' : 'Removed'} ${omxDir}`);
+  if (options.verbose) console.log(`  ${options.dryRun ? 'Would remove' : 'Removed'} ${omkDir}`);
   return true;
 }
 
@@ -270,7 +270,7 @@ function printSummary(summary: UninstallSummary, dryRun: boolean): void {
   console.log('\nUninstall summary:');
 
   if (summary.configCleaned) {
-    console.log(`  ${prefix} OMX configuration block from config.toml`);
+    console.log(`  ${prefix} OMK configuration block from config.toml`);
     if (summary.mcpServersRemoved.length > 0) {
       console.log(`    MCP servers: ${summary.mcpServersRemoved.join(', ')}`);
     }
@@ -287,7 +287,7 @@ function printSummary(summary: UninstallSummary, dryRun: boolean): void {
       console.log('    Feature flags (multi_agent, child_agents_md)');
     }
   } else if (!summary.configCleaned && summary.mcpServersRemoved.length === 0) {
-    console.log('  config.toml: no OMX entries found (or --keep-config used)');
+    console.log('  config.toml: no OMK entries found (or --keep-config used)');
   }
 
   if (summary.promptsRemoved > 0) {
@@ -303,7 +303,7 @@ function printSummary(summary: UninstallSummary, dryRun: boolean): void {
     console.log(`  ${prefix} AGENTS.md`);
   }
   if (summary.cacheDirectoryRemoved) {
-    console.log(`  ${prefix} .omx/ cache directory`);
+    console.log(`  ${prefix} .omk/ cache directory`);
   }
 
   const totalActions =
@@ -315,7 +315,7 @@ function printSummary(summary: UninstallSummary, dryRun: boolean): void {
     (summary.cacheDirectoryRemoved ? 1 : 0);
 
   if (totalActions === 0) {
-    console.log('  Nothing to remove. oh-my-codex does not appear to be installed.');
+    console.log('  Nothing to remove. oh-my-kiro does not appear to be installed.');
   }
 }
 
@@ -334,7 +334,7 @@ export async function uninstall(options: UninstallOptions = {}): Promise<void> {
   const scope = options.scope ?? readPersistedSetupScope(projectRoot) ?? 'user';
   const scopeDirs = resolveScopeDirectories(scope, projectRoot);
 
-  console.log('oh-my-codex uninstall');
+  console.log('oh-my-kiro uninstall');
   console.log('=====================\n');
   if (dryRun) {
     console.log('[dry-run mode] No files will be modified.\n');
@@ -383,15 +383,15 @@ export async function uninstall(options: UninstallOptions = {}): Promise<void> {
   console.log(`  ${dryRun ? 'Would remove' : 'Removed'} ${summary.skillsRemoved} skill(s).`);
   console.log();
 
-  // Step 5: Remove AGENTS.md and optionally .omx/ cache directory
+  // Step 5: Remove AGENTS.md and optionally .omk/ cache directory
   console.log('[5/5] Cleaning up...');
   summary.agentsMdRemoved = await removeAgentsMd(projectRoot, { dryRun, verbose });
   if (purge) {
     summary.cacheDirectoryRemoved = await removeCacheDirectory(projectRoot, { dryRun, verbose });
   } else {
     // Always clean up setup-scope.json and hud-config.json
-    const scopeFile = join(projectRoot, '.omx', 'setup-scope.json');
-    const hudConfig = join(projectRoot, '.omx', 'hud-config.json');
+    const scopeFile = join(projectRoot, '.omk', 'setup-scope.json');
+    const hudConfig = join(projectRoot, '.omk', 'hud-config.json');
     for (const f of [scopeFile, hudConfig]) {
       if (existsSync(f)) {
         if (!dryRun) await rm(f, { force: true });
@@ -404,7 +404,7 @@ export async function uninstall(options: UninstallOptions = {}): Promise<void> {
   printSummary(summary, dryRun);
 
   if (!dryRun) {
-    console.log('\noh-my-codex has been uninstalled. Run "omx setup" to reinstall.');
+    console.log('\noh-my-kiro has been uninstalled. Run "omk setup" to reinstall.');
   } else {
     console.log('\nRun without --dry-run to apply changes.');
   }

@@ -1,5 +1,5 @@
 /**
- * omx setup - Automated installation of oh-my-codex
+ * omk setup - Automated installation of oh-my-kiro
  * Installs skills, prompts, MCP servers config, and AGENTS.md
  */
 
@@ -22,10 +22,10 @@ import {
   codexConfigPath,
   codexPromptsDir,
   userSkillsDir,
-  omxStateDir,
-  omxPlansDir,
-  omxLogsDir,
-  omxAgentsConfigDir,
+  omkStateDir,
+  omkPlansDir,
+  omkLogsDir,
+  omkAgentsConfigDir,
 } from "../utils/paths.js";
 import { buildMergedConfig, getRootModelName } from "../config/generator.js";
 import { generateAgentToml } from "../agents/native-config.js";
@@ -145,12 +145,12 @@ function getBackupContext(
   const timestamp = new Date().toISOString().replace(/[:]/g, "-");
   if (scope === "project") {
     return {
-      backupRoot: join(projectRoot, ".omx", "backups", "setup", timestamp),
+      backupRoot: join(projectRoot, ".omk", "backups", "setup", timestamp),
       baseRoot: projectRoot,
     };
   }
   return {
-    backupRoot: join(homedir(), ".omx", "backups", "setup", timestamp),
+    backupRoot: join(homedir(), ".omk", "backups", "setup", timestamp),
     baseRoot: homedir(),
   };
 }
@@ -201,7 +201,7 @@ function isSetupScope(value: string): value is SetupScope {
 }
 
 function getScopeFilePath(projectRoot: string): string {
-  return join(projectRoot, ".omx", "setup-scope.json");
+  return join(projectRoot, ".omk", "setup-scope.json");
 }
 
 export function resolveScopeDirectories(
@@ -213,7 +213,7 @@ export function resolveScopeDirectories(
     return {
       codexConfigFile: join(codexHomeDir, "config.toml"),
       codexHomeDir,
-      nativeAgentsDir: join(projectRoot, ".omx", "agents"),
+      nativeAgentsDir: join(projectRoot, ".omk", "agents"),
       promptsDir: join(codexHomeDir, "prompts"),
       skillsDir: join(projectRoot, ".agents", "skills"),
     };
@@ -221,7 +221,7 @@ export function resolveScopeDirectories(
   return {
     codexConfigFile: codexConfigPath(),
     codexHomeDir: codexHome(),
-    nativeAgentsDir: omxAgentsConfigDir(),
+    nativeAgentsDir: omkAgentsConfigDir(),
     promptsDir: codexPromptsDir(),
     skillsDir: userSkillsDir(),
   };
@@ -242,7 +242,7 @@ async function readPersistedSetupScope(
       const migrated = LEGACY_SCOPE_MIGRATION[parsed.scope];
       if (migrated) {
         console.warn(
-          `[omx] Migrating persisted setup scope "${parsed.scope}" → "${migrated}" ` +
+          `[omk] Migrating persisted setup scope "${parsed.scope}" → "${migrated}" ` +
             `(see issue #243: simplified to user/project).`,
         );
         return migrated;
@@ -352,9 +352,9 @@ export async function setup(options: SetupOptions = {}): Promise<void> {
   const resolvedScope = await resolveSetupScope(projectRoot, requestedScope);
   const scopeDirs = resolveScopeDirectories(resolvedScope.scope, projectRoot);
   const scopeSourceMessage =
-    resolvedScope.source === "persisted" ? " (from .omx/setup-scope.json)" : "";
+    resolvedScope.source === "persisted" ? " (from .omk/setup-scope.json)" : "";
 
-  console.log("oh-my-codex setup");
+  console.log("oh-my-kiro setup");
   console.log("=================\n");
   console.log(
     `Using setup scope: ${resolvedScope.scope}${scopeSourceMessage}\n`,
@@ -367,9 +367,9 @@ export async function setup(options: SetupOptions = {}): Promise<void> {
     scopeDirs.promptsDir,
     scopeDirs.skillsDir,
     scopeDirs.nativeAgentsDir,
-    omxStateDir(projectRoot),
-    omxPlansDir(projectRoot),
-    omxLogsDir(projectRoot),
+    omkStateDir(projectRoot),
+    omkPlansDir(projectRoot),
+    omkLogsDir(projectRoot),
   ];
   for (const dir of dirs) {
     if (!dryRun) {
@@ -480,10 +480,10 @@ export async function setup(options: SetupOptions = {}): Promise<void> {
   console.log("[5.5/8] Verifying Team CLI API interop...");
   const teamToolsCheck = await verifyTeamCliApiInterop(pkgRoot);
   if (teamToolsCheck.ok) {
-    console.log("  omx team api command detected (CLI-first interop ready)");
+    console.log("  omk team api command detected (CLI-first interop ready)");
   } else {
     console.log(`  WARNING: ${teamToolsCheck.message}`);
-    console.log("  Run `npm run build` and then re-run `omx setup`.");
+    console.log("  Run `npm run build` and then re-run `omk setup`.");
   }
   console.log();
 
@@ -516,7 +516,7 @@ export async function setup(options: SetupOptions = {}): Promise<void> {
       if (sessionIsActive && agentsMdExists && changed) {
         summary.agentsMd.skipped += 1;
         console.log(
-          "  WARNING: Active omx session detected (pid " +
+          "  WARNING: Active omk session detected (pid " +
             activeSession?.pid +
             ").",
         );
@@ -553,13 +553,13 @@ export async function setup(options: SetupOptions = {}): Promise<void> {
 
   // Step 8: Configure HUD
   console.log("[8/8] Configuring HUD...");
-  const hudConfigPath = join(projectRoot, ".omx", "hud-config.json");
+  const hudConfigPath = join(projectRoot, ".omk", "hud-config.json");
   if (force || !existsSync(hudConfigPath)) {
     if (!dryRun) {
       const defaultHudConfig = { preset: "focused" };
       await writeFile(hudConfigPath, JSON.stringify(defaultHudConfig, null, 2));
     }
-    if (verbose) console.log("  Wrote .omx/hud-config.json");
+    if (verbose) console.log("  Wrote .omk/hud-config.json");
     console.log("  HUD config created (preset: focused).");
   } else {
     console.log("  HUD config already exists (use --force to overwrite).");
@@ -582,7 +582,7 @@ export async function setup(options: SetupOptions = {}): Promise<void> {
     console.log();
   }
 
-  console.log('Setup complete! Run "omx doctor" to verify installation.');
+  console.log('Setup complete! Run "omk doctor" to verify installation.');
   console.log("\nNext steps:");
   console.log("  1. Start Codex CLI in your project directory");
   console.log(
@@ -592,7 +592,7 @@ export async function setup(options: SetupOptions = {}): Promise<void> {
   console.log("  4. The AGENTS.md orchestration brain is loaded automatically");
   console.log("  5. Native agent roles registered in config.toml [agents.*]");
   if (isGitHubCliConfigured()) {
-    console.log("\nSupport the project: gh repo star Yeachan-Heo/oh-my-codex");
+    console.log("\nSupport the project: gh repo star penghuo/oh-my-kiro");
   }
 }
 

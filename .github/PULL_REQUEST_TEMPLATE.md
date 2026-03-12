@@ -10,7 +10,7 @@ Describe the problem and why this change is needed.
 
 - [ ] `npm run build`
 - [ ] `npm test`
-- [ ] `omx doctor` (when setup/config behavior changes)
+- [ ] `omk doctor` (when setup/config behavior changes)
 
 ## Checklist
 

@@ -1,7 +1,7 @@
 /**
- * OMX HUD - State file readers
+ * OMK HUD - State file readers
  *
- * Reads .omx/state/ files to build HUD render context.
+ * Reads .omk/state/ files to build HUD render context.
  */
 
 import { readFile } from 'fs/promises';
@@ -9,7 +9,7 @@ import { readFileSync } from 'fs';
 import { execSync } from 'child_process';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { omxStateDir } from '../utils/paths.js';
+import { omkStateDir } from '../utils/paths.js';
 import { getReadScopedStatePaths } from '../mcp/state-paths.js';
 import type {
   RalphStateForHud,
@@ -63,20 +63,20 @@ export async function readTeamState(cwd: string): Promise<TeamStateForHud | null
 }
 
 export async function readMetrics(cwd: string): Promise<HudMetrics | null> {
-  return readJsonFile<HudMetrics>(join(cwd, '.omx', 'metrics.json'));
+  return readJsonFile<HudMetrics>(join(cwd, '.omk', 'metrics.json'));
 }
 
 export async function readHudNotifyState(cwd: string): Promise<HudNotifyState | null> {
-  return readJsonFile<HudNotifyState>(join(omxStateDir(cwd), 'hud-state.json'));
+  return readJsonFile<HudNotifyState>(join(omkStateDir(cwd), 'hud-state.json'));
 }
 
 export async function readSessionState(cwd: string): Promise<SessionStateForHud | null> {
-  const state = await readJsonFile<SessionStateForHud>(join(omxStateDir(cwd), 'session.json'));
+  const state = await readJsonFile<SessionStateForHud>(join(omkStateDir(cwd), 'session.json'));
   return state?.session_id ? state : null;
 }
 
 export async function readHudConfig(cwd: string): Promise<HudConfig> {
-  const config = await readJsonFile<HudConfig>(join(cwd, '.omx', 'hud-config.json'));
+  const config = await readJsonFile<HudConfig>(join(cwd, '.omk', 'hud-config.json'));
   return config ?? DEFAULT_HUD_CONFIG;
 }
 

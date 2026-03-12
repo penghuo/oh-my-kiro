@@ -1,19 +1,19 @@
 {
-  "name": "oh-my-codex",
+  "name": "oh-my-kiro",
   "version": "0.8.15",
   "description": "Multi-agent orchestration layer for OpenAI Codex CLI",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "omx": "bin/omx.js"
+    "omk": "bin/omk.js"
   },
   "scripts": {
     "build": "tsc",
     "check:no-unused": "tsc -p tsconfig.no-unused.json",
     "dev": "tsc --watch",
     "lint": "biome lint .",
-    "setup": "node bin/omx.js setup",
-    "doctor": "node bin/omx.js doctor",
+    "setup": "node bin/omk.js setup",
+    "doctor": "node bin/omk.js doctor",
     "ask:claude": "./scripts/ask-claude.sh",
     "ask:gemini": "./scripts/ask-gemini.sh",
     "test:node": "node --test $(find dist -name '*.test.js')",
@@ -43,11 +43,11 @@
   "author": "Yeachan Heo",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Yeachan-Heo/oh-my-codex.git"
+    "url": "git+https://github.com/penghuo/oh-my-kiro.git"
   },
-  "homepage": "https://yeachan-heo.github.io/oh-my-codex",
+  "homepage": "https://penghuo.github.io/oh-my-kiro",
   "bugs": {
-    "url": "https://github.com/Yeachan-Heo/oh-my-codex/issues"
+    "url": "https://github.com/penghuo/oh-my-kiro/issues"
   },
   "license": "MIT",
   "dependencies": {

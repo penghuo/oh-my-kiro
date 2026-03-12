@@ -1,5 +1,5 @@
 /**
- * Base mode lifecycle management for oh-my-codex
+ * Base mode lifecycle management for oh-my-kiro
  * All execution modes (autopilot, ralph, ultrawork, team, ultraqa, ralplan) share this base.
  */
 
@@ -64,7 +64,7 @@ function normalizeRalphModeStateOrThrow(state: ModeState): ModeState {
 }
 
 function stateDir(projectRoot?: string): string {
-  return join(projectRoot || process.cwd(), '.omx', 'state');
+  return join(projectRoot || process.cwd(), '.omk', 'state');
 }
 
 function statePath(mode: string, projectRoot?: string): string {

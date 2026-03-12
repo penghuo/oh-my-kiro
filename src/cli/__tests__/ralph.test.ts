@@ -36,7 +36,7 @@ describe('filterRalphCodexArgs', () => {
   it('consumes --PRD case-insensitively', () => {
     assert.deepEqual(filterRalphCodexArgs(['--PRD', '--model', 'gpt-5']), ['--model', 'gpt-5']);
   });
-  it('preserves non-omx flags', () => {
+  it('preserves non-omk flags', () => {
     assert.deepEqual(filterRalphCodexArgs(['--model', 'gpt-5', '--yolo', 'fix', 'it']), ['--model', 'gpt-5', '--yolo', 'fix', 'it']);
   });
 });

@@ -1,7 +1,7 @@
 /**
  * Notification System - Public API
  *
- * Multi-platform lifecycle notifications for oh-my-codex.
+ * Multi-platform lifecycle notifications for oh-my-kiro.
  * Sends notifications to Discord, Telegram, Slack, and generic webhooks
  * on session lifecycle events.
  *
@@ -163,7 +163,7 @@ export async function shouldDispatchOpenClaw(
   tempContract: NotifyTempContract | null,
   env: NodeJS.ProcessEnv = process.env,
 ) : Promise<boolean> {
-  if (env.OMX_OPENCLAW !== "1") return false;
+  if (env.OMK_OPENCLAW !== "1") return false;
   if (!tempContract?.active) return true;
   if (!isOpenClawSelectedInTempContract(tempContract)) return false;
 

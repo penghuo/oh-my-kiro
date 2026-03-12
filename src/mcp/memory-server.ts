@@ -1,7 +1,7 @@
 /**
- * OMX Project Memory & Notepad MCP Server
+ * OMK Project Memory & Notepad MCP Server
  * Provides persistent project memory and session notepad tools
- * Storage: .omx/project-memory.json, .omx/notepad.md
+ * Storage: .omk/project-memory.json, .omk/notepad.md
  */
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -17,11 +17,11 @@ import { autoStartStdioMcpServer } from './bootstrap.js';
 import { resolveWorkingDirectoryForState } from './state-paths.js';
 
 function getMemoryPath(wd: string): string {
-  return join(wd, '.omx', 'project-memory.json');
+  return join(wd, '.omk', 'project-memory.json');
 }
 
 function getNotepadPath(wd: string): string {
-  return join(wd, '.omx', 'notepad.md');
+  return join(wd, '.omk', 'notepad.md');
 }
 
 interface ProjectMemory {
@@ -34,7 +34,7 @@ interface ProjectMemory {
 }
 
 const server = new Server(
-  { name: 'omx-memory', version: '0.1.0' },
+  { name: 'omk-memory', version: '0.1.0' },
   { capabilities: { tools: {} } }
 );
 
@@ -199,7 +199,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     case 'project_memory_write': {
       const memPath = getMemoryPath(wd);
-      await mkdir(join(wd, '.omx'), { recursive: true });
+      await mkdir(join(wd, '.omk'), { recursive: true });
       const merge = a.merge as boolean;
       const newMem = a.memory as Record<string, unknown>;
       if (merge && existsSync(memPath)) {
@@ -219,7 +219,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     case 'project_memory_add_note': {
       const memPath = getMemoryPath(wd);
-      await mkdir(join(wd, '.omx'), { recursive: true });
+      await mkdir(join(wd, '.omk'), { recursive: true });
       let data: ProjectMemory = {};
       if (existsSync(memPath)) {
         try {
@@ -240,7 +240,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     case 'project_memory_add_directive': {
       const memPath = getMemoryPath(wd);
-      await mkdir(join(wd, '.omx'), { recursive: true });
+      await mkdir(join(wd, '.omk'), { recursive: true });
       let data: ProjectMemory = {};
       if (existsSync(memPath)) {
         try {
@@ -277,7 +277,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     case 'notepad_write_priority': {
       const notePath = getNotepadPath(wd);
-      await mkdir(join(wd, '.omx'), { recursive: true });
+      await mkdir(join(wd, '.omk'), { recursive: true });
       const content = a.content as string;
       let existing: string;
       try {
@@ -298,7 +298,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     case 'notepad_write_working': {
       const notePath = getNotepadPath(wd);
-      await mkdir(join(wd, '.omx'), { recursive: true });
+      await mkdir(join(wd, '.omk'), { recursive: true });
       const entry = `\n[${new Date().toISOString()}] ${a.content as string}`;
       let existing: string;
       try {
@@ -319,7 +319,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     case 'notepad_write_manual': {
       const notePath = getNotepadPath(wd);
-      await mkdir(join(wd, '.omx'), { recursive: true });
+      await mkdir(join(wd, '.omk'), { recursive: true });
       const entry = `\n${a.content as string}`;
       let existing: string;
       try {

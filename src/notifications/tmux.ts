@@ -11,7 +11,7 @@ const DEFAULT_CAPTURE_LINES = 12;
 const MAX_CAPTURE_LINES = 2000;
 
 function shouldUsePidFallback(): boolean {
-  return process.env.OMX_TMUX_PID_FALLBACK === "1";
+  return process.env.OMK_TMUX_PID_FALLBACK === "1";
 }
 
 /**
@@ -109,13 +109,13 @@ function detectTmuxSessionByPid(): string | null {
 }
 
 /**
- * List active omx-team tmux sessions for a given team.
+ * List active omk-team tmux sessions for a given team.
  */
 export function getTeamTmuxSessions(teamName: string): string[] {
   const sanitized = teamName.replace(/[^a-zA-Z0-9-]/g, "");
   if (!sanitized) return [];
 
-  const prefix = `omx-team-${sanitized}`;
+  const prefix = `omk-team-${sanitized}`;
   try {
     const output = execSync("tmux list-sessions -F '#{session_name}'", {
       encoding: "utf-8",

@@ -7,7 +7,7 @@ import { initTeamState, appendTeamEvent } from '../state.js';
 import { readTeamEvents, waitForTeamEvent } from '../state/events.js';
 
 async function setupTeam(name: string): Promise<{ cwd: string; cleanup: () => Promise<void> }> {
-  const cwd = await mkdtemp(join(tmpdir(), `omx-team-events-${name}-`));
+  const cwd = await mkdtemp(join(tmpdir(), `omk-team-events-${name}-`));
   await initTeamState(name, 'event test', 'executor', 2, cwd);
   return { cwd, cleanup: () => rm(cwd, { recursive: true, force: true }) };
 }

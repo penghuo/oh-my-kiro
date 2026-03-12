@@ -1,12 +1,12 @@
 /**
- * OMX HUD - CLI entry point
+ * OMK HUD - CLI entry point
  *
  * Usage:
- *   omx hud              Show current HUD state
- *   omx hud --watch      Poll every 1s with terminal clear
- *   omx hud --json       Output raw state as JSON
- *   omx hud --preset=X   Use preset: minimal, focused, full
- *   omx hud --tmux       Open HUD in a tmux split pane (auto-detects orientation)
+ *   omk hud              Show current HUD state
+ *   omk hud --watch      Poll every 1s with terminal clear
+ *   omk hud --json       Output raw state as JSON
+ *   omk hud --preset=X   Use preset: minimal, focused, full
+ *   omk hud --tmux       Open HUD in a tmux split pane (auto-detects orientation)
  */
 
 import { execFileSync } from 'child_process';
@@ -244,7 +244,7 @@ export async function hudCommand(args: string[]): Promise<void> {
       intervalMs: 1000,
       signal: abortController.signal,
       onError: (error) => {
-        console.warn('[omx] warning: hud watch render failed', error);
+        console.warn('[omk] warning: hud watch render failed', error);
       },
     });
   } finally {
@@ -262,34 +262,34 @@ export function shellEscape(s: string): string {
  * Build the argument array for `execFileSync('tmux', args)`.
  *
  * By returning an argv array instead of a shell command string, `cwd` is
- * passed as a literal argument to tmux (no shell expansion).  `omxBin` is
+ * passed as a literal argument to tmux (no shell expansion).  `omkBin` is
  * shell-escaped inside the command string that tmux will execute in a shell.
  */
 export function buildTmuxSplitArgs(
   cwd: string,
-  omxBin: string,
+  omkBin: string,
   preset?: string,
 ): string[] {
   // Defense-in-depth: keep preset constrained even if this helper is reused.
   const safePreset = parseHudPreset(preset);
   const presetArg = safePreset ? ` --preset=${safePreset}` : '';
-  const cmd = `node ${shellEscape(omxBin)} hud --watch${presetArg}`;
+  const cmd = `node ${shellEscape(omkBin)} hud --watch${presetArg}`;
   return ['split-window', '-v', '-l', String(HUD_TMUX_HEIGHT_LINES), '-c', cwd, cmd];
 }
 
 async function launchTmuxPane(cwd: string, flags: HudFlags): Promise<void> {
   // Check if we're inside tmux
   if (!process.env.TMUX) {
-    console.error('Not inside a tmux session. Start tmux first, then run: omx hud --tmux');
+    console.error('Not inside a tmux session. Start tmux first, then run: omk hud --tmux');
     process.exit(1);
   }
 
-  const omxBin = process.argv[1]; // path to bin/omx.js
-  const args = buildTmuxSplitArgs(cwd, omxBin, flags.preset);
+  const omkBin = process.argv[1]; // path to bin/omk.js
+  const args = buildTmuxSplitArgs(cwd, omkBin, flags.preset);
 
   try {
-    // Split bottom pane, 4 lines tall, running omx hud --watch.
-    // execFileSync bypasses the shell – cwd and omxBin cannot inject commands.
+    // Split bottom pane, 4 lines tall, running omk hud --watch.
+    // execFileSync bypasses the shell – cwd and omkBin cannot inject commands.
     execFileSync('tmux', args, { stdio: 'inherit' });
     console.log('HUD launched in tmux pane below. Close with: Ctrl+C in that pane, or `tmux kill-pane -t bottom`');
   } catch {

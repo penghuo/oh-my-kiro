@@ -1,6 +1,6 @@
 /**
- * Launch-time update checks for oh-my-codex.
- * Non-fatal and throttled; can be disabled via OMX_AUTO_UPDATE=0.
+ * Launch-time update checks for oh-my-kiro.
+ * Non-fatal and throttled; can be disabled via OMK_AUTO_UPDATE=0.
  */
 
 import { readFile, writeFile, mkdir } from 'fs/promises';
@@ -20,7 +20,7 @@ interface LatestPackageInfo {
   version?: string;
 }
 
-const PACKAGE_NAME = 'oh-my-codex';
+const PACKAGE_NAME = 'oh-my-kiro';
 const CHECK_INTERVAL_MS = 12 * 60 * 60 * 1000; // 12h
 
 function parseSemver(version: string): [number, number, number] | null {
@@ -50,7 +50,7 @@ export function shouldCheckForUpdates(
 }
 
 function updateStatePath(cwd: string): string {
-  return join(cwd, '.omx', 'state', 'update-check.json');
+  return join(cwd, '.omk', 'state', 'update-check.json');
 }
 
 async function readUpdateState(cwd: string): Promise<UpdateState | null> {
@@ -65,7 +65,7 @@ async function readUpdateState(cwd: string): Promise<UpdateState | null> {
 }
 
 async function writeUpdateState(cwd: string, state: UpdateState): Promise<void> {
-  const stateDir = join(cwd, '.omx', 'state');
+  const stateDir = join(cwd, '.omk', 'state');
   await mkdir(stateDir, { recursive: true });
   await writeFile(updateStatePath(cwd), JSON.stringify(state, null, 2));
 }
@@ -145,7 +145,7 @@ export async function maybeCheckAndPromptUpdate(
   dependencies: Partial<UpdateDependencies> = {},
 ): Promise<void> {
   const updateDependencies = { ...defaultUpdateDependencies, ...dependencies };
-  if (process.env.OMX_AUTO_UPDATE === '0') return;
+  if (process.env.OMK_AUTO_UPDATE === '0') return;
   if (!process.stdin.isTTY || !process.stdout.isTTY) return;
 
   const now = Date.now();
@@ -165,17 +165,17 @@ export async function maybeCheckAndPromptUpdate(
   if (!current || !latest || !isNewerVersion(current, latest)) return;
 
   const approved = await updateDependencies.askYesNo(
-    `[omx] Update available: v${current} → v${latest}. Update now? [Y/n] `,
+    `[omk] Update available: v${current} → v${latest}. Update now? [Y/n] `,
   );
   if (!approved) return;
 
-  console.log(`[omx] Running: npm install -g ${PACKAGE_NAME}@latest`);
+  console.log(`[omk] Running: npm install -g ${PACKAGE_NAME}@latest`);
   const result = updateDependencies.runGlobalUpdate();
 
   if (result.ok) {
     await updateDependencies.setup({ force: true });
-    console.log(`[omx] Updated to v${latest}. Restart to use new code.`);
+    console.log(`[omk] Updated to v${latest}. Restart to use new code.`);
   } else {
-    console.log('[omx] Update failed. Run manually: npm install -g oh-my-codex@latest');
+    console.log('[omk] Update failed. Run manually: npm install -g oh-my-kiro@latest');
   }
 }

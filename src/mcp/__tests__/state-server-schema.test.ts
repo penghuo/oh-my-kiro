@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 
 describe("state-server schema validation", () => {
 	it("exposes only state_* tool schemas after team MCP hard-deprecation", async () => {
-		process.env.OMX_STATE_SERVER_DISABLE_AUTO_START = "1";
+		process.env.OMK_STATE_SERVER_DISABLE_AUTO_START = "1";
 		const { buildStateServerTools } = await import("../state-server.js");
 
 		const tools = buildStateServerTools();

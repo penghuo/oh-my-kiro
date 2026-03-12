@@ -56,14 +56,14 @@ const maxLifetimeMs = runOnce
   : Math.max(
     pollMs,
     asNumber(
-      argValue('--max-lifetime-ms', process.env.OMX_NOTIFY_FALLBACK_MAX_LIFETIME_MS || String(defaultMaxLifetimeMs)),
+      argValue('--max-lifetime-ms', process.env.OMK_NOTIFY_FALLBACK_MAX_LIFETIME_MS || String(defaultMaxLifetimeMs)),
       defaultMaxLifetimeMs
     )
   );
 
-const omxDir = join(cwd, '.omx');
-const logsDir = join(omxDir, 'logs');
-const stateDir = join(omxDir, 'state');
+const omkDir = join(cwd, '.omk');
+const logsDir = join(omkDir, 'logs');
+const stateDir = join(omkDir, 'state');
 const statePath = join(stateDir, 'notify-fallback-state.json');
 const pidFilePath = resolve(argValue('--pid-file', join(stateDir, 'notify-fallback.pid')));
 const logPath = join(logsDir, `notify-fallback-${new Date().toISOString().split('T')[0]}.jsonl`);
@@ -78,7 +78,7 @@ let shutdownPromise = null;
 const dispatchTickMax = Math.max(1, asNumber(argValue('--dispatch-max-per-tick', '5'), 5));
 let dispatchDrainRuns = 0;
 let lastDispatchDrain = {
-  leader_only: safeString(process.env.OMX_TEAM_WORKER || '').trim() === '',
+  leader_only: safeString(process.env.OMK_TEAM_WORKER || '').trim() === '',
   last_tick_at: null,
   last_result: null,
   last_error: null,
@@ -86,7 +86,7 @@ let lastDispatchDrain = {
 let leaderNudgeRuns = 0;
 let lastLeaderNudge = {
   enabled: true,
-  leader_only: safeString(process.env.OMX_TEAM_WORKER || '').trim() === '',
+  leader_only: safeString(process.env.OMK_TEAM_WORKER || '').trim() === '',
   stale_threshold_ms: null,
   precomputed_leader_stale: null,
   last_tick_at: null,
@@ -565,7 +565,7 @@ async function pollFiles() {
 
 async function runLeaderNudgeTick() {
   const startedIso = new Date().toISOString();
-  const leaderOnly = safeString(process.env.OMX_TEAM_WORKER || '').trim() === '';
+  const leaderOnly = safeString(process.env.OMK_TEAM_WORKER || '').trim() === '';
   const staleThresholdMs = resolveLeaderStalenessThresholdMs();
 
   if (!leaderOnly) {
@@ -635,7 +635,7 @@ async function runDispatchDrainTick() {
     const result = await drainPendingTeamDispatch({ cwd, stateDir, logsDir, maxPerTick: dispatchTickMax });
     dispatchDrainRuns += 1;
     lastDispatchDrain = {
-      leader_only: safeString(process.env.OMX_TEAM_WORKER || '').trim() === '',
+      leader_only: safeString(process.env.OMK_TEAM_WORKER || '').trim() === '',
       last_tick_at: startedIso,
       last_result: result,
       last_error: null,
@@ -650,7 +650,7 @@ async function runDispatchDrainTick() {
   } catch (err) {
     dispatchDrainRuns += 1;
     lastDispatchDrain = {
-      leader_only: safeString(process.env.OMX_TEAM_WORKER || '').trim() === '',
+      leader_only: safeString(process.env.OMK_TEAM_WORKER || '').trim() === '',
       last_tick_at: startedIso,
       last_result: null,
       last_error: err instanceof Error ? err.message : safeString(err),

@@ -6,15 +6,15 @@ import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-function runOmx(
+function runOmk(
   cwd: string,
   argv: string[],
   envOverrides: Record<string, string> = {},
 ): { status: number | null; stdout: string; stderr: string; error?: string } {
   const testDir = dirname(fileURLToPath(import.meta.url));
   const repoRoot = join(testDir, '..', '..', '..');
-  const omxBin = join(repoRoot, 'bin', 'omx.js');
-  const r = spawnSync(process.execPath, [omxBin, ...argv], {
+  const omkBin = join(repoRoot, 'bin', 'omk.js');
+  const r = spawnSync(process.execPath, [omkBin, ...argv], {
     cwd,
     encoding: 'utf-8',
     env: { ...process.env, ...envOverrides },
@@ -26,9 +26,9 @@ function shouldSkipForSpawnPermissions(err?: string): boolean {
   return typeof err === 'string' && /(EPERM|EACCES)/i.test(err);
 }
 
-describe('omx doctor onboarding warning copy', () => {
+describe('omk doctor onboarding warning copy', () => {
   it('explains first-setup expectation for config and MCP onboarding warnings', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-doctor-copy-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-doctor-copy-'));
     try {
       const home = join(wd, 'home');
       const codexDir = join(home, '.codex');
@@ -36,12 +36,12 @@ describe('omx doctor onboarding warning copy', () => {
       await writeFile(
         join(codexDir, 'config.toml'),
         `
-[mcp_servers.non_omx]
+[mcp_servers.non_omk]
 command = "node"
 `.trimStart(),
       );
 
-      const res = runOmx(wd, ['doctor'], {
+      const res = runOmk(wd, ['doctor'], {
         HOME: home,
         CODEX_HOME: join(home, '.codex'),
       });
@@ -49,11 +49,11 @@ command = "node"
       assert.equal(res.status, 0, res.stderr || res.stdout);
       assert.match(
         res.stdout,
-        /Config: config\.toml exists but no OMX entries yet \(expected before first setup; run "omx setup --force" once\)/,
+        /Config: config\.toml exists but no OMK entries yet \(expected before first setup; run "omk setup --force" once\)/,
       );
       assert.match(
         res.stdout,
-        /MCP Servers: 1 servers but no OMX servers yet \(expected before first setup; run "omx setup --force" once\)/,
+        /MCP Servers: 1 servers but no OMK servers yet \(expected before first setup; run "omk setup --force" once\)/,
       );
     } finally {
       await rm(wd, { recursive: true, force: true });

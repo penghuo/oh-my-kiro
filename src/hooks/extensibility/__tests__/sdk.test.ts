@@ -20,7 +20,7 @@ function makeEvent(event = 'session-start'): HookEventEnvelope {
 describe('createHookPluginSdk', () => {
   describe('state', () => {
     it('reads undefined for missing key', async () => {
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-sdk-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-sdk-'));
       try {
         const sdk = createHookPluginSdk({ cwd, pluginName: 'test', event: makeEvent() });
         const val = await sdk.state.read('nonexistent');
@@ -31,7 +31,7 @@ describe('createHookPluginSdk', () => {
     });
 
     it('returns fallback for missing key', async () => {
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-sdk-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-sdk-'));
       try {
         const sdk = createHookPluginSdk({ cwd, pluginName: 'test', event: makeEvent() });
         const val = await sdk.state.read('missing', 42);
@@ -42,7 +42,7 @@ describe('createHookPluginSdk', () => {
     });
 
     it('writes and reads state', async () => {
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-sdk-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-sdk-'));
       try {
         const sdk = createHookPluginSdk({ cwd, pluginName: 'test', event: makeEvent() });
         await sdk.state.write('counter', 5);
@@ -54,7 +54,7 @@ describe('createHookPluginSdk', () => {
     });
 
     it('deletes state key', async () => {
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-sdk-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-sdk-'));
       try {
         const sdk = createHookPluginSdk({ cwd, pluginName: 'test', event: makeEvent() });
         await sdk.state.write('key', 'value');
@@ -67,7 +67,7 @@ describe('createHookPluginSdk', () => {
     });
 
     it('delete is a no-op for nonexistent key', async () => {
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-sdk-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-sdk-'));
       try {
         const sdk = createHookPluginSdk({ cwd, pluginName: 'test', event: makeEvent() });
         await sdk.state.write('keep', 'yes');
@@ -80,7 +80,7 @@ describe('createHookPluginSdk', () => {
     });
 
     it('reads all state', async () => {
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-sdk-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-sdk-'));
       try {
         const sdk = createHookPluginSdk({ cwd, pluginName: 'test', event: makeEvent() });
         await sdk.state.write('a', 1);
@@ -93,7 +93,7 @@ describe('createHookPluginSdk', () => {
     });
 
     it('returns empty object for all() with no state', async () => {
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-sdk-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-sdk-'));
       try {
         const sdk = createHookPluginSdk({ cwd, pluginName: 'test', event: makeEvent() });
         const all = await sdk.state.all();
@@ -104,7 +104,7 @@ describe('createHookPluginSdk', () => {
     });
 
     it('rejects empty state key', async () => {
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-sdk-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-sdk-'));
       try {
         const sdk = createHookPluginSdk({ cwd, pluginName: 'test', event: makeEvent() });
         await assert.rejects(() => sdk.state.read(''), /state key is required/);
@@ -114,7 +114,7 @@ describe('createHookPluginSdk', () => {
     });
 
     it('rejects state key with path traversal', async () => {
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-sdk-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-sdk-'));
       try {
         const sdk = createHookPluginSdk({ cwd, pluginName: 'test', event: makeEvent() });
         await assert.rejects(() => sdk.state.read('../escape'), /invalid state key/);
@@ -124,7 +124,7 @@ describe('createHookPluginSdk', () => {
     });
 
     it('rejects state key starting with /', async () => {
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-sdk-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-sdk-'));
       try {
         const sdk = createHookPluginSdk({ cwd, pluginName: 'test', event: makeEvent() });
         await assert.rejects(() => sdk.state.write('/absolute', 1), /invalid state key/);
@@ -136,7 +136,7 @@ describe('createHookPluginSdk', () => {
 
   describe('log', () => {
     it('exposes info, warn, error methods', async () => {
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-sdk-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-sdk-'));
       try {
         const sdk = createHookPluginSdk({ cwd, pluginName: 'test', event: makeEvent() });
         // These should not throw
@@ -151,7 +151,7 @@ describe('createHookPluginSdk', () => {
 
   describe('tmux.sendKeys', () => {
     it('returns side_effects_disabled when sideEffectsEnabled is false', async () => {
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-sdk-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-sdk-'));
       try {
         const sdk = createHookPluginSdk({
           cwd,
@@ -168,7 +168,7 @@ describe('createHookPluginSdk', () => {
     });
 
     it('returns invalid_text for empty text', async () => {
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-sdk-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-sdk-'));
       try {
         const sdk = createHookPluginSdk({
           cwd,
@@ -185,10 +185,10 @@ describe('createHookPluginSdk', () => {
     });
 
     it('returns loop_guard_input_marker when text contains loop marker', async () => {
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-sdk-'));
-      const originalMarker = process.env.OMX_HOOK_PLUGIN_LOOP_MARKER;
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-sdk-'));
+      const originalMarker = process.env.OMK_HOOK_PLUGIN_LOOP_MARKER;
       try {
-        process.env.OMX_HOOK_PLUGIN_LOOP_MARKER = '[TESTMARK]';
+        process.env.OMK_HOOK_PLUGIN_LOOP_MARKER = '[TESTMARK]';
         const sdk = createHookPluginSdk({
           cwd,
           pluginName: 'test',
@@ -200,16 +200,16 @@ describe('createHookPluginSdk', () => {
         assert.equal(result.reason, 'loop_guard_input_marker');
       } finally {
         if (originalMarker === undefined) {
-          delete process.env.OMX_HOOK_PLUGIN_LOOP_MARKER;
+          delete process.env.OMK_HOOK_PLUGIN_LOOP_MARKER;
         } else {
-          process.env.OMX_HOOK_PLUGIN_LOOP_MARKER = originalMarker;
+          process.env.OMK_HOOK_PLUGIN_LOOP_MARKER = originalMarker;
         }
         await rm(cwd, { recursive: true, force: true });
       }
     });
 
     it('returns target_missing when no pane is resolvable', async () => {
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-sdk-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-sdk-'));
       const originalPane = process.env.TMUX_PANE;
       try {
         delete process.env.TMUX_PANE;
@@ -233,7 +233,7 @@ describe('createHookPluginSdk', () => {
 
   describe('plugin name sanitization', () => {
     it('sanitizes special characters in plugin name', async () => {
-      const cwd = await mkdtemp(join(tmpdir(), 'omx-sdk-'));
+      const cwd = await mkdtemp(join(tmpdir(), 'omk-sdk-'));
       try {
         const sdk = createHookPluginSdk({
           cwd,
@@ -252,9 +252,9 @@ describe('createHookPluginSdk', () => {
 
 describe('clearHookPluginState', () => {
   it('removes data.json and tmux.json for plugin', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-clear-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-clear-'));
     try {
-      const pluginDir = join(cwd, '.omx', 'state', 'hooks', 'plugins', 'my-plugin');
+      const pluginDir = join(cwd, '.omk', 'state', 'hooks', 'plugins', 'my-plugin');
       await mkdir(pluginDir, { recursive: true });
       await writeFile(join(pluginDir, 'data.json'), '{}');
       await writeFile(join(pluginDir, 'tmux.json'), '{}');
@@ -269,7 +269,7 @@ describe('clearHookPluginState', () => {
   });
 
   it('does not throw when files do not exist', async () => {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-clear-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-clear-'));
     try {
       await clearHookPluginState(cwd, 'nonexistent');
     } finally {

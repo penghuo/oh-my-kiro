@@ -6,15 +6,15 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-function runOmx(
+function runOmk(
   cwd: string,
   argv: string[],
   envOverrides: Record<string, string> = {},
 ): { status: number | null; stdout: string; stderr: string; error: string } {
   const testDir = dirname(fileURLToPath(import.meta.url));
   const repoRoot = join(testDir, '..', '..', '..');
-  const omxBin = join(repoRoot, 'bin', 'omx.js');
-  const result = spawnSync(process.execPath, [omxBin, ...argv], {
+  const omkBin = join(repoRoot, 'bin', 'omk.js');
+  const result = spawnSync(process.execPath, [omkBin, ...argv], {
     cwd,
     encoding: 'utf-8',
     env: {
@@ -30,9 +30,9 @@ function runOmx(
   };
 }
 
-describe('omx resume', () => {
+describe('omk resume', () => {
   it('forwards --last to codex resume through the normal launch wrapper', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-resume-cli-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-resume-cli-'));
     try {
       const home = join(wd, 'home');
       const fakeBin = join(wd, 'bin');
@@ -43,12 +43,12 @@ describe('omx resume', () => {
       await writeFile(fakeCodexPath, '#!/bin/sh\nprintf \'fake-codex:%s\\n\' \"$*\"\n');
       await chmod(fakeCodexPath, 0o755);
 
-      const result = runOmx(wd, ['resume', '--last'], {
+      const result = runOmk(wd, ['resume', '--last'], {
         HOME: home,
         PATH: `${fakeBin}:/usr/bin:/bin`,
-        OMX_AUTO_UPDATE: '0',
-        OMX_NOTIFY_FALLBACK: '0',
-        OMX_HOOK_DERIVED_SIGNALS: '0',
+        OMK_AUTO_UPDATE: '0',
+        OMK_NOTIFY_FALLBACK: '0',
+        OMK_HOOK_DERIVED_SIGNALS: '0',
       });
 
       assert.equal(result.status, 0, result.error || result.stderr || result.stdout);
@@ -58,8 +58,8 @@ describe('omx resume', () => {
     }
   });
 
-  it('passes resume --help through to codex instead of printing top-level omx help', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omx-resume-cli-'));
+  it('passes resume --help through to codex instead of printing top-level omk help', async () => {
+    const wd = await mkdtemp(join(tmpdir(), 'omk-resume-cli-'));
     try {
       const home = join(wd, 'home');
       const fakeBin = join(wd, 'bin');
@@ -70,12 +70,12 @@ describe('omx resume', () => {
       await writeFile(fakeCodexPath, '#!/bin/sh\nprintf \'fake-codex:%s\\n\' \"$*\"\n');
       await chmod(fakeCodexPath, 0o755);
 
-      const result = runOmx(wd, ['resume', '--help'], {
+      const result = runOmk(wd, ['resume', '--help'], {
         HOME: home,
         PATH: `${fakeBin}:/usr/bin:/bin`,
-        OMX_AUTO_UPDATE: '0',
-        OMX_NOTIFY_FALLBACK: '0',
-        OMX_HOOK_DERIVED_SIGNALS: '0',
+        OMK_AUTO_UPDATE: '0',
+        OMK_NOTIFY_FALLBACK: '0',
+        OMK_HOOK_DERIVED_SIGNALS: '0',
       });
 
       assert.equal(result.status, 0, result.error || result.stderr || result.stdout);

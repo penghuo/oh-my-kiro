@@ -1,16 +1,16 @@
-# oh-my-codex (OMX)
+# oh-my-kiro (OMK)
 
 <p align="center">
-  <img src="https://yeachan-heo.github.io/oh-my-codex-website/omx-character-nobg.png" alt="oh-my-codex character" width="280">
+  <img src="https://penghuo.github.io/oh-my-kiro-website/omk-character-nobg.png" alt="oh-my-kiro character" width="280">
   <br>
   <em>Tu codex no está solo.</em>
 </p>
 
-[![npm version](https://img.shields.io/npm/v/oh-my-codex)](https://www.npmjs.com/package/oh-my-codex)
+[![npm version](https://img.shields.io/npm/v/oh-my-kiro)](https://www.npmjs.com/package/oh-my-kiro)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org)
 
-> **[Website](https://yeachan-heo.github.io/oh-my-codex-website/)** | **[Documentation](https://yeachan-heo.github.io/oh-my-codex-website/docs.html)** | **[CLI Reference](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#cli-reference)** | **[Workflows](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#workflows)** | **[Guía de integración de OpenClaw](./docs/openclaw-integration.es.md)** | **[GitHub](https://github.com/Yeachan-Heo/oh-my-codex)** | **[npm](https://www.npmjs.com/package/oh-my-codex)**
+> **[Website](https://penghuo.github.io/oh-my-kiro-website/)** | **[Documentation](https://penghuo.github.io/oh-my-kiro-website/docs.html)** | **[CLI Reference](https://penghuo.github.io/oh-my-kiro-website/docs.html#cli-reference)** | **[Workflows](https://penghuo.github.io/oh-my-kiro-website/docs.html#workflows)** | **[Guía de integración de OpenClaw](./docs/openclaw-integration.es.md)** | **[GitHub](https://github.com/penghuo/oh-my-kiro)** | **[npm](https://www.npmjs.com/package/oh-my-kiro)**
 
 Capa de orquestación multiagente para [OpenAI Codex CLI](https://github.com/openai/codex).
 
@@ -35,21 +35,21 @@ Capa de orquestación multiagente para [OpenAI Codex CLI](https://github.com/ope
 - [Italiano (Italian)](./README.it.md)
 
 
-OMX convierte Codex de un agente de sesión única en un sistema coordinado con:
+OMK convierte Codex de un agente de sesión única en un sistema coordinado con:
 - Role prompts (`/prompts:name`) para agentes especializados
 - Workflow skills (`$name`) para modos de ejecución repetibles
-- Orquestación de equipos en tmux (`omx team`, `$team`)
+- Orquestación de equipos en tmux (`omk team`, `$team`)
 - Estado persistente y memoria a través de servidores MCP
 
-## Por qué OMX
+## Por qué OMK
 
-Codex CLI es potente para tareas directas. OMX añade estructura para trabajo más amplio:
+Codex CLI es potente para tareas directas. OMK añade estructura para trabajo más amplio:
 - Descomposición y ejecución por etapas (`team-plan -> team-prd -> team-exec -> team-verify -> team-fix`)
-- Estado persistente del ciclo de vida de modos (`.omx/state/`)
+- Estado persistente del ciclo de vida de modos (`.omk/state/`)
 - Superficies de memoria y bloc de notas para sesiones prolongadas
 - Controles operacionales para inicio, verificación y cancelación
 
-OMX es un complemento, no un fork. Utiliza los puntos de extensión nativos de Codex.
+OMK es un complemento, no un fork. Utiliza los puntos de extensión nativos de Codex.
 
 ## Requisitos
 
@@ -61,20 +61,20 @@ OMX es un complemento, no un fork. Utiliza los puntos de extensión nativos de C
 ## Inicio rápido (3 minutos)
 
 ```bash
-npm install -g oh-my-codex
-omx setup
-omx doctor
+npm install -g oh-my-kiro
+omk setup
+omk doctor
 ```
 
 Perfil de inicio recomendado para entornos de confianza:
 
 ```bash
-omx --xhigh --madmax
+omk --xhigh --madmax
 ```
 
 ## Novedades en v0.5.0
 
-- **Configuración con alcance** mediante `omx setup --scope user|project` para modos de instalación flexibles.
+- **Configuración con alcance** mediante `omk setup --scope user|project` para modos de instalación flexibles.
 - **Enrutamiento de Spark worker** vía `--spark` / `--madmax-spark` — los workers del equipo pueden usar `gpt-5.3-codex-spark` sin forzar el modelo líder.
 - **Consolidación del catálogo** — se eliminaron prompts obsoletos (`deep-executor`, `scientist`) y 9 skills obsoletos para una superficie más compacta.
 - **Niveles de detalle de notificaciones** para control granular de la salida de CCNotifier.
@@ -93,14 +93,14 @@ $team 3:executor "fix all TypeScript errors"
 Desde la terminal:
 
 ```bash
-omx team 4:executor "parallelize a multi-module refactor"
-omx team status <team-name>
-omx team shutdown <team-name>
+omk team 4:executor "parallelize a multi-module refactor"
+omk team status <team-name>
+omk team shutdown <team-name>
 ```
 
 ## Modelo central
 
-OMX instala y conecta estas capas:
+OMK instala y conecta estas capas:
 
 ```text
 User
@@ -109,34 +109,34 @@ User
     -> ~/.codex/prompts/*.md (catálogo de prompts de agentes)
     -> ~/.agents/skills/*/SKILL.md (catálogo de skills)
     -> ~/.codex/config.toml (características, notificaciones, MCP)
-    -> .omx/ (estado en ejecución, memoria, planes, registros)
+    -> .omk/ (estado en ejecución, memoria, planes, registros)
 ```
 
 ## Comandos principales
 
 ```bash
-omx                # Lanzar Codex (+ HUD en tmux cuando está disponible)
-omx setup          # Instalar prompts/skills/config por alcance + proyecto AGENTS.md/.omx
-omx doctor         # Diagnósticos de instalación/ejecución
-omx doctor --team  # Diagnósticos de Team/swarm
-omx team ...       # Iniciar/estado/reanudar/apagar workers tmux del equipo
-omx status         # Mostrar modos activos
-omx cancel         # Cancelar modos de ejecución activos
-omx reasoning <mode> # low|medium|high|xhigh
-omx tmux-hook ...  # init|status|validate|test
-omx hooks ...      # init|status|validate|test (flujo de trabajo de extensión de plugins)
-omx hud ...        # --watch|--json|--preset
-omx help
+omk                # Lanzar Codex (+ HUD en tmux cuando está disponible)
+omk setup          # Instalar prompts/skills/config por alcance + proyecto AGENTS.md/.omk
+omk doctor         # Diagnósticos de instalación/ejecución
+omk doctor --team  # Diagnósticos de Team/swarm
+omk team ...       # Iniciar/estado/reanudar/apagar workers tmux del equipo
+omk status         # Mostrar modos activos
+omk cancel         # Cancelar modos de ejecución activos
+omk reasoning <mode> # low|medium|high|xhigh
+omk tmux-hook ...  # init|status|validate|test
+omk hooks ...      # init|status|validate|test (flujo de trabajo de extensión de plugins)
+omk hud ...        # --watch|--json|--preset
+omk help
 ```
 
 ## Extensión de Hooks (Superficie adicional)
 
-OMX ahora incluye `omx hooks` para scaffolding y validación de plugins.
+OMK ahora incluye `omk hooks` para scaffolding y validación de plugins.
 
-- `omx tmux-hook` sigue siendo compatible y no ha cambiado.
-- `omx hooks` es aditivo y no reemplaza los flujos de trabajo de tmux-hook.
-- Los archivos de plugins se encuentran en `.omx/hooks/*.mjs`.
-- Los plugins están desactivados por defecto; actívalos con `OMX_HOOK_PLUGINS=1`.
+- `omk tmux-hook` sigue siendo compatible y no ha cambiado.
+- `omk hooks` es aditivo y no reemplaza los flujos de trabajo de tmux-hook.
+- Los archivos de plugins se encuentran en `.omk/hooks/*.mjs`.
+- Los plugins están desactivados por defecto; actívalos con `OMK_HOOK_PLUGINS=1`.
 
 Consulta `docs/hooks-extension.md` para el flujo de trabajo completo de extensiones y el modelo de eventos.
 
@@ -162,14 +162,14 @@ Por defecto, las herramientas MCP de state/memory/trace aceptan el `workingDirec
 Para restringir esto, establece una lista de raíces permitidas:
 
 ```bash
-export OMX_MCP_WORKDIR_ROOTS="/path/to/project:/path/to/another-root"
+export OMK_MCP_WORKDIR_ROOTS="/path/to/project:/path/to/another-root"
 ```
 
 Cuando se establece, los valores de `workingDirectory` fuera de estas raíces son rechazados.
 
 ## Control de prompts Codex-First
 
-Por defecto, OMX inyecta:
+Por defecto, OMK inyecta:
 
 ```text
 -c model_instructions_file="<cwd>/AGENTS.md"
@@ -181,8 +181,8 @@ Extiende el comportamiento de Codex, pero no reemplaza ni elude las políticas c
 Controles:
 
 ```bash
-OMX_BYPASS_DEFAULT_SYSTEM_PROMPT=0 omx     # desactivar inyección de AGENTS.md
-OMX_MODEL_INSTRUCTIONS_FILE=/path/to/instructions.md omx
+OMK_BYPASS_DEFAULT_SYSTEM_PROMPT=0 omk     # desactivar inyección de AGENTS.md
+OMK_MODEL_INSTRUCTIONS_FILE=/path/to/instructions.md omk
 ```
 
 ## Modo equipo
@@ -198,17 +198,17 @@ start -> assign scoped lanes -> monitor -> verify terminal tasks -> shutdown
 Comandos operacionales:
 
 ```bash
-omx team <args>
-omx team status <team-name>
-omx team resume <team-name>
-omx team shutdown <team-name>
+omk team <args>
+omk team status <team-name>
+omk team resume <team-name>
+omk team shutdown <team-name>
 ```
 
 Regla importante: no apagues mientras las tareas estén en estado `in_progress` a menos que estés abortando.
 
 ### Política de limpieza Ralph
 
-Cuando un equipo se ejecuta en modo ralph (`omx team ralph ...`), la limpieza al apagar
+Cuando un equipo se ejecuta en modo ralph (`omk team ralph ...`), la limpieza al apagar
 aplica una política dedicada diferente a la ruta normal:
 
 | Comportamiento | Equipo normal | Equipo Ralph |
@@ -218,41 +218,41 @@ aplica una política dedicada diferente a la ruta normal:
 | Registro de finalización | Evento estándar `shutdown_gate` | Evento adicional `ralph_cleanup_summary` con desglose de tareas |
 
 La política Ralph se detecta automáticamente del estado del modo equipo (`linked_ralph`) o
-se puede pasar explícitamente vía `omx team shutdown <name> --ralph`.
+se puede pasar explícitamente vía `omk team shutdown <name> --ralph`.
 
 Selección de Worker CLI para los workers del equipo:
 
 ```bash
-OMX_TEAM_WORKER_CLI=auto    # predeterminado; usa claude cuando worker --model contiene "claude"
-OMX_TEAM_WORKER_CLI=codex   # forzar workers Codex CLI
-OMX_TEAM_WORKER_CLI=claude  # forzar workers Claude CLI
-OMX_TEAM_WORKER_CLI_MAP=codex,codex,claude,claude  # mezcla de CLI por worker (longitud=1 o cantidad de workers)
-OMX_TEAM_AUTO_INTERRUPT_RETRY=0  # opcional: desactivar fallback adaptativo queue->resend
+OMK_TEAM_WORKER_CLI=auto    # predeterminado; usa claude cuando worker --model contiene "claude"
+OMK_TEAM_WORKER_CLI=codex   # forzar workers Codex CLI
+OMK_TEAM_WORKER_CLI=claude  # forzar workers Claude CLI
+OMK_TEAM_WORKER_CLI_MAP=codex,codex,claude,claude  # mezcla de CLI por worker (longitud=1 o cantidad de workers)
+OMK_TEAM_AUTO_INTERRUPT_RETRY=0  # opcional: desactivar fallback adaptativo queue->resend
 ```
 
 Notas:
-- Los argumentos de inicio de workers se comparten a través de `OMX_TEAM_WORKER_LAUNCH_ARGS`.
-- `OMX_TEAM_WORKER_CLI_MAP` anula `OMX_TEAM_WORKER_CLI` para selección por worker.
+- Los argumentos de inicio de workers se comparten a través de `OMK_TEAM_WORKER_LAUNCH_ARGS`.
+- `OMK_TEAM_WORKER_CLI_MAP` anula `OMK_TEAM_WORKER_CLI` para selección por worker.
 - El envío de triggers usa reintentos adaptativos por defecto (queue/submit, luego fallback seguro clear-line+resend cuando es necesario).
-- En modo Claude worker, OMX lanza workers como `claude` simple (sin argumentos de inicio extra) e ignora anulaciones explícitas de `--model` / `--config` / `--effort` para que Claude use el `settings.json` predeterminado.
+- En modo Claude worker, OMK lanza workers como `claude` simple (sin argumentos de inicio extra) e ignora anulaciones explícitas de `--model` / `--config` / `--effort` para que Claude use el `settings.json` predeterminado.
 
-## Qué escribe `omx setup`
+## Qué escribe `omk setup`
 
-- `.omx/setup-scope.json` (alcance de instalación persistido)
+- `.omk/setup-scope.json` (alcance de instalación persistido)
 - Instalaciones dependientes del alcance:
-  - `user`: `~/.codex/prompts/`, `~/.agents/skills/`, `~/.codex/config.toml`, `~/.omx/agents/`
-  - `project`: `./.codex/prompts/`, `./.agents/skills/`, `./.codex/config.toml`, `./.omx/agents/`
-- Comportamiento de inicio: si el alcance persistido es `project`, el lanzamiento de `omx` usa automáticamente `CODEX_HOME=./.codex` (a menos que `CODEX_HOME` ya esté establecido).
+  - `user`: `~/.codex/prompts/`, `~/.agents/skills/`, `~/.codex/config.toml`, `~/.omk/agents/`
+  - `project`: `./.codex/prompts/`, `./.agents/skills/`, `./.codex/config.toml`, `./.omk/agents/`
+- Comportamiento de inicio: si el alcance persistido es `project`, el lanzamiento de `omk` usa automáticamente `CODEX_HOME=./.codex` (a menos que `CODEX_HOME` ya esté establecido).
 - El `AGENTS.md` existente se preserva por defecto. En ejecuciones TTY interactivas, setup pregunta antes de sobrescribir; `--force` sobrescribe sin preguntar (las verificaciones de seguridad de sesiones activas siguen aplicándose).
 - Actualizaciones de `config.toml` (para ambos alcances):
   - `notify = ["node", "..."]`
   - `model_reasoning_effort = "high"`
   - `developer_instructions = "..."`
   - `[features] multi_agent = true, child_agents_md = true`
-  - Entradas de servidores MCP (`omx_state`, `omx_memory`, `omx_code_intel`, `omx_trace`)
+  - Entradas de servidores MCP (`omk_state`, `omk_memory`, `omk_code_intel`, `omk_trace`)
   - `[tui] status_line`
 - `AGENTS.md` del proyecto
-- Directorios `.omx/` de ejecución y configuración de HUD
+- Directorios `.omk/` de ejecución y configuración de HUD
 
 ## Agentes y skills
 
@@ -266,8 +266,8 @@ Ejemplos:
 ## Estructura del proyecto
 
 ```text
-oh-my-codex/
-  bin/omx.js
+oh-my-kiro/
+  bin/omk.js
   src/
     cli/
     team/
@@ -287,8 +287,8 @@ oh-my-codex/
 ## Desarrollo
 
 ```bash
-git clone https://github.com/Yeachan-Heo/oh-my-codex.git
-cd oh-my-codex
+git clone https://github.com/penghuo/oh-my-kiro.git
+cd oh-my-kiro
 npm install
 npm run build
 npm test
@@ -296,11 +296,11 @@ npm test
 
 ## Documentación
 
-- **[Documentación completa](https://yeachan-heo.github.io/oh-my-codex-website/docs.html)** — Guía completa
-- **[Referencia CLI](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#cli-reference)** — Todos los comandos `omx`, flags y herramientas
-- **[Guía de notificaciones](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#notifications)** — Configuración de Discord, Telegram, Slack y webhooks
-- **[Flujos de trabajo recomendados](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#workflows)** — Cadenas de skills probadas en batalla para tareas comunes
-- **[Notas de versión](https://yeachan-heo.github.io/oh-my-codex-website/docs.html#release-notes)** — Novedades en cada versión
+- **[Documentación completa](https://penghuo.github.io/oh-my-kiro-website/docs.html)** — Guía completa
+- **[Referencia CLI](https://penghuo.github.io/oh-my-kiro-website/docs.html#cli-reference)** — Todos los comandos `omk`, flags y herramientas
+- **[Guía de notificaciones](https://penghuo.github.io/oh-my-kiro-website/docs.html#notifications)** — Configuración de Discord, Telegram, Slack y webhooks
+- **[Flujos de trabajo recomendados](https://penghuo.github.io/oh-my-kiro-website/docs.html#workflows)** — Cadenas de skills probadas en batalla para tareas comunes
+- **[Notas de versión](https://penghuo.github.io/oh-my-kiro-website/docs.html#release-notes)** — Novedades en cada versión
 
 ## Notas
 

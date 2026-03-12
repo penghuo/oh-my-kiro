@@ -10,7 +10,7 @@ import { monitorTeam } from '../dist/team/runtime.js';
 import { planWorktreeTarget, ensureWorktree } from '../dist/team/worktree.js';
 
 async function initRepo() {
-  const cwd = await mkdtemp(join(tmpdir(), 'omx-team-bench-repo-'));
+  const cwd = await mkdtemp(join(tmpdir(), 'omk-team-bench-repo-'));
   execFileSync('git', ['init'], { cwd, stdio: 'ignore' });
   execFileSync('git', ['config', 'user.email', 'test@example.com'], { cwd, stdio: 'ignore' });
   execFileSync('git', ['config', 'user.name', 'Test User'], { cwd, stdio: 'ignore' });
@@ -23,14 +23,14 @@ async function initRepo() {
 async function benchReclaim(iterations = 10) {
   const samples = [];
   for (let i = 0; i < iterations; i += 1) {
-    const cwd = await mkdtemp(join(tmpdir(), 'omx-team-bench-reclaim-'));
+    const cwd = await mkdtemp(join(tmpdir(), 'omk-team-bench-reclaim-'));
     try {
       await initTeamState('team-bench', 'bench reclaim', 'executor', 2, cwd);
       const task = await createTask('team-bench', { subject: 'recover', description: 'd', status: 'pending' }, cwd);
       const claim = await claimTask('team-bench', task.id, 'worker-1', task.version ?? 1, cwd);
       if (!claim.ok) throw new Error('claim failed');
 
-      const taskPath = join(cwd, '.omx', 'state', 'team', 'team-bench', 'tasks', `task-${task.id}.json`);
+      const taskPath = join(cwd, '.omk', 'state', 'team', 'team-bench', 'tasks', `task-${task.id}.json`);
       const current = JSON.parse(await readFile(taskPath, 'utf-8'));
       current.claim.leased_until = new Date(Date.now() - 1000).toISOString();
       await writeAtomic(taskPath, JSON.stringify(current, null, 2));

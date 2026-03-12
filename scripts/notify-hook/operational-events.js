@@ -63,13 +63,13 @@ function sanitizeTmuxToken(value) {
 function buildTmuxSessionName(cwd, sessionId) {
   const parentDir = basename(dirname(cwd));
   const dirName = basename(cwd);
-  const dirToken = parentDir.endsWith('.omx-worktrees')
-    ? sanitizeTmuxToken(`${parentDir.slice(0, -'.omx-worktrees'.length)}-${dirName}`)
+  const dirToken = parentDir.endsWith('.omk-worktrees')
+    ? sanitizeTmuxToken(`${parentDir.slice(0, -'.omk-worktrees'.length)}-${dirName}`)
     : sanitizeTmuxToken(dirName);
   const branch = gitValue(cwd, ['rev-parse', '--abbrev-ref', 'HEAD']);
   const branchToken = branch ? sanitizeTmuxToken(branch) : 'detached';
-  const sessionToken = sanitizeTmuxToken(safeString(sessionId).replace(/^omx-/, ''));
-  const name = `omx-${dirToken}-${branchToken}-${sessionToken}`;
+  const sessionToken = sanitizeTmuxToken(safeString(sessionId).replace(/^omk-/, ''));
+  const name = `omk-${dirToken}-${branchToken}-${sessionToken}`;
   return name.length > 120 ? name.slice(0, 120) : name;
 }
 

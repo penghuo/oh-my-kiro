@@ -6,14 +6,14 @@ import { join } from 'path';
 import { tmpdir } from 'os';
 
 describe('state-server directory initialization', () => {
-  it('creates .omx/state for state tools without setup', async () => {
-    process.env.OMX_STATE_SERVER_DISABLE_AUTO_START = '1';
+  it('creates .omk/state for state tools without setup', async () => {
+    process.env.OMK_STATE_SERVER_DISABLE_AUTO_START = '1';
     const { handleStateToolCall } = await import('../state-server.js');
 
-    const wd = await mkdtemp(join(tmpdir(), 'omx-state-server-test-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-state-server-test-'));
     try {
-      const stateDir = join(wd, '.omx', 'state');
-      const tmuxHookConfig = join(wd, '.omx', 'tmux-hook.json');
+      const stateDir = join(wd, '.omk', 'state');
+      const tmuxHookConfig = join(wd, '.omk', 'tmux-hook.json');
       assert.equal(existsSync(stateDir), false);
       assert.equal(existsSync(tmuxHookConfig), false);
 
@@ -36,12 +36,12 @@ describe('state-server directory initialization', () => {
   });
 
   it('creates session-scoped state directory when session_id is provided', async () => {
-    process.env.OMX_STATE_SERVER_DISABLE_AUTO_START = '1';
+    process.env.OMK_STATE_SERVER_DISABLE_AUTO_START = '1';
     const { handleStateToolCall } = await import('../state-server.js');
 
-    const wd = await mkdtemp(join(tmpdir(), 'omx-state-server-test-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-state-server-test-'));
     try {
-      const sessionDir = join(wd, '.omx', 'state', 'sessions', 'sess1');
+      const sessionDir = join(wd, '.omk', 'state', 'sessions', 'sess1');
       assert.equal(existsSync(sessionDir), false);
 
       const response = await handleStateToolCall({
@@ -62,10 +62,10 @@ describe('state-server directory initialization', () => {
   });
 
   it('serializes concurrent state_write calls per mode file and preserves merged fields', async () => {
-    process.env.OMX_STATE_SERVER_DISABLE_AUTO_START = '1';
+    process.env.OMK_STATE_SERVER_DISABLE_AUTO_START = '1';
     const { handleStateToolCall } = await import('../state-server.js');
 
-    const wd = await mkdtemp(join(tmpdir(), 'omx-state-server-test-'));
+    const wd = await mkdtemp(join(tmpdir(), 'omk-state-server-test-'));
     try {
       const writes = Array.from({ length: 16 }, (_, i) => handleStateToolCall({
         params: {
@@ -83,7 +83,7 @@ describe('state-server directory initialization', () => {
         assert.equal(response.isError, undefined);
       }
 
-      const filePath = join(wd, '.omx', 'state', 'team-state.json');
+      const filePath = join(wd, '.omk', 'state', 'team-state.json');
       const state = JSON.parse(await readFile(filePath, 'utf-8')) as Record<string, unknown>;
       for (let i = 0; i < 16; i++) {
         assert.equal(state[`k${i}`], i);

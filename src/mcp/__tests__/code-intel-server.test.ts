@@ -25,7 +25,7 @@ describe('mcp/code-intel-server module contract', () => {
     }
 
     assert.match(src, /const args = \['--noEmit', '--pretty', 'false'\]/);
-    assert.match(src, /new Server\(\s*\{ name: 'omx-code-intel', version: '0\.1\.0' \}/);
+    assert.match(src, /new Server\(\s*\{ name: 'omk-code-intel', version: '0\.1\.0' \}/);
   });
 
   it('delegates stdio lifecycle bootstrapping to the shared MCP bootstrap helper', async () => {
