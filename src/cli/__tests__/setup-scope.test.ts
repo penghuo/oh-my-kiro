@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, readdir, realpath, rm, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -76,7 +76,7 @@ describe('omk setup scope behavior', () => {
   });
 
   it('doctor respects persisted project setup scope paths', async () => {
-    const wd = await mkdtemp(join(tmpdir(), 'omk-doctor-scope-'));
+    const wd = await realpath(await mkdtemp(join(tmpdir(), 'omk-doctor-scope-')));
     try {
       const home = join(wd, 'home');
       await mkdir(home, { recursive: true });

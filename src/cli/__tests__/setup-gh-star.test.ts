@@ -53,7 +53,7 @@ describe('omk setup (gh star hint)', () => {
       });
       if (shouldSkipForSpawnPermissions(res.error)) return;
       assert.equal(res.status, 0, res.stderr || res.stdout);
-      assert.match(res.stdout, /gh repo star Yeachan-Heo\/oh-my-kiro/);
+      assert.match(res.stdout, /gh repo star penghuo\/oh-my-kiro/);
     } finally {
       await rm(wd, { recursive: true, force: true });
     }
