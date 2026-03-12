@@ -1,7 +1,6 @@
 # Fix Plan
 
 ## TODO
-- [ ] Copy oh-my-codex source tree: rsync from /Users/penghuo/oss/oh-my-codex/ excluding .git, node_modules, dist, docs/plans. Verify src/cli/index.ts, src/team/runtime.ts, package.json, bin/omx.js exist. Commit.
 - [ ] Rename bin/omx.js → bin/omk.js: mv the file, commit.
 - [ ] Bulk text rename pass 1 — long patterns: sed replace oh-my-codex→oh-my-kiro, Oh-My-Codex→Oh-My-Kiro, OH_MY_CODEX→OH_MY_KIRO, Yeachan-Heo/oh-my-codex→penghuo/oh-my-kiro, yeachan-heo.github.io/oh-my-codex→penghuo.github.io/oh-my-kiro across all text files (exclude .git, node_modules, dist, images, package-lock.json, docs/plans/2026-03-12-oh-my-kiro-fork*).
 - [ ] Bulk text rename pass 2 — OMX_ env vars: sed replace OMX_→OMK_ across all text files.
@@ -18,3 +17,4 @@
 - [ ] Smoke test CLI: run node bin/omk.js --help (expect omk commands in output), run node bin/omk.js doctor (expect no crash). Commit final state.
 
 ## Completed
+- [x] Copy oh-my-codex source tree: rsync from /Users/penghuo/oss/oh-my-codex/ excluding .git, node_modules, dist, docs/plans. Verified src/cli/index.ts, src/team/runtime.ts, package.json, bin/omx.js. Committed (023a620).
