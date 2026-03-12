@@ -7,10 +7,12 @@ dist/
 .omc/research/
 .omc/
 .omx/
+.omk/
 
 # Local agent/worktree artifacts (never commit)
 .claude/
 .claire/
 .codex/
 .agents/
+.kiro/
 coverage/
