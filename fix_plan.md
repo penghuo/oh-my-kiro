@@ -1,7 +1,7 @@
 # Fix Plan
 
 ## TODO
-- [ ] Rename bin/omx.js → bin/omk.js: mv the file, commit.
+- [x] Rename bin/omx.js → bin/omk.js: mv the file, commit. Done (6b6cda1).
 - [ ] Bulk text rename pass 1 — long patterns: sed replace oh-my-codex→oh-my-kiro, Oh-My-Codex→Oh-My-Kiro, OH_MY_CODEX→OH_MY_KIRO, Yeachan-Heo/oh-my-codex→penghuo/oh-my-kiro, yeachan-heo.github.io/oh-my-codex→penghuo.github.io/oh-my-kiro across all text files (exclude .git, node_modules, dist, images, package-lock.json, docs/plans/2026-03-12-oh-my-kiro-fork*).
 - [ ] Bulk text rename pass 2 — OMX_ env vars: sed replace OMX_→OMK_ across all text files.
 - [ ] Bulk text rename pass 3 — state dirs: sed replace .omx/→.omk/ and .omc/→.omk/ across all text files.
