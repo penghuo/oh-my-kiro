@@ -1,7 +1,7 @@
 {
   "name": "oh-my-kiro",
   "version": "0.8.15",
-  "description": "Multi-agent orchestration layer for OpenAI Codex CLI",
+  "description": "Multi-agent orchestration layer for Kiro CLI",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -33,14 +33,14 @@
     "scripts/"
   ],
   "keywords": [
-    "codex",
-    "openai",
+    "kiro",
+    "kiro-cli",
     "cli",
     "agents",
     "orchestration",
     "multi-agent"
   ],
-  "author": "Yeachan Heo",
+  "author": "Peng Huo",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/penghuo/oh-my-kiro.git"
