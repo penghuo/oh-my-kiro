@@ -15,6 +15,7 @@
 - [x] Build: run npm run build. Fix any compilation errors from missed renames. Rebuild until clean.
 - [x] Run tests: run npm run test:node. Fix any test failures from stale env var names or path references. Commit fixes.
 - [x] Smoke test CLI: run node bin/omk.js --help (expect omk commands in output), run node bin/omk.js doctor (expect no crash). Commit final state.
+- [x] Fix flaky test: dispatcher.test.ts "uses gateway timeout over env timeout" — increased gateway timeout from 500ms to 2000ms to prevent timing failures under load.
 
 ## Completed
 - [x] Copy oh-my-codex source tree: rsync from /Users/penghuo/oss/oh-my-codex/ excluding .git, node_modules, dist, docs/plans. Verified src/cli/index.ts, src/team/runtime.ts, package.json, bin/omx.js. Committed (023a620).

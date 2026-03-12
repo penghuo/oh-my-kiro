@@ -217,9 +217,12 @@ describe('wakeCommandGateway - command gate', () => {
     const { wakeCommandGateway } = await import('../dispatcher.js');
     process.env.OMK_OPENCLAW_COMMAND = '1';
     process.env.OMK_OPENCLAW_COMMAND_TIMEOUT_MS = '100';
+    // Gateway timeout (2000ms) must override env timeout (100ms).
+    // The command sleeps 250ms — well within 2000ms but over 100ms,
+    // so success proves the gateway timeout took precedence.
     const result = await wakeCommandGateway(
       'test',
-      { type: 'command', command: "node -e \"setTimeout(() => {}, 250)\"", timeout: 500 },
+      { type: 'command', command: "node -e \"setTimeout(() => {}, 250)\"", timeout: 2000 },
       {},
     );
     assert.equal(result.success, true);
