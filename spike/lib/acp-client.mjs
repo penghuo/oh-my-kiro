@@ -64,18 +64,21 @@ export function createAcpClient(opts = {}) {
 
   proc.stderr.on('data', () => {}); // suppress stderr
 
-  function send(method, params) {
+  function send(method, params, overrideTimeout) {
     const id = ++requestId;
     const msg = { jsonrpc: '2.0', id, method, params };
     proc.stdin.write(JSON.stringify(msg) + '\n');
     return new Promise((resolve, reject) => {
-      pending.set(id, { resolve, reject });
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         if (pending.has(id)) {
           pending.delete(id);
           reject(new Error(`[${name}] timeout waiting for ${method} (id=${id})`));
         }
-      }, timeoutMs);
+      }, overrideTimeout || timeoutMs);
+      pending.set(id, {
+        resolve: (v) => { clearTimeout(timer); resolve(v); },
+        reject:  (e) => { clearTimeout(timer); reject(e); },
+      });
     });
   }
 
@@ -158,7 +161,7 @@ export function createAcpClient(opts = {}) {
     // The RPC blocks until the turn ends (stopReason: "end_turn")
     let resp;
     try {
-      resp = await send('session/prompt', { sessionId, prompt: [{ type: 'text', text }] });
+      resp = await send('session/prompt', { sessionId, prompt: [{ type: 'text', text }] }, promptTimeout);
     } finally {
       if (poller) clearInterval(poller);
     }
@@ -185,10 +188,20 @@ export function createAcpClient(opts = {}) {
   }
 
   /**
-   * Kill the kiro-cli acp child process.
+   * Kill the kiro-cli acp child process and clean up all handles
+   * so the Node.js event loop can exit.
+   *
+   * Without destroying all stdio streams and unref'ing the process,
+   * Node.js keeps the event loop alive waiting for the child — even
+   * after SIGTERM — causing the parent process to hang indefinitely.
    */
   function kill() {
+    rl.close();
+    proc.stdin.destroy();
+    proc.stdout.destroy();
+    proc.stderr.destroy();
     proc.kill('SIGTERM');
+    proc.unref();
   }
 
   return { initialize, newSession, prompt, kill, proc, name };

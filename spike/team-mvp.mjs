@@ -17,10 +17,11 @@
 
 import { createAcpClient } from './lib/acp-client.mjs';
 import { readFileSync, writeFileSync, unlinkSync, appendFileSync } from 'fs';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import { homedir, tmpdir } from 'os';
 import { execSync } from 'child_process';
 import { parseArgs } from 'util';
+import { fileURLToPath } from 'url';
 
 // --- Arg parsing ---
 
@@ -134,7 +135,10 @@ async function main() {
   process.stdout.write(result);
 }
 
-main().catch(err => {
-  console.error(`team-mvp error: ${err.message}`);
-  process.exit(1);
-});
+// Only run main when executed directly (not when imported by tests)
+if (resolve(process.argv[1] || '') === fileURLToPath(import.meta.url)) {
+  main().catch(err => {
+    console.error(`team-mvp error: ${err.message}`);
+    process.exit(1);
+  });
+}
